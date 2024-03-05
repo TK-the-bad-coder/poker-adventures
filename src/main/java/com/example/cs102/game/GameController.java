@@ -63,7 +63,7 @@ public class GameController {
     }
 
     public void displayPlayers() {
-        // playerDAO.
+        // playerDAO // may not be used
     }
 
     public void start(String name) {
@@ -74,28 +74,33 @@ public class GameController {
         System.out.printf("Welcome, %s!\n", player.getName());
         
         List<Card> cards = new ArrayList<>();
-        // new dc every time!
+        // new dc every time a game begins!
         DeckController deckControl = new DeckController(cards); 
         cards = deckControl.initCards();
         // ArrayList<Card> cards = deckControl.getCards();
     
         // make deck for player
-        Deck playerDeck = new Deck(cards);
+        Deck playerDeck = new Deck(new ArrayList<>(cards));
         // playerDeck.getCards();
-        System.out.println("Player Cards remaining: " + playerDeck.getDeckLength());
-        System.out.println(playerDeck.drawCard());
-        System.out.println("Player Cards remaining: " + playerDeck.getDeckLength());
+
+        // these are meant for debugging 
+        // System.out.println("Player Cards remaining: " + playerDeck.getDeckLength());
+        // System.out.println(playerDeck.drawCard());
+        // System.out.println("Player Cards remaining: " + playerDeck.getDeckLength());
         // make deck for enemy
-        cards = deckControl.initCards();
-        Deck bossDeck = new Deck(cards);
-        // List<Card> bossCards = new ArrayList<>();
+
+        Deck bossDeck = new Deck(new ArrayList<>(cards));
+        // // List<Card> bossCards = new ArrayList<>();
         System.out.println("Boss Cards remaining: " + bossDeck.getDeckLength());
-        System.out.println(bossDeck.drawCard());
+        Card bossDraw = bossDeck.drawCard();
+        System.out.println(bossDraw.getValue() + " of " + bossDraw.getSuit());
         System.out.println("Boss Cards remaining: " + bossDeck.getDeckLength());
 
-        System.out.println("Special Check for Players:" + playerDeck.getDeckLength());
+        // System.out.println("Special Check for Players:" + playerDeck.getDeckLength());
 
         // shuffle the decks
 
+        // TODO: once both decks are made, pass both decks into a game display method
+        // toDoMethod(playerDeck, bossDeck);
     }
 }

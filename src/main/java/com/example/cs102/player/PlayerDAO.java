@@ -49,7 +49,7 @@ public class PlayerDAO {
     // returns a single player object based on name,
     // or null if there is no matching player
     public Player retrieve(String name) {
-        System.out.println(name);
+       
         Optional<Player> playerEl = players.stream().filter(player -> player.getName().equals(name)).findFirst();
 
         return playerEl.orElse(null);
