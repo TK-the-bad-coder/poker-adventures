@@ -1,0 +1,1 @@
+javac -d "classes" -cp "src/main/java" src/main/java/com/example/cs102/PokerAdventureApplication.java 
