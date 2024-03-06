@@ -71,6 +71,30 @@ public class GameController {
         // List<Player> players = playerDAO.retrievePlayers();
         Player player = playerDAO.retrieve(name); // assuming the name exists!
         // System.out.println(player);
+        if (player == null){
+            System.out.println("Player name not found");
+
+            boolean isValid = false;
+            do {
+                System.out.println("Would you like to make a new account? y/n");
+                Scanner sc = new Scanner(System.in);
+                String input = sc.next();
+                if ( input.equals("n") || input.equals("N")){
+                    System.out.println("Ok, Bye Bye!");
+                    return;
+                }
+                if ( input.equals("y") || input.equals("Y")){
+                    playerDAO.addPlayer(name);
+                    isValid = true;
+
+                } else{
+                    System.out.println("Please enter a valid input y/n");
+                    // sc.next();
+                }
+            } while(!isValid);
+
+            return;
+        }
         System.out.printf("Welcome, %s!\n", player.getName());
         
         List<Card> cards = new ArrayList<>();
