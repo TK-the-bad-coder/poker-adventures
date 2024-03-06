@@ -123,10 +123,11 @@ public class GameController {
             }
             else if ( input.equals("y") || input.equals("Y")){
                 playerDAO.addPlayer(name);
+
                 return true;
 
             } else{
-                System.out.println("Please enter a valid input y/n");
+                System.out.println("Please enter a valid input");
             }
         } while(!isValid);
 
