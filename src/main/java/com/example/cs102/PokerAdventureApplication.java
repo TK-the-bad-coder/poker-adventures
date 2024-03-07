@@ -13,6 +13,7 @@ public class PokerAdventureApplication {
         GameController gameController = new GameController();
         GameMenu gameMenu = new GameMenu(gameController);
         gameMenu.readOption();
+        
         // SpringApplication.run(PokerAdventureApplication.class, args);
     }
 

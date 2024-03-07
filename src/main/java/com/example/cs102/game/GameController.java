@@ -10,6 +10,7 @@ import java.util.Scanner;
 
 import com.example.cs102.boss.Boss;
 import com.example.cs102.boss.BossDAO;
+import com.example.cs102.hand.Hand;
 import com.example.cs102.player.Player;
 import com.example.cs102.player.PlayerDAO;
 import com.example.cs102.poker.Card;
@@ -80,7 +81,7 @@ public class GameController {
 
         //select boss
         Boss selectedBoss=selectBoss(bossDAO);
-        System.out.println(selectedBoss);
+        
       
 
 
@@ -101,15 +102,21 @@ public class GameController {
         // make deck for enemy
         
         
-
+        
         Deck bossDeck = new Deck(new ArrayList<>(cards));
         // // List<Card> bossCards = new ArrayList<>();
         System.out.println("Boss Cards remaining: " + bossDeck.getDeckLength());
-        Card bossDraw = bossDeck.drawCard();
-        System.out.println(bossDraw.getValue() + " of " + bossDraw.getSuit());
+        
+        //Starting Hand for both player and boss
+
+        //testing hand
+        // Card bossDraw = bossDeck.drawCard();
+        // System.out.println(bossDraw.getValue() + " of " + bossDraw.getSuit());
+         Hand bossHand= new Hand(bossDeck);
+        
         System.out.println("Boss Cards remaining: " + bossDeck.getDeckLength());
 
-        // System.out.println("Special Check for Players:" + playerDeck.getDeckLength());
+        System.out.println("Special Check for Players:" + playerDeck.getDeckLength());
 
         // shuffle the decks
 
@@ -117,8 +124,9 @@ public class GameController {
         // toDoMethod(playerDeck, bossDeck);
 
     }
+
         //select boss, loops until user selects a valid difficulty
-        public Boss selectBoss(BossDAO bossDAO){
+    public Boss selectBoss(BossDAO bossDAO){
             Scanner scanner = new Scanner(System.in);
 
             Boss selectedBoss=null;
@@ -134,16 +142,22 @@ public class GameController {
             };
 
             String userInput=scanner.next().toUpperCase();
-            System.out.println(userInput);
             selectedBoss =bossDAO.retrieve(userInput);
                 if (selectedBoss == null) {
                     System.out.println("Invalid difficulty. Please try again.\n");
                 }   
             }
-            return selectedBoss;
             
-            //System.out.println("You entered an invalid difficulty, try again");
+            return selectedBoss;
 
             }
 
+        public Hand startingHand(Deck deck, Hand user){
+            for(int i=0;i<10;i++){
+                Card card = deck.drawCard();
+                user.addToHand(card);
+                System.out.print(card.getValue() + " of " + card.getSuit()+", ");
+            }
+            return user;
+        }
 }
