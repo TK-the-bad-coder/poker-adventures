@@ -109,19 +109,29 @@ public class GameController {
         
         //Starting Hand for both player and boss
 
-        //testing hand
-        // Card bossDraw = bossDeck.drawCard();
-        // System.out.println(bossDraw.getValue() + " of " + bossDraw.getSuit());
-         Hand bossHand= new Hand(bossDeck);
-         System.out.println();
-         Hand playerHand= new Hand(playerDeck);
-        System.out.println(bossHand.discard(0));
+        //testing hand features
+
+        System.out.println("Boss Hand:");
+        Hand bossHand= new Hand(bossDeck);
+        System.err.println();
+        System.out.println("Player Hand:");
+        Hand playerHand= new Hand(playerDeck);
+        System.err.println();
 
         
         System.out.println("Boss Cards remaining: " + bossDeck.getDeckLength());
 
         System.out.println("Special Check for Players:" + playerDeck.getDeckLength());
+        bossHand.discard("012345678");
 
+        System.out.println("New Boss Hand:");
+        boolean has10Cards= bossHand.addToHand(bossDeck);
+        if(!has10Cards){
+            System.out.println("Lose");
+        }
+        bossHand.showHand();
+
+        System.out.println();
         // shuffle the decks
 
         // TODO: once both decks are made, pass both decks into a game display method
