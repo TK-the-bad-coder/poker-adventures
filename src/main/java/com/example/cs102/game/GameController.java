@@ -8,6 +8,8 @@ import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
+import com.example.cs102.boss.Boss;
+import com.example.cs102.boss.BossDAO;
 import com.example.cs102.player.Player;
 import com.example.cs102.player.PlayerDAO;
 import com.example.cs102.poker.Card;
@@ -18,10 +20,12 @@ public class GameController {
 
     // private final GameService service;
     private PlayerDAO playerDAO;
+    private BossDAO bossDAO;
 
     public GameController() {
         // this.service = service;
         playerDAO = new PlayerDAO();
+        bossDAO= new BossDAO();
     }
 
     public void readOption() {
@@ -73,6 +77,13 @@ public class GameController {
         // System.out.println(player);
         System.out.printf("Welcome, %s!\n", player.getName());
         
+
+        //select boss
+        Boss selectedBoss=selectBoss(bossDAO);
+        System.out.println(selectedBoss);
+      
+
+
         List<Card> cards = new ArrayList<>();
         // new dc every time a game begins!
         DeckController deckControl = new DeckController(cards); 
@@ -88,6 +99,8 @@ public class GameController {
         // System.out.println(playerDeck.drawCard());
         // System.out.println("Player Cards remaining: " + playerDeck.getDeckLength());
         // make deck for enemy
+        
+        
 
         Deck bossDeck = new Deck(new ArrayList<>(cards));
         // // List<Card> bossCards = new ArrayList<>();
@@ -102,5 +115,35 @@ public class GameController {
 
         // TODO: once both decks are made, pass both decks into a game display method
         // toDoMethod(playerDeck, bossDeck);
+
     }
+        //select boss, loops until user selects a valid difficulty
+        public Boss selectBoss(BossDAO bossDAO){
+            Scanner scanner = new Scanner(System.in);
+
+            Boss selectedBoss=null;
+
+            
+            while (selectedBoss == null) {
+            System.out.printf("Enter Difficulty:\n" );
+            List<Boss> bosses=bossDAO.retrieveBosses();
+            for (Boss boss: bosses){
+                String bossName=boss.getName();
+                String difficulty= boss.getDifficulty();
+                System.out.println("Name: "+bossName+ " ,Difficulty = " + difficulty);
+            };
+
+            String userInput=scanner.next().toUpperCase();
+            System.out.println(userInput);
+            selectedBoss =bossDAO.retrieve(userInput);
+                if (selectedBoss == null) {
+                    System.out.println("Invalid difficulty. Please try again.\n");
+                }   
+            }
+            return selectedBoss;
+            
+            //System.out.println("You entered an invalid difficulty, try again");
+
+            }
+
 }

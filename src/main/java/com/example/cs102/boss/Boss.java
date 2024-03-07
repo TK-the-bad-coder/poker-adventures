@@ -1,7 +1,7 @@
 package com.example.cs102.boss;
 
 public class Boss{
-    private int id;
+    private String difficulty;
 
     private String name;
     private double atkMultiplier;
@@ -9,8 +9,8 @@ public class Boss{
 
 
     //create boss
-    public Boss(int id, String name,double atkMultiplier,int hp) {
-        this.id = id;
+    public Boss(String difficulty, String name,double atkMultiplier,int hp) {
+        this.difficulty = difficulty;
         this.name = name;
         this.atkMultiplier=atkMultiplier;
         this.hp= hp;
@@ -28,5 +28,12 @@ public class Boss{
 
     public String getName() {
         return name;
+    }
+    public String getDifficulty() {
+        return difficulty;
+    }
+
+    public double getAtkMultiplier(){
+        return atkMultiplier;
     }
 }
