@@ -113,6 +113,10 @@ public class GameController {
         // Card bossDraw = bossDeck.drawCard();
         // System.out.println(bossDraw.getValue() + " of " + bossDraw.getSuit());
          Hand bossHand= new Hand(bossDeck);
+         System.out.println();
+         Hand playerHand= new Hand(playerDeck);
+        System.out.println(bossHand.discard(0));
+
         
         System.out.println("Boss Cards remaining: " + bossDeck.getDeckLength());
 
@@ -152,12 +156,9 @@ public class GameController {
 
             }
 
-        public Hand startingHand(Deck deck, Hand user){
-            for(int i=0;i<10;i++){
-                Card card = deck.drawCard();
-                user.addToHand(card);
-                System.out.print(card.getValue() + " of " + card.getSuit()+", ");
-            }
-            return user;
-        }
+
+        //gameDisplay method
+    public void GameDisplay(){
+
+    }
 }

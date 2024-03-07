@@ -22,5 +22,33 @@ public class Hand {
         }
     }
 //figure out a way to remove card from hand
-    
+    public void discard(String input){
+        
+        //split input
+        String[] substrings =input.split("");
+        
+        //get the cards to remove based on substring, assuming 
+
+        //add to temp storage
+        List<Card> temp= new ArrayList<>();
+        for(Card card:currentHand){
+            for()
+            if
+            temp.add(card);
+        }
+
+        //remove based on old index list
+        
+
+    }
+
+//show hand
+    public void showHand(){
+        
+        
+        for(Card card:currentHand){
+            
+            System.out.print(card.getValue() + " of " + card.getSuit()+", ");
+        }
+    }
 }
