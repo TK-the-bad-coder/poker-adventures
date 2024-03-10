@@ -29,6 +29,9 @@ public class Player {
         this.hp = hp;
     }
 
+    public int getId(){
+        return id;
+    }
     public int getHp() {
         return hp;
     }

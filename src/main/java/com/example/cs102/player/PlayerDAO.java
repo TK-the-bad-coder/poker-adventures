@@ -1,8 +1,6 @@
 package com.example.cs102.player;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 
 // import org.springframework.stereotype.Service;
@@ -59,7 +57,13 @@ public class PlayerDAO {
     // the ID of this new player is automatically generated
     public void addPlayer(String name) {
         int nextId = players.size() + 1;
-        players.add(new Player(nextId, name));
+        Player added = new Player(nextId,name);
+        players.add(added);
+        try (PrintStream out = new PrintStream(new FileOutputStream("data/players.csv", true))){
+            out.printf("%d,%s,%d\r\n", added.getId() , added.getName() , added.getHp());
+        } catch (FileNotFoundException e){
+             System.out.println("Error with adding player name");
+        }
     }
 
     // public boolean isGreater(CardValue oneCard, CardValue another) {
