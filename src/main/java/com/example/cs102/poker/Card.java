@@ -2,7 +2,7 @@ package com.example.cs102.poker;
 
 // by nicholas
 
-public class Card {
+public class Card implements Comparable<Card>{
 
     private static final String ANSI_HEART = "\u001B[47m\u001B[31m\u2764\u001B[0m";
     private static final String ANSI_DIAMOND = "\u001B[47m\u001B[31m\u2666\u001B[0m";
@@ -68,5 +68,10 @@ public class Card {
         result += value + suit;
         return result;
 
+    }
+    @Override
+    public int compareTo(Card anotherCard) {
+        int cmp = getValue() - anotherCard.getValue();
+        return cmp;
     }
 }

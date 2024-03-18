@@ -114,12 +114,13 @@ public class GameController {
 
     }
 
-    // gameDisplay method
+    // gameDisplay method -- to move all the prints into menu
+    // logic stays here
     public void gameDisplay(Hand playerHand) {
         List<Card> currentHand = playerHand.getHand();
         Scanner sc = new Scanner(System.in);
         String cardsChoice = "";
-
+        // line 124 to line 131 should be in menu
         do {
             System.out.println("=======================================");
             System.out.println("Enter your card choice: ");
