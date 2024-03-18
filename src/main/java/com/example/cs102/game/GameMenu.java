@@ -64,7 +64,7 @@ public class GameMenu {
         } while (name.isEmpty());
         // should retrieve whether the player exists or not.... do later
 
-        this.controller.start(name);
+        this.controller.loadPlayer(name);
         // make deck for player
 
         // make deck for enemy

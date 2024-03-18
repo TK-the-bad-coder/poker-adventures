@@ -5,7 +5,7 @@ import com.example.cs102.poker.Deck;
 import java.util.*;
 
 public class Hand {
-    private List<Card> currentHand;
+    protected List<Card> currentHand;
     private final int maxHand = 10;
     // private static final String ANSI_RESET = "\u001B[0m";
     // private static final String ANSI_BLACK = "\u001B[30m";
