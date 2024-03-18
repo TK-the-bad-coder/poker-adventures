@@ -207,7 +207,12 @@ public class Combo {
     }
 
     /**
-     * Helper function to sort the selected cards
+     * Helper function to sort the selected cards by value with special conditions
+     * example:
+     * selected cards 1: [2, 4, 2, 4, 2] -> [2, 2, 2, 4, 4]
+     * selected cards 2: [4, 9, 4, 4, 9] -> [4, 4, 4, 9, 9]
+     * selected cards 3: [1, 9, 7, 9, 7] -> [7, 7, 9, 9, 1]
+     * selected cards 4: [4, 9, 1, 2, 5] -> [1, 2, 4, 5, 9] 
      */
     private static void cardSort() {
         
@@ -219,11 +224,17 @@ public class Combo {
             frequencyMap.put(card.getValue(), frequencyMap.getOrDefault(card.getValue(), 0) + 1);
         }
 
+        // sort cards based on a certain criterias
         Collections.sort(cards, (card1, card2) -> {
+            // compare the number of frequency of the value in the map
             int freqCompare = frequencyMap.get(card2.getValue()).compareTo(frequencyMap.get(card1.getValue()));
+            
+            // if frequency is exactly the same, or all cards are unique
+            // sort in ascending order
             if (freqCompare == 0) {
                 return card1.compareTo(card2);
             }
+            // sort by frequency
             return freqCompare;
         });
     }
