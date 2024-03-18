@@ -10,8 +10,8 @@ public class Hand {
     // private static final String ANSI_RESET = "\u001B[0m";
     // private static final String ANSI_BLACK = "\u001B[30m";
     // private static final String ANSI_RED = "\u001B[31m";
-    private static final String ANSI_HEART = "\u001B[31m\u2764\u001B[0m";
-    private static final String ANSI_DIAMOND = "\u001B[31m\u2666\u001B[0m";
+    private static final String ANSI_HEART = "\u001B[47m\u001B[31m\u2764\u001B[0m";
+    private static final String ANSI_DIAMOND = "\u001B[47m\u001B[31m\u2666\u001B[0m";
     private static final String ANSI_CLUB = "\u001B[47m\u001B[30m\u2663\u001B[0m";
     private static final String ANSI_SPADE = "\u001B[47m\u001B[30m\u2660\u001B[0m";
 
@@ -22,7 +22,7 @@ public class Hand {
             Card card = deck.drawCard();
             this.currentHand.add(card);
         }
-        showHand();
+        // showHand();
     }
 
     // add to hand
@@ -55,8 +55,9 @@ public class Hand {
     // show hand
     public void showHand() {
         String suit = "";
+        String value = "";
         for (Card card : currentHand) {
-            System.out.print("|" + card.getValue());
+
             switch (card.getSuit()) {
                 case 's':
                     suit = ANSI_SPADE;
@@ -71,7 +72,27 @@ public class Hand {
                     suit = ANSI_DIAMOND;
                     break;
             }
-            System.out.print(suit);
+            System.out.print("|");
+            if (card.getValue() != 10) {
+                System.out.print(" ");
+            }
+            switch (card.getValue()) {
+                case 11:
+                    value = "J";
+                    break;
+                case 12:
+                    value = "Q";
+                    break;
+                case 13:
+                    value = "K";
+                    break;
+                case 14:
+                    value = "A";
+                    break;
+                default:
+                    value = Integer.toString(card.getValue());
+            }
+            System.out.print(value + suit);
 
         }
         System.out.print("|");

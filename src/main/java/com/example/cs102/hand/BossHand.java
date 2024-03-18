@@ -7,10 +7,5 @@ public class BossHand extends Hand{
     public BossHand(Deck deck) {
         super(deck);
     }
-
-    @Override
-    public void discard() {
-        
-    }
     
 }

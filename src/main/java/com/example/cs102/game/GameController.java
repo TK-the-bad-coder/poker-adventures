@@ -10,7 +10,9 @@ import java.util.Scanner;
 
 import com.example.cs102.boss.Boss;
 import com.example.cs102.boss.BossDAO;
+import com.example.cs102.hand.BossHand;
 import com.example.cs102.hand.Hand;
+import com.example.cs102.hand.PlayerHand;
 import com.example.cs102.player.Player;
 import com.example.cs102.player.PlayerDAO;
 import com.example.cs102.poker.Card;
@@ -26,7 +28,7 @@ public class GameController {
     public GameController() {
         // this.service = service;
         playerDAO = new PlayerDAO();
-        bossDAO= new BossDAO();
+        bossDAO = new BossDAO();
     }
 
     public void readOption() {
@@ -72,58 +74,51 @@ public class GameController {
     }
 
     public void start(String name) {
-        
+
         // List<Player> players = playerDAO.retrievePlayers();
         Player player = playerDAO.retrieve(name); // assuming the name exists!
         // System.out.println(player);
-        if (player == null){
-            if (!makeNewPlayer(name)){
+        if (player == null) {
+            if (!makeNewPlayer(name)) {
                 return;
             }
             player = playerDAO.retrieve(name);
         }
         System.out.printf("Welcome, %s!\n", player.getName());
-        
 
-        //select boss
-        Boss selectedBoss=selectBoss(bossDAO);
-        
-      
-
+        // select boss
+        Boss selectedBoss = selectBoss(bossDAO);
 
         List<Card> cards = new ArrayList<>();
         // new dc every time a game begins!
-        DeckController deckControl = new DeckController(cards); 
+        DeckController deckControl = new DeckController(cards);
         cards = deckControl.initCards();
         // ArrayList<Card> cards = deckControl.getCards();
-    
+
         // make deck for player
         Deck playerDeck = new Deck(new ArrayList<>(cards));
         // playerDeck.getCards();
 
-        // these are meant for debugging 
+        // these are meant for debugging
         // System.out.println("Player Cards remaining: " + playerDeck.getDeckLength());
         // System.out.println(playerDeck.drawCard());
         // System.out.println("Player Cards remaining: " + playerDeck.getDeckLength());
         // make deck for enemy
-        
-        
-        
+
         Deck bossDeck = new Deck(new ArrayList<>(cards));
         // // List<Card> bossCards = new ArrayList<>();
         System.out.println("Boss Cards remaining: " + bossDeck.getDeckLength());
-        
-        //Starting Hand for both player and boss
 
-        //testing hand
+        // Starting Hand for both player and boss
+
+        // testing hand
         // Card bossDraw = bossDeck.drawCard();
         // System.out.println(bossDraw.getValue() + " of " + bossDraw.getSuit());
-         Hand bossHand= new Hand(bossDeck);
-         System.out.println();
-         Hand playerHand= new Hand(playerDeck);
+        Hand bossHand = new BossHand(bossDeck);
+        System.out.println();
+        Hand playerHand = new PlayerHand(playerDeck);
         // System.out.println(bossHand.discard());
 
-        
         System.out.println("Boss Cards remaining: " + bossDeck.getDeckLength());
 
         System.out.println("Special Check for Players:" + playerDeck.getDeckLength());
@@ -135,56 +130,57 @@ public class GameController {
 
     }
 
-        //select boss, loops until user selects a valid difficulty
-    public Boss selectBoss(BossDAO bossDAO){
-            Scanner scanner = new Scanner(System.in);
+    // select boss, loops until user selects a valid difficulty
+    public Boss selectBoss(BossDAO bossDAO) {
+        Scanner scanner = new Scanner(System.in);
 
-            Boss selectedBoss=null;
+        Boss selectedBoss = null;
 
-            
-            while (selectedBoss == null) {
-            System.out.printf("Enter Difficulty:\n" );
-            List<Boss> bosses=bossDAO.retrieveBosses();
-            for(int i=0;i<bosses.size();i++){
-                String bossName=bosses.get(i).getName();
-                String difficulty= bosses.get(i).getDifficulty();
-                int number=1+i;
-                System.out.println(": Name: "+bossName+ " ,Difficulty = " + difficulty+". Press "+number);
+        while (selectedBoss == null) {
+            System.out.printf("Enter Difficulty:\n");
+            List<Boss> bosses = bossDAO.retrieveBosses();
+            for (int i = 0; i < bosses.size(); i++) {
+                String bossName = bosses.get(i).getName();
+                String difficulty = bosses.get(i).getDifficulty();
+                int number = 1 + i;
+                System.out
+                        .println(number + ": Name: " + bossName + " ,Difficulty = " + difficulty + ". Press " + number);
             }
 
-                scanner.nextLine();
-            int userInput=scanner.nextInt();
-            String difficultyString= translateDifficulty(userInput);
-            selectedBoss =bossDAO.retrieve(difficultyString);
-                if (selectedBoss == null) {
-                    System.out.println("Invalid difficulty. Please try again.\n");
-                }   
+            // scanner.nextLine();
+            int userInput = scanner.nextInt();
+            String difficultyString = translateDifficulty(userInput);
+            selectedBoss = bossDAO.retrieve(difficultyString);
+            if (selectedBoss == null) {
+                System.out.println("Invalid difficulty. Please try again.\n");
             }
-            
-            return selectedBoss;
+        }
 
-            }
-    public static String translateDifficulty(int userInput){
-        if(userInput==1){
+        return selectedBoss;
+
+    }
+
+    public static String translateDifficulty(int userInput) {
+        if (userInput == 1) {
             return "EASY";
         }
-        if(userInput==2){
+        if (userInput == 2) {
             return "NORMAL";
         }
-        if(userInput==3){
+        if (userInput == 3) {
             return "HARD";
-        }
-        else{
+        } else {
             return null;
         }
 
-    } 
+    }
 
-        //gameDisplay method
-    public void gameDisplay(){
+    // gameDisplay method
+    public void gameDisplay() {
 
     }
-    public boolean makeNewPlayer(String name){
+
+    public boolean makeNewPlayer(String name) {
         System.out.println("Player name not found");
 
         boolean isValid = false;
@@ -192,19 +188,18 @@ public class GameController {
             System.out.println("Would you like to make a new account? y/n");
             Scanner sc1 = new Scanner(System.in);
             String input = sc1.next();
-            if ( input.equals("n") || input.equals("N")){
+            if (input.equals("n") || input.equals("N")) {
                 System.out.println("Ok, Bye Bye!");
                 isValid = true;
-            }
-            else if ( input.equals("y") || input.equals("Y")){
+            } else if (input.equals("y") || input.equals("Y")) {
                 playerDAO.addPlayer(name);
                 sc1.close();
                 return true;
 
-            } else{
+            } else {
                 System.out.println("Please enter a valid input");
             }
-        } while(!isValid);
+        } while (!isValid);
 
         // sc1.close();
 
