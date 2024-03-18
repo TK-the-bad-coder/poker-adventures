@@ -16,54 +16,55 @@ public class Combo {
     private static final int STRAIGHT_FLUSH = 100;
     private static final int ROYAL_FLUSH = 200;
 
-    private List<Card> card;
-    public static int damage(List<Card> cards) {
-        if (isSingleHand(cards)) {
+    private static List<Card> cards;
+    public static int damage(List<Card> selectedCards) {
+        cards = selectedCards;
+        if (isSingleHand()) {
             return SINGLE_HAND;
-        } else if (isPair(cards)) {
+        } else if (isPair()) {
             return ONE_PAIR;
-        } else if (isTwoPair(cards)) {
+        } else if (isTwoPair()) {
             return TWO_PAIR;
         }
         // this have to go first
-        else if (isRoyalFlush(cards)) {
+        else if (isRoyalFlush()) {
             return ROYAL_FLUSH;
         }
 
-        else if (isStraightFlush(cards)) {
+        else if (isStraightFlush()) {
             return STRAIGHT_FLUSH;
         }
 
-        else if (isFourOfKind(cards)) {
+        else if (isFourOfKind()) {
             return FOUR_OF_A_KIND;
         }
 
-        else if (isFullHouse(cards)) {
+        else if (isFullHouse()) {
             return FULL_HOUSE;
         }
 
-        else if (isFlush(cards)) {
+        else if (isFlush()) {
             return FLUSH;
         }
 
-        else if (isStraight(cards)) {
+        else if (isStraight()) {
             return STRAIGHT;
         }
 
-        else if (isThreeOfKind(cards)) {
+        else if (isThreeOfKind()) {
             return THREE_OF_KIND;
         }
         return 0;
     }
 
-    private static boolean isSingleHand(List<Card> cards) {
+    private static boolean isSingleHand() {
         if (cards.size() == 1) {
             return true;
         }
         return false;
     }
 
-    private static boolean isPair(List<Card> cards) {
+    private static boolean isPair() {
         if (cards.size() == 2) {
             if (cards.get(0).getValue() == cards.get(1).getValue()) {
                 return true;
@@ -72,7 +73,7 @@ public class Combo {
         return false;
     }
 
-    private static boolean isTwoPair(List<Card> cards) {
+    private static boolean isTwoPair() {
         int check = 0;
         if (cards.size() == 5) {
             for (int counter = 1; counter < 5; counter++) {
@@ -88,7 +89,7 @@ public class Combo {
         return false;
     }
 
-    private static boolean isThreeOfKind(List<Card> cards) {
+    private static boolean isThreeOfKind() {
         int check = 0;
         if (cards.size() == 5) {
             for (int counter = 1; counter < 5; counter++) {
@@ -104,7 +105,7 @@ public class Combo {
         return false;
     }
 
-    private static boolean isStraight(List<Card> cards) {
+    private static boolean isStraight() {
         if (cards.size() == 5) {
             for (int counter = 1; counter < 5; counter++) {
                 if (cards.get(counter - 1).getValue() != cards.get(counter).getValue() - 1) {
@@ -117,7 +118,7 @@ public class Combo {
         return false;
     }
 
-    private static boolean isFlush(List<Card> cards) {
+    private static boolean isFlush() {
 
         if (cards.size() == 5) {
             for (int counter = 1; counter < 5; counter++) {
@@ -131,7 +132,7 @@ public class Combo {
         return false;
     }
 
-    private static boolean isFullHouse(List<Card> cards) {
+    private static boolean isFullHouse() {
         int check1 = 0;
         int check2 = 0;
         if (cards.size() == 5) {
@@ -152,7 +153,7 @@ public class Combo {
         return false;
     }
 
-    private static boolean isFourOfKind(List<Card> cards) {
+    private static boolean isFourOfKind() {
         int check = 0;
         if (cards.size() == 5) {
             for (int counter = 1; counter < 5; counter++) {
@@ -168,12 +169,12 @@ public class Combo {
         return false;
     }
 
-    private static boolean isStraightFlush(List<Card> cards) {
+    private static boolean isStraightFlush() {
         int check = 0;
         if (cards.size() == 5) {
             // differentiate between straight flush vs Royal flush
             if (cards.get(0).getValue() != 10 || cards.get(4).getValue() != 14) {
-                if (isFlush(cards) && isStraight(cards)) {
+                if (isFlush() && isStraight()) {
                     return true;
                 }
             }
@@ -182,12 +183,12 @@ public class Combo {
         return false;
     }
 
-    private static boolean isRoyalFlush(List<Card> cards) {
+    private static boolean isRoyalFlush() {
         int check = 0;
         if (cards.size() == 5) {
             // differentiate between straight flush vs Royal flush
             if (cards.get(0).getValue() == 10 && cards.get(4).getValue() == 14) {
-                if (isFlush(cards) && isStraight(cards)) {
+                if (isFlush() && isStraight()) {
                     return true;
                 }
             }

@@ -2,8 +2,6 @@ package com.example.cs102.game;
 
 import java.util.ArrayList;
 
-//import org.springframework.web.bind.annotation.*;
-
 import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
@@ -106,15 +104,12 @@ public class GameController {
         Hand playerHand = new PlayerHand(playerDeck);
         // System.out.println(bossHand.discard());
 
-
         System.out.println("You are left with :" + playerDeck.getDeckLength() + " cards");
 
         System.out.println("=========================================");
         System.out.println("Enter your hand: ");
         gameDisplay(playerHand);
         System.out.println("=========================================");
-
-        
 
         // TODO: once both decks are made, pass both decks into a game display method
         // toDoMethod(playerDeck, bossDeck);
@@ -137,9 +132,9 @@ public class GameController {
                 System.out
                         .println(number + ": Name: " + bossName + " ,Difficulty = " + difficulty + ". Press " + number);
             }
-
-            // scanner.nextLine();
+            System.out.print("Enter your choice: ");
             int userInput = scanner.nextInt();
+            System.out.println();
             String difficultyString = translateDifficulty(userInput);
             selectedBoss = bossDAO.retrieve(difficultyString);
             if (selectedBoss == null) {
@@ -171,7 +166,7 @@ public class GameController {
         List<Card> currentHand = playerHand.getHand();
         Scanner sc = new Scanner(System.in);
         String cardsChoice = "";
-       
+
         do {
             System.out.println("=======================================");
             System.out.println("Enter your card choice: ");
@@ -182,19 +177,20 @@ public class GameController {
             }
             List<Card> out = new ArrayList<>();
             String[] splitted_cards = cardsChoice.split(" ");
-            for(int i=0; i < splitted_cards.length; i++){
+            for (int i = 0; i < splitted_cards.length; i++) {
                 out.add(currentHand.get(Integer.parseInt(splitted_cards[i])));
             }
-            // check if card is correct anot
-            if(Combo.damage(out) != 0){
+            // check if hand selection is correct anot
+            if (Combo.damage(out) != 0) {
+                // if hand selection is correct, deal damage
                 int damage = Combo.damage(out);
-                System.out.println("Your damage is "+ damage);
-                
+                playerHand.discard(out);
+                System.out.println("Your damage is " + damage); 
+
             }
-            
+
         } while (cardsChoice.isEmpty());
 
-        
     }
 
     public boolean makeNewPlayer(String name) {
