@@ -18,10 +18,6 @@ public class Deck {
         return cards;
     }
 
-    // public void setCards(List<Card> cards) {
-    // this.cards = cards;
-    // }
-
     public Card drawCard() {
         if (cards.size() > 0) {
             Card toReturn = cards.get(0);

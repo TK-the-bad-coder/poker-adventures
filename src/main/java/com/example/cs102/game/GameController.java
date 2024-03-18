@@ -16,6 +16,7 @@ import com.example.cs102.hand.PlayerHand;
 import com.example.cs102.player.Player;
 import com.example.cs102.player.PlayerDAO;
 import com.example.cs102.poker.Card;
+import com.example.cs102.poker.Combo;
 import com.example.cs102.poker.Deck;
 import com.example.cs102.poker.DeckController;
 
@@ -97,33 +98,23 @@ public class GameController {
 
         // make deck for player
         Deck playerDeck = new Deck(new ArrayList<>(cards));
-        // playerDeck.getCards();
-
-        // these are meant for debugging
-        // System.out.println("Player Cards remaining: " + playerDeck.getDeckLength());
-        // System.out.println(playerDeck.drawCard());
-        // System.out.println("Player Cards remaining: " + playerDeck.getDeckLength());
         // make deck for enemy
-
         Deck bossDeck = new Deck(new ArrayList<>(cards));
-        // // List<Card> bossCards = new ArrayList<>();
-        System.out.println("Boss Cards remaining: " + bossDeck.getDeckLength());
 
-        // Starting Hand for both player and boss
-
-        // testing hand
-        // Card bossDraw = bossDeck.drawCard();
-        // System.out.println(bossDraw.getValue() + " of " + bossDraw.getSuit());
         Hand bossHand = new BossHand(bossDeck);
         System.out.println();
         Hand playerHand = new PlayerHand(playerDeck);
         // System.out.println(bossHand.discard());
 
-        System.out.println("Boss Cards remaining: " + bossDeck.getDeckLength());
 
-        System.out.println("Special Check for Players:" + playerDeck.getDeckLength());
+        System.out.println("You are left with :" + playerDeck.getDeckLength() + " cards");
 
-        // shuffle the decks
+        System.out.println("=========================================");
+        System.out.println("Enter your hand: ");
+        gameDisplay(playerHand);
+        System.out.println("=========================================");
+
+        
 
         // TODO: once both decks are made, pass both decks into a game display method
         // toDoMethod(playerDeck, bossDeck);
@@ -176,8 +167,34 @@ public class GameController {
     }
 
     // gameDisplay method
-    public void gameDisplay() {
+    public void gameDisplay(Hand playerHand) {
+        List<Card> currentHand = playerHand.getHand();
+        Scanner sc = new Scanner(System.in);
+        String cardsChoice = "";
+       
+        do {
+            System.out.println("=======================================");
+            System.out.println("Enter your card choice: ");
+            System.out.println("=======================================");
+            cardsChoice = sc.nextLine();
+            if (cardsChoice.isEmpty()) {
+                System.out.println("Please enter something!!");
+            }
+            List<Card> out = new ArrayList<>();
+            String[] splitted_cards = cardsChoice.split(" ");
+            for(int i=0; i < splitted_cards.length; i++){
+                out.add(currentHand.get(Integer.parseInt(splitted_cards[i])));
+            }
+            // check if card is correct anot
+            if(Combo.damage(out) != 0){
+                int damage = Combo.damage(out);
+                System.out.println("Your damage is "+ damage);
+                
+            }
+            
+        } while (cardsChoice.isEmpty());
 
+        
     }
 
     public boolean makeNewPlayer(String name) {

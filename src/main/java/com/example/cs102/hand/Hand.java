@@ -25,6 +25,10 @@ public class Hand {
         // showHand();
     }
 
+    public List<Card> getHand() {
+        return currentHand;
+    }
+
     // add to hand
     public void addToHand(Card card) {
         if (currentHand.size() < maxHand) {
@@ -51,6 +55,8 @@ public class Hand {
         // remove based on old index list
 
     }
+
+    
 
     // show hand
     public void showHand() {
