@@ -145,14 +145,17 @@ public class GameController {
             while (selectedBoss == null) {
             System.out.printf("Enter Difficulty:\n" );
             List<Boss> bosses=bossDAO.retrieveBosses();
-            for (Boss boss: bosses){
-                String bossName=boss.getName();
-                String difficulty= boss.getDifficulty();
-                System.out.println("Name: "+bossName+ " ,Difficulty = " + difficulty);
-            };
+            for(int i=0;i<bosses.size();i++){
+                String bossName=bosses.get(i).getName();
+                String difficulty= bosses.get(i).getDifficulty();
+                int number=1+i;
+                System.out.println(": Name: "+bossName+ " ,Difficulty = " + difficulty+". Press "+number);
+            }
 
-            String userInput=scanner.next().toUpperCase();
-            selectedBoss =bossDAO.retrieve(userInput);
+                scanner.nextLine();
+            int userInput=scanner.nextInt();
+            String difficultyString= translateDifficulty(userInput);
+            selectedBoss =bossDAO.retrieve(difficultyString);
                 if (selectedBoss == null) {
                     System.out.println("Invalid difficulty. Please try again.\n");
                 }   
@@ -161,7 +164,21 @@ public class GameController {
             return selectedBoss;
 
             }
+    public static String translateDifficulty(int userInput){
+        if(userInput==1){
+            return "EASY";
+        }
+        if(userInput==2){
+            return "NORMAL";
+        }
+        if(userInput==3){
+            return "HARD";
+        }
+        else{
+            return null;
+        }
 
+    } 
 
         //gameDisplay method
     public void gameDisplay(){
