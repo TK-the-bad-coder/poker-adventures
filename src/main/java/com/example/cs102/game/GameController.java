@@ -121,7 +121,7 @@ public class GameController {
          Hand bossHand= new Hand(bossDeck);
          System.out.println();
          Hand playerHand= new Hand(playerDeck);
-        System.out.println(bossHand.discard(0));
+        // System.out.println(bossHand.discard());
 
         
         System.out.println("Boss Cards remaining: " + bossDeck.getDeckLength());

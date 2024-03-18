@@ -3,7 +3,7 @@ package com.example.cs102.hand;
 import com.example.cs102.poker.Card;
 import com.example.cs102.poker.Deck;
 import java.util.*;
-public class Hand implements Discard{
+public class Hand{
     private List<Card> currentHand;
     private final int maxHand=10;
     //create Hand
