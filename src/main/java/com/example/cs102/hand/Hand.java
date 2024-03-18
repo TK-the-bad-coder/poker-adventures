@@ -46,10 +46,7 @@ public class Hand implements Discard{
 
 //show hand
     public void showHand(){
-        
-        
         for(Card card:currentHand){
-            
             System.out.print(card.getValue() + " of " + card.getSuit()+", ");
         }
     }
