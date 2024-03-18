@@ -10,3 +10,4 @@ public class SuitComparator implements Comparator <Card>{
         return card1.getValue() - card2.getValue();
     }
 }
+

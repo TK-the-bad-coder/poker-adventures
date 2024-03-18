@@ -29,54 +29,15 @@ public class GameController {
         playerDAO = new PlayerDAO();
         bossDAO = new BossDAO();
     }
-
-    public void readOption() {
-        Scanner sc = new Scanner(System.in);
-        int choice;
-
-        do {
-            display();
-            choice = 0;
-            try {
-                choice = sc.nextInt();
-                switch (choice) {
-                    case 1:
-                        start("abc");
-                        break;
-
-                    case 2:
-                        System.out.println("Bye Bye");
-                        break;
-
-                    default:
-                        System.out.println("Enter a number 1 or 2");
-                }
-            } catch (InputMismatchException e) {
-                System.out.println("Please enter a number");
-                sc.next();
-            }
-        } while (choice != 2);
-
-    }
-
-    public void display() {
-        System.out.println("=======================================");
-        System.out.println("Welcome to Poker Adventure!");
-        System.out.println("=======================================");
-        System.out.println("1: Start Game");
-        System.out.println("2: Quit App");
-        System.out.print("Please enter your choice: ");
-    }
-
     public void displayPlayers() {
         // playerDAO // may not be used
     }
 
-    public void start(String name) {
+    public void loadPlayer(String name) {
 
         // List<Player> players = playerDAO.retrievePlayers();
-        Player player = playerDAO.retrieve(name); // assuming the name exists!
-        // System.out.println(player);
+        Player player = playerDAO.retrieve(name); 
+        // if the player is not in the database
         if (player == null) {
             if (!makeNewPlayer(name)) {
                 return;
@@ -92,25 +53,17 @@ public class GameController {
         // new dc every time a game begins!
         DeckController deckControl = new DeckController(cards);
         cards = deckControl.initCards();
-        // ArrayList<Card> cards = deckControl.getCards();
 
         // make deck for player
         Deck playerDeck = new Deck(new ArrayList<>(cards));
         // make deck for enemy
         Deck bossDeck = new Deck(new ArrayList<>(cards));
 
+        // Starting Hand for both player and boss
         Hand bossHand = new BossHand(bossDeck);
         System.out.println();
         Hand playerHand = new PlayerHand(playerDeck);
-        // System.out.println(bossHand.discard());
-
-        System.out.println("You are left with :" + playerDeck.getDeckLength() + " cards");
-
-        System.out.println("=========================================");
-        System.out.println("Enter your hand: ");
         gameDisplay(playerHand);
-        System.out.println("=========================================");
-
         // TODO: once both decks are made, pass both decks into a game display method
         // toDoMethod(playerDeck, bossDeck);
 

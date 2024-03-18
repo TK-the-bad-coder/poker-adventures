@@ -10,3 +10,4 @@ public class ValueComparator implements Comparator <Card>{
         return (int)(card1.getSuit() - card2.getSuit());
     }
 }
+
