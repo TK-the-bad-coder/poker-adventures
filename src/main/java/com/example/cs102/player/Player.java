@@ -43,6 +43,13 @@ public class Player {
     public String getName() {
         return name;
     }
+    
+    public boolean isDead(){
+        if(hp < 0){
+            return true;
+        }
+        return false;
+    }
 
     // private final static MAX_CARDS = 10;
 }
