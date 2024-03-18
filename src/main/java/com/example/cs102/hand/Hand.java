@@ -3,7 +3,7 @@ package com.example.cs102.hand;
 import com.example.cs102.poker.Card;
 import com.example.cs102.poker.Deck;
 import java.util.*;
-public class Hand {
+public class Hand implements Discard{
     private List<Card> currentHand;
     private final int maxHand=10;
     //create Hand
@@ -23,6 +23,7 @@ public class Hand {
         }
     }
 //figure out a way to remove card from hand
+    
     public void discard(String input){
         
         //split input
@@ -32,11 +33,11 @@ public class Hand {
 
         //add to temp storage
         List<Card> temp= new ArrayList<>();
-        for(Card card:currentHand){
-            for()
-            if
-            temp.add(card);
-        }
+        // for(Card card:currentHand){
+        //     for()
+        //     if
+        //     temp.add(card);
+        // }
 
         //remove based on old index list
         
@@ -52,4 +53,5 @@ public class Hand {
             System.out.print(card.getValue() + " of " + card.getSuit()+", ");
         }
     }
+
 }

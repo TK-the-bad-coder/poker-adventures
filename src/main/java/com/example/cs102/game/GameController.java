@@ -164,7 +164,7 @@ public class GameController {
 
 
         //gameDisplay method
-    public void GameDisplay(){
+    public void gameDisplay(){
 
     }
     public boolean makeNewPlayer(String name){
@@ -181,13 +181,15 @@ public class GameController {
             }
             else if ( input.equals("y") || input.equals("Y")){
                 playerDAO.addPlayer(name);
-
+                sc1.close();
                 return true;
 
             } else{
                 System.out.println("Please enter a valid input");
             }
         } while(!isValid);
+
+        // sc1.close();
 
         return false;
     }
