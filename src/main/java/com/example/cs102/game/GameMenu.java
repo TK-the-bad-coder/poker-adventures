@@ -2,7 +2,12 @@ package com.example.cs102.game;
 
 import java.util.InputMismatchException;
 import java.util.Scanner;
+import java.util.List;
 
+import com.example.cs102.Exceptions.BossNotFoundException;
+import com.example.cs102.Exceptions.PlayerNotFoundException;
+import com.example.cs102.player.Player;
+import com.example.cs102.boss.Boss;
 public class GameMenu {
     private GameController controller;
 
@@ -63,24 +68,73 @@ public class GameMenu {
             }
         } while (name.isEmpty());
         // should retrieve whether the player exists or not.... do later
+        try{
+            Player player = this.controller.login(name);
+            welcome(player);
+        }
+        catch (PlayerNotFoundException e){
+            makeNewPlayer(name);
+        }
 
-        this.controller.loadPlayer(name);
+    }
         // make deck for player
 
         // make deck for enemy
 
         // shuffle the decks
 
+    
+
+    public void makeNewPlayer(String name){
+        boolean isValid = true;
+        do {
+            System.out.println("Would you like to make a new account? y/n");
+            Scanner sc = new Scanner(System.in);
+            String input = sc.next().toLowerCase();
+
+            if (input.equals("n")){
+                System.out.println("Ok, exiting to main menu.");
+            } else if (input.equals("y")){
+                Player player = this.controller.makeNewPlayer(name);
+                welcome(player);
+            } else {
+                isValid = false;
+                System.out.println("Please enter a valid input");
+            }
+        } while(!isValid);
     }
 
-    public void displayGame() {
-        System.out.println("=======================================");
-        System.out.println("Choose your character!");
-        System.out.println("=======================================");
-        System.out.println("1: Yeow Leong");
-        System.out.println("2: Lay Foo");
-        System.out.println("3: Quit App");
-        System.out.print("Please enter your choice: ");
+
+    public void welcome(Player player){
+        System.out.println("===================================");
+        System.out.printf("Welcome to Poker Adventure, %s!\r\n" , player.getName());
+        selectBoss();
     }
 
+    public void selectBoss(){
+        Scanner sc = new Scanner(System.in);
+        boolean isValid = false;
+        do{
+            showBosses();
+            System.out.println("Enter Choice of opponent:");
+            try{
+                int choice = Integer.parseInt(sc.next());
+                Boss boss = this.controller.selectBoss(choice);
+                isValid = true;
+            } catch (NumberFormatException e){
+                System.out.println("Please enter a number");
+            } catch (BossNotFoundException e){
+                System.out.println("Please enter a valid id");
+            }
+
+        } while (!isValid);
+    }
+
+
+    public void showBosses(){
+        List <Boss> bosses = this.controller.loadBosses();
+        for (Boss boss : bosses){
+            System.out.println(boss);
+        }
+    }
 }
