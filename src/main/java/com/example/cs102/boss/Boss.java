@@ -1,19 +1,20 @@
 package com.example.cs102.boss;
 
 public class Boss{
-    private String difficulty;
 
+    private int id;
     private String name;
     private double atkMultiplier;
     private int hp;
-
+    private String difficulty;
 
     //create boss
-    public Boss(String difficulty, String name,double atkMultiplier,int hp) {
-        this.difficulty = difficulty;
+    public Boss(int id, String name,double atkMultiplier,int hp, String difficulty) {
+        this.id = id;
         this.name = name;
         this.atkMultiplier=atkMultiplier;
         this.hp= hp;
+        this.difficulty = difficulty;
     }
 
 
@@ -25,7 +26,6 @@ public class Boss{
         this.hp = hp;
     }
 
-
     public String getName() {
         return name;
     }
@@ -35,5 +35,17 @@ public class Boss{
 
     public double getAtkMultiplier(){
         return atkMultiplier;
+    }
+
+    public int getId(){
+        return id;
+    }
+    public String toString(){
+        String result = "";
+        result += id ;
+        result += ") Name: " + name;
+        result +=", Difficulty = " + difficulty;
+        result +=" Press "+ id;
+        return result;
     }
 }
