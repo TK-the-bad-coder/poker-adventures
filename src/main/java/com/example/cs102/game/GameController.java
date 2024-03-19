@@ -26,11 +26,15 @@ public class GameController {
     private PlayerDAO playerDAO;
     private BossDAO bossDAO;
 
+    private Player player;
+    private Boss boss;
+
     public GameController() {
         // this.service = service;
         playerDAO = new PlayerDAO();
         bossDAO = new BossDAO();
     }
+
     public void displayPlayers() {
         // playerDAO // may not be used
     }
@@ -38,7 +42,7 @@ public class GameController {
     public Player login(String name) {
 
         // List<Player> players = playerDAO.retrievePlayers();
-        Player player = playerDAO.retrieve(name); 
+        player = playerDAO.retrieve(name);
         // if the player is not in the database
         if (player == null) {
             throw new PlayerNotFoundException();
@@ -59,39 +63,82 @@ public class GameController {
 
     // gameDisplay method -- to move all the prints into menu
     // logic stays here
-    public void gameDisplay(Hand playerHand) {
+    public void gameDisplay(PlayerHand playerHand, BossHand bossHand) {
         List<Card> currentHand = playerHand.getHand();
         Scanner sc = new Scanner(System.in);
         String cardsChoice = "";
+
+        int bossHP = boss.getHp();
+        int playerHP = boss.getHp();
         // line 124 to line 131 should be in menu
-        do {
-            System.out.println("=======================================");
-            System.out.println("Enter your card choice: ");
-            System.out.println("=======================================");
-            cardsChoice = sc.nextLine();
-            if (cardsChoice.isEmpty()) {
-                System.out.println("Please enter something!!");
-            }
-            List<Card> out = new ArrayList<>();
-            String[] splitted_cards = cardsChoice.split(" ");
-            for (int i = 0; i < splitted_cards.length; i++) {
-                out.add(currentHand.get(Integer.parseInt(splitted_cards[i])));
-            }
-            // check if hand selection is correct anot
-            if (Combo.damage(out) != 0) {
-                // if hand selection is correct, deal damage
-                int damage = Combo.damage(out);
-                playerHand.discard(out);
-                System.out.println("Your damage is " + damage); 
+        while (bossHP > 0 && playerHP > 0) {
+            playerHand.showHand();
+            do {
+                // System.out.println("Type 'q' to flee!");
+                System.out.println("======================================================");
+                System.out.println("Select your card choice(s) below or type 'q' to flee: ");
+                System.out.println("======================================================");
+                System.out.print("Cards (separate it by a space)> ");
+                cardsChoice = sc.nextLine();
+                if (cardsChoice.isEmpty()) {
+                    System.out.println("Please enter something!!");
+                } else if (cardsChoice.equals("q")) {
+                    System.out.println("The boss laughs at you as you flee back to the main menu...");
+                    return;
+                }
+                List<Card> out = new ArrayList<>();
+                String[] splitted_cards = cardsChoice.split(" ");
+                for (int i = 0; i < splitted_cards.length; i++) {
+                    out.add(currentHand.get(Integer.parseInt(splitted_cards[i])));
+                }
+                // check if hand selection is correct anot
+                if (Combo.damage(out) != 0) {
+                    // if hand selection is correct, deal damage
+                    int damage = Combo.damage(out);
+                    System.out.println("You played the following hand:");
+                    playerHand.discard(out);
+                    
+                    playerHand.addToHand();
+                    // update the current hand
+                    
+                    currentHand = playerHand.getHand();
+                    System.out.println("Your damage is " + damage);
+                    // System.out.println("\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014");
+                    System.out.println("=======================================");
 
-            }
+                    bossHP -= damage;
+                    bossMove(bossHand, damage);
+                }
 
-        } while (cardsChoice.isEmpty());
+            } while (cardsChoice.isEmpty());
+        }
 
     }
 
     public Player makeNewPlayer(String name) {
         this.playerDAO.addPlayer(name);
         return login(name);
+    }
+
+    private int bossMove(Hand bossHand, int playerDamage) {
+        int discardSize = 1;
+        List<Card> bossChoice = new ArrayList<>();
+        if (playerDamage >= 15) {
+            // boss will discard five card if possible!
+            discardSize = 5;
+        }
+
+        switch (boss.getDifficulty()) {
+            case "EASY":
+                // aim for up to two pairs
+                return 1;
+            // break;
+            case "NORMAL":
+                // aim for up to
+                break;
+            case "HARD":
+                break;
+        }
+        return Combo.damage(bossChoice);
     }
 }
