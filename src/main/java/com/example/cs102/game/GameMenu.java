@@ -128,6 +128,8 @@ public class GameMenu {
             }
 
         } while (!isValid);
+
+        controller.startGame();
     }
 
 

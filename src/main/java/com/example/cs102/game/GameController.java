@@ -63,10 +63,21 @@ public class GameController {
 
     // gameDisplay method -- to move all the prints into menu
     // logic stays here
-    public void gameDisplay(PlayerHand playerHand, BossHand bossHand) {
+    public void startGame() {
+
+        List<Card> cards = new ArrayList<>();
+        // new dc every time a game begins!
+        DeckController deckControl = new DeckController(cards); 
+        cards = deckControl.initCards();
+    
+        Deck playerDeck = new Deck(new ArrayList<>(cards));
+
+        Deck bossDeck = new Deck(new ArrayList<>(cards));
+
+        PlayerHand playerHand = new PlayerHand(playerDeck);
+        BossHand bossHand = new BossHand(bossDeck);
         List<Card> currentHand = playerHand.getHand();
         Scanner sc = new Scanner(System.in);
-        String cardsChoice = "";
 
         int bossHP = boss.getHp();
         int playerHP = boss.getHp();
@@ -74,6 +85,8 @@ public class GameController {
         while (bossHP > 0 && playerHP > 0) {
             playerHand.showHand();
             do {
+                // print logic goes to Menu
+                // pass in cardChoice to another method
                 // System.out.println("Type 'q' to flee!");
                 System.out.println("======================================================");
                 System.out.println("Select your card choice(s) below or type 'q' to flee: ");
@@ -86,6 +99,7 @@ public class GameController {
                     System.out.println("The boss laughs at you as you flee back to the main menu...");
                     return;
                 }
+                // this should be a method to call the cards
                 List<Card> out = new ArrayList<>();
                 String[] splitted_cards = cardsChoice.split(" ");
                 for (int i = 0; i < splitted_cards.length; i++) {
@@ -109,6 +123,7 @@ public class GameController {
                     bossHP -= damage;
                     bossMove(bossHand, damage);
                 }
+                // return the outcome to menu
 
             } while (cardsChoice.isEmpty());
         }
