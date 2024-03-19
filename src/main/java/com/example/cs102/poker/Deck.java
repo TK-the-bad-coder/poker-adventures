@@ -7,6 +7,7 @@ import java.util.List;
 public class Deck {
     private List<Card> cards;
     private List<Card> usedCards = new ArrayList<>();
+    private int refreshCount = 0;
 
     public Deck(List<Card> cards) {
         this.cards = cards;
@@ -19,14 +20,18 @@ public class Deck {
     }
 
     public Card drawCard() {
-        if (cards.size() > 0) {
-            Card toReturn = cards.get(0);
-            usedCards.add(toReturn);
-            cards.remove(0);
-            return toReturn;
+        // players can refresh their deck up to twice
+        if (getDeckLength() == 0 && refreshCount != 2) {
+            refreshDeck();
+            refreshCount++;
         }
+        Card toReturn = cards.get(0);
+        usedCards.add(toReturn);
+        cards.remove(0);
+        return toReturn;
+
         // no cards left to draw
-        return null;
+        // return null;
     }
 
     public int getDeckLength() {
@@ -34,7 +39,7 @@ public class Deck {
     }
 
     // if current deck is empty, fill up all the cards that has been used
-    public void refreshDeck() {
+    private void refreshDeck() {
         for (Card card : usedCards) {
             this.cards.add(card);
         }
@@ -45,7 +50,5 @@ public class Deck {
     private void shuffleDeck() {
         Collections.shuffle(cards);
     }
-
-    
 
 }

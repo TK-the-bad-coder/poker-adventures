@@ -30,22 +30,23 @@ public class Hand {
 
     // add to hand
     public void addToHand() {
-        while (currentHand.size() <= MAXHAND) {
+        while (currentHand.size() < MAXHAND) {
             currentHand.add(deck.drawCard());
         }
-        // if (currentHand.size() < maxHand) {
-        // currentHand.add(card);
-        // }
     }
     // figure out a way to remove card from hand
 
     public void discard(List<Card> cards) {
         currentHand = currentHand.stream().filter(card -> !cards.contains(card)).collect(Collectors.toList());
-
+        showDiscards(cards);
     }
 
-    private void displayDiscards(List<Card> cards) {
-        
+    private void showDiscards(List<Card> cards) {
+        for (Card card : cards) {
+            System.out.print("|");
+            System.out.print(card.getSpecialOutput());
+        }
+        System.out.print("|\n");
     }
 
 }
