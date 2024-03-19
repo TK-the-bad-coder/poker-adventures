@@ -201,7 +201,7 @@ public class Combo {
     private static boolean isRoyalFlush() {
         // differentiate between straight flush vs Royal flush
         if (cards.get(0).getValue() == 10 && cards.get(4).getValue() == 14) {
-            return isFlush() && isStraight()
+            return isFlush() && isStraight();
         }
         return false;
     }

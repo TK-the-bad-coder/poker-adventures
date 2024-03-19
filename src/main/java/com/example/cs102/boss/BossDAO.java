@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
 
-import com.example.cs102.player.Player;
+import com.example.cs102.Exceptions.BossNotFoundException;
 
 // @Service
 public class BossDAO {
@@ -32,7 +32,7 @@ public class BossDAO {
             sc.useDelimiter(",|\n|\r\n");
             while (sc.hasNext()) {
                 // System.out.println(sc.next());
-                bosses.add(new Boss(sc.next(), sc.next(),sc.nextDouble(), sc.nextInt()));
+                bosses.add(new Boss(sc.nextInt(),sc.next(),sc.nextDouble(), sc.nextInt(),sc.next()));
             }
         } catch (FileNotFoundException e) {
             System.out.println("Shag, file maybe not found ah...");
@@ -50,12 +50,12 @@ public class BossDAO {
     }
 
     // returns a single boss object based on difficulty selected,
-    public Boss retrieve(String difficulty) {
-       
-        Optional<Boss> selectedBoss = bosses.stream().filter(boss -> boss.getDifficulty().equals(difficulty)).findFirst();
-
-        return selectedBoss.orElse(null);
-  
+    public Boss retrieve(int id) {
+       List<Boss> bosses = retrieveBosses(); 
+        if (id > bosses.size()){
+            throw new BossNotFoundException();
+        }
+        return bosses.get(id - 1);
     }
 
 }
