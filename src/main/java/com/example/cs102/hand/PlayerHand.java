@@ -8,13 +8,12 @@ public class PlayerHand extends Hand {
 
     public PlayerHand(Deck deck) {
         super(deck);
-        // currentHand.sort(new ValueComparator());
+        currentHand.sort(new ValueComparator());
         // showHand();
     }
 
     // show hand
     public void showHand() {
-        currentHand.sort(new ValueComparator());
         for (Card card : currentHand) {
             System.out.print("|");
             System.out.print(card.getSpecialOutput());

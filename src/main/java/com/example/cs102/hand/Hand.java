@@ -38,15 +38,8 @@ public class Hand {
 
     public void discard(List<Card> cards) {
         currentHand = currentHand.stream().filter(card -> !cards.contains(card)).collect(Collectors.toList());
-        showDiscards(cards);
     }
 
-    private void showDiscards(List<Card> cards) {
-        for (Card card : cards) {
-            System.out.print("|");
-            System.out.print(card.getSpecialOutput());
-        }
-        System.out.print("|\n");
-    }
+
 
 }

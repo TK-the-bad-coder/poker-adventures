@@ -5,17 +5,21 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 import java.util.List;
 
+import com.example.cs102.Comparators.SuitComparator;
 import com.example.cs102.Comparators.ValueComparator;
 import com.example.cs102.Exceptions.BossNotFoundException;
 import com.example.cs102.Exceptions.PlayerNotFoundException;
 import com.example.cs102.player.Player;
 import com.example.cs102.poker.Card;
+import com.example.cs102.poker.Combo;
 import com.example.cs102.poker.Deck;
 import com.example.cs102.poker.DeckController;
 import com.example.cs102.boss.Boss;
 import com.example.cs102.hand.BossHand;
 import com.example.cs102.hand.PlayerHand;
+
 public class GameMenu {
+    private static final char SQUARE = '\u25a0';
     private GameController controller;
 
     public GameMenu(GameController controller) {
@@ -160,20 +164,134 @@ public class GameMenu {
         List<Card> currentHand = playerHand.getHand();
         Scanner sc = new Scanner(System.in);
 
+        Boss boss = controller.getBoss();
+        Player player = controller.getPlayer();
+        int bossMaxHp = boss.getHp();
+        int playerMaxHp = player.getHp();
+        int bossHp = bossMaxHp;
+        int playerHp = playerMaxHp;
+        while (bossHp > 0 && playerHp > 0){
+            String input = "";
+            boolean turnPlayed = true;
+            do {
+                showGameState(player.getName(),playerMaxHp, playerHp, boss.getName(), bossMaxHp, bossHp);
+                showHand(currentHand);
+                requestPlayerCombo();
+                input = sc.nextLine();
+                if (input.equals("s")){
+                    currentHand.sort(new SuitComparator());
+                    System.out.println("Sorting by suit");
+                }
+                else if (input.equals("v")){
+                    currentHand.sort(new ValueComparator());
+                }
+                else if (input.equals("f")){
+                    System.out.println("The boss laughs at you as you flee to the main menu...");
+                    System.out.println();
+                }
+                else if (input.isEmpty()){
+                    System.out.println("Please enter something");
+                }
+                else {
+                    String [] splittedCards = input.split(" ");
+                    try{
+                        List <Card> out = new ArrayList<>();
+                        // getting the cards selected
+                        for (int i = 0 ; i < splittedCards.length ; i++){
+                            out.add(currentHand.get(Integer.parseInt(splittedCards[i])));
+                        }
+                        // the player played a turn
+                        turnPlayed = true;
+                        int damage = controller.playTurn(out);
+                        //remove the played cards from the hand
+                        playerHand.discard(out);
+                        // display the cards played
+                        
+                        showPlayedHand(out);
+                        // draw cards
+                        playerHand.addToHand();
+                        currentHand = playerHand.getHand();
+                        currentHand.sort(new ValueComparator());
+                        //show damage dealt
+                        System.out.printf("You dealt %d damage to %s\r\n" , damage , boss.getName());
 
+                        bossHp -= damage;
+                        controller.bossMove(bossHand , damage);
+
+                    } catch(InputMismatchException e){
+                        System.out.println("|ERROR| Please enter a valid input");
+                    } catch(ArrayIndexOutOfBoundsException e){
+                        System.out.println("Um... you dont have that many cards ah");
+                    }
+                }
+            } while (!turnPlayed);
+
+        }
+        // someone died already
+        if (playerHp <= 0){
+            System.out.printf("%s laughs over your demise... returning to main menu");
+        }
+        if (bossHp <= 0){
+            System.out.printf("Congratulations! You have defeated %s! Have a cookie\r\n" , boss.getName());
+        }
+        return;
     }
 
-    public void showGameState(int playerMaxHp, int playerHp, int BossMaxHp, int bossHp){
-        
+    public void showGameState(String playerName,int playerMaxHp, int playerHp, String bossName,int bossMaxHp, int bossHp){
+        System.out.println("=======================================");
+        System.out.println(playerName + ":");
+        System.out.println("Health" + playerHp + "/" + playerMaxHp);
+        showHealthBar(playerHp, playerMaxHp);
+        System.out.println("=======================================");
+        System.out.println(bossName + ":");
+        System.out.println("Health" + bossHp + "/" + bossMaxHp);
+        showHealthBar(bossHp , bossMaxHp);
+        System.out.println("=======================================");
     }
+
+    // showing cards--------------------------------------------------------------------------------------------------
     public void showHand(List <Card> currentHand) {
-        currentHand.sort(new ValueComparator());
         for (Card card : currentHand) {
             System.out.print("|");
             System.out.print(card.getSpecialOutput());
         }
         System.out.print("|\n");
         System.out.println("| 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 |");
+        System.out.println("Enter 's' to sort by suit");
+        System.out.println("Enter 'v' to sort by value");
+    }
 
+    public void showPlayedHand(List <Card> hand){
+        System.out.println("You played the following hand:");
+        showDiscards(hand);
+        
+    }
+    // displaying game states------------------------------------------------------------------------------------------
+    public void showHealthBar(int hp, int maxHp){
+        System.out.print("|");
+        int numBars = hp * 30 /maxHp;
+        for (int i = 0 ; i < 30 ; i++){
+            if (i < numBars){
+                System.out.print(SQUARE);
+            }
+            else{
+                System.out.print(" ");
+            }
+        }
+        System.out.println("|");
+    }
+
+    private void requestPlayerCombo(){
+        System.out.println("======================================================");
+        System.out.println("Select your card choice(s) below or type 'f' to flee: ");
+        System.out.println("======================================================");
+        System.out.print("Cards (separate it by a space)> ");
+    }
+    private void showDiscards(List<Card> cards) {
+        for (Card card : cards) {
+            System.out.print("|");
+            System.out.print(card.getSpecialOutput());
+        }
+        System.out.println("|");
     }
 }
