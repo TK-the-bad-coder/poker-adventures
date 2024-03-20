@@ -1,13 +1,20 @@
 package com.example.cs102.game;
 
+import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 import java.util.List;
 
+import com.example.cs102.Comparators.ValueComparator;
 import com.example.cs102.Exceptions.BossNotFoundException;
 import com.example.cs102.Exceptions.PlayerNotFoundException;
 import com.example.cs102.player.Player;
+import com.example.cs102.poker.Card;
+import com.example.cs102.poker.Deck;
+import com.example.cs102.poker.DeckController;
 import com.example.cs102.boss.Boss;
+import com.example.cs102.hand.BossHand;
+import com.example.cs102.hand.PlayerHand;
 public class GameMenu {
     private GameController controller;
 
@@ -108,18 +115,20 @@ public class GameMenu {
     public void welcome(Player player){
         System.out.println("===================================");
         System.out.printf("Welcome to Poker Adventure, %s!\r\n" , player.getName());
+        controller.initPlayer(player);
         selectBoss();
     }
 
     public void selectBoss(){
         Scanner sc = new Scanner(System.in);
         boolean isValid = false;
+        Boss boss = null;
         do{
             showBosses();
             System.out.println("Enter Choice of opponent:");
             try{
                 int choice = Integer.parseInt(sc.next());
-                Boss boss = this.controller.selectBoss(choice);
+                boss = this.controller.selectBoss(choice);
                 isValid = true;
             } catch (NumberFormatException e){
                 System.out.println("Please enter a number");
@@ -128,15 +137,43 @@ public class GameMenu {
             }
 
         } while (!isValid);
-
-        controller.startGame();
+        controller.initBoss(boss);
+        startGame();
     }
-
-
     public void showBosses(){
         List <Boss> bosses = this.controller.loadBosses();
         for (Boss boss : bosses){
             System.out.println(boss);
         }
+    }
+
+    public void startGame(){
+        List<Card> cards = new ArrayList<>();
+        DeckController deckControl = new DeckController(cards); 
+        cards = deckControl.initCards();
+
+        Deck playerDeck = new Deck(new ArrayList<>(cards));
+        Deck bossDeck = new Deck(new ArrayList<>(cards));
+
+        PlayerHand playerHand = new PlayerHand(playerDeck);
+        BossHand bossHand = new BossHand(bossDeck);
+        List<Card> currentHand = playerHand.getHand();
+        Scanner sc = new Scanner(System.in);
+
+
+    }
+
+    public void showGameState(int playerMaxHp, int playerHp, int BossMaxHp, int bossHp){
+        
+    }
+    public void showHand(List <Card> currentHand) {
+        currentHand.sort(new ValueComparator());
+        for (Card card : currentHand) {
+            System.out.print("|");
+            System.out.print(card.getSpecialOutput());
+        }
+        System.out.print("|\n");
+        System.out.println("| 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 |");
+
     }
 }

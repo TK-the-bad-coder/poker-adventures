@@ -54,24 +54,40 @@ public class GameController {
     public Boss selectBoss(int n) {
 
         Boss boss = bossDAO.retrieve(n);
-
+        if (boss == null){
+            throw new BossNotFoundException();
+        }
         return boss;
         }
+
+
     public List<Boss> loadBosses(){
         return bossDAO.retrieveBosses();
     }
 
+    //loading the player and boss into the controller
+    public void initPlayer(Player player){
+        this.player = player;
+    }
+    public void initBoss(Boss boss){
+        this.boss = boss;
+    }
+
+    public Boss getBoss(){
+        return boss;
+    }
+    public Player getPlayer(){
+        return player;
+    }
     // gameDisplay method -- to move all the prints into menu
     // logic stays here
     public void startGame() {
 
         List<Card> cards = new ArrayList<>();
-        // new dc every time a game begins!
         DeckController deckControl = new DeckController(cards); 
         cards = deckControl.initCards();
-    
-        Deck playerDeck = new Deck(new ArrayList<>(cards));
 
+        Deck playerDeck = new Deck(new ArrayList<>(cards));
         Deck bossDeck = new Deck(new ArrayList<>(cards));
 
         PlayerHand playerHand = new PlayerHand(playerDeck);
@@ -84,6 +100,7 @@ public class GameController {
         // line 124 to line 131 should be in menu
         while (bossHP > 0 && playerHP > 0) {
             playerHand.showHand();
+            String cardsChoice = "";
             do {
                 // print logic goes to Menu
                 // pass in cardChoice to another method
@@ -117,8 +134,7 @@ public class GameController {
                     
                     currentHand = playerHand.getHand();
                     System.out.println("Your damage is " + damage);
-                    // System.out.println("\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014");
-                    System.out.println("=======================================");
+                    System.out.println("========================================");
 
                     bossHP -= damage;
                     bossMove(bossHand, damage);

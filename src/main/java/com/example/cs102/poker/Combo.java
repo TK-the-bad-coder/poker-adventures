@@ -38,12 +38,10 @@ public class Combo {
             }
 
         } else if (cardSize == 5) {
-            if (isTwoPair()) {
-                return TWO_PAIR;
-            }
+
 
             // this have to go first
-            else if (isRoyalFlush()) {
+            if (isRoyalFlush()) {
                 return ROYAL_FLUSH;
             }
 
@@ -69,6 +67,9 @@ public class Combo {
 
             else if (isThreeOfKind()) {
                 return THREE_OF_A_KIND;
+            }
+            if (isTwoPair()) {
+                return TWO_PAIR;
             }
             // user botched cases
             else if (isOnePair()) {
@@ -141,7 +142,6 @@ public class Combo {
         for (int i = 1; i < cardCheck; i++) {
             if (cards.get(i - 1).getValue() - cards.get(i).getValue() != -1) {
                 return false;
-
             }
         }
 

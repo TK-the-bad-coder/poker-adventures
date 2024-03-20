@@ -21,11 +21,6 @@ public class DeckController {
                 cards.add(new Card(suit, i));
             }
         });
-        // for (Character entry : suits.entrySet()) {
-        //     for (int i = 2; i <= 14; i++) {
-        //         cards.add(new Card(suit, i));
-        //     }
-        // }
         return cards;
     }
 }
