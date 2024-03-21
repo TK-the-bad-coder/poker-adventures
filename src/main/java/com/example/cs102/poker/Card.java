@@ -74,4 +74,9 @@ public class Card implements Comparable<Card>{
         int cmp = getValue() - anotherCard.getValue();
         return cmp;
     }
+
+    @Override
+    public String toString() {
+        return String.format("[Card Value=" + getValue() + ",Suit=" + getSuit() + "]\n");
+    }
 }

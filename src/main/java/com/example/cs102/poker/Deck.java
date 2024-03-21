@@ -15,23 +15,29 @@ public class Deck {
     }
 
     public List<Card> getCards() {
-        cards = new ArrayList<>(cards);
-        return cards;
+        // cards = new ArrayList<>(cards);
+        return cards == null ? new ArrayList<Card>() : cards;
     }
 
     public Card drawCard() {
         // players can refresh their deck up to twice
+
+        Card toReturn = null;
+
+        // System.out.println(cards.toString());
+        // cards.remove(0);
         if (getDeckLength() == 0 && refreshCount != 2) {
             refreshDeck();
             refreshCount++;
         }
-        Card toReturn = cards.get(0);
-        usedCards.add(toReturn);
-        cards.remove(0);
+        toReturn = cards.remove(0);
+
         return toReturn;
 
-        // no cards left to draw
-        // return null;
+    }
+
+    public void addToDiscardPile(Card card) {
+        usedCards.add(card);
     }
 
     public int getDeckLength() {
@@ -40,11 +46,17 @@ public class Deck {
 
     // if current deck is empty, fill up all the cards that has been used
     private void refreshDeck() {
+        System.out.println("===========DECK REFRESHED==========" + usedCards.size());
         for (Card card : usedCards) {
-            this.cards.add(card);
+            cards.add(card);
         }
         shuffleDeck();
         usedCards.clear();
+
+    }
+
+    public int getUsedLength() {
+        return usedCards.size();
     }
 
     private void shuffleDeck() {
