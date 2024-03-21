@@ -5,9 +5,13 @@ package com.example.cs102.poker;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
+import com.example.cs102.Exceptions.InvalidHandException;
+import com.example.cs102.Exceptions.DuplicateCardException;
 public class Combo {
 
     private static final int SINGLE_HAND = 1;
@@ -238,5 +242,15 @@ public class Combo {
             return freqCompare;
         });
     }
-
+    public static void handChecker(List<Card> hand){
+        int handSize = hand.size();
+        if (handSize != 1 && handSize != 2 && handSize != 5 ){
+            throw new InvalidHandException();
+        }
+        // checking for duplicates
+        Set <Card> handSet= new HashSet<Card>(hand);
+        if (handSet.size() != hand.size()){
+            throw new DuplicateCardException();
+        }
+    }
 }

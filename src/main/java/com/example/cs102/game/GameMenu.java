@@ -8,6 +8,7 @@ import java.util.List;
 import com.example.cs102.Comparators.SuitComparator;
 import com.example.cs102.Comparators.ValueComparator;
 import com.example.cs102.Exceptions.BossNotFoundException;
+import com.example.cs102.Exceptions.InvalidHandException;
 import com.example.cs102.Exceptions.PlayerNotFoundException;
 import com.example.cs102.player.Player;
 import com.example.cs102.poker.Card;
@@ -193,6 +194,7 @@ public class GameMenu {
                         for (int i = 0; i < splittedCards.length; i++) {
                             out.add(currentHand.get(Integer.parseInt(splittedCards[i])));
                         }
+                        Combo.handChecker(out);
                         // the player played a turn
                         turnPlayed = true;
                         int damage = controller.playTurn(out);
@@ -213,10 +215,16 @@ public class GameMenu {
 
                     } catch (IndexOutOfBoundsException e) {
                         System.out.println("Um... you dont have that many cards ah");
-                    } catch (NumberFormatException e) {
+                        
+                    }
+                     catch (InvalidHandException e){
+                        System.out.println("Hand should only contain either 1, 2 or 5 cards");
+                        System.out.println(e.getMessage());
+                        InvalidHandException.showValidChoices();
+                    }
+                    catch (NumberFormatException e) {
                         System.out.println("|ERROR| Please enter a valid input");
-                        System.out.println("A valid input looks something like this");
-                        System.out.println("0 1 2 3 4");
+                        InvalidHandException.showValidChoices();
                     }
                 }
 
