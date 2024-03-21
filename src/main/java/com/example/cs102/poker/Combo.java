@@ -101,7 +101,7 @@ public class Combo {
 
     private static boolean isOnePair() {
         // only used when someone keys in 5 cards 
-        for (int i = 0; i < 5; i ++) {
+        for (int i = 0; i < 4; i ++) {
             if (isPair(cards.get(i), cards.get(i + 1))) {
                 return true;
             }
@@ -136,7 +136,7 @@ public class Combo {
         // i = 4 - this is ace, 14, ignore it
         int cardCheck = 5;
         // if the last card is 14, check only the first 4 cards
-        if (cards.get(4).getValue() == 14) {
+        if (cards.get(4).getValue() == 14 && cards.get(0).getValue() == 2) {
             cardCheck = 4;
         }
         for (int i = 1; i < cardCheck; i++) {
