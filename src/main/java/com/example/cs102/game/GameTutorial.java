@@ -1,6 +1,7 @@
 
 package com.example.cs102.game;
 import com.example.cs102.boss.*;
+import com.example.cs102.player.*;
 import java.util.Scanner;
 
 public class GameTutorial {
@@ -39,9 +40,14 @@ public class GameTutorial {
 
     public static void actualTutorial(){
         Boss tutorialBoss=new Boss("Common thug",0.1,15);
+        Player tutorialPlayer= new Player("trainee",5000);
+        System.out.println("The goal of the game is to defeat the boss using poker combos");
+        System.out.println("Bigger hands deal more damage");
+        System.out.println("But this is true for the boss as well!");
+        System.out.println("");
 
         GameController gameController=new GameController();
-        gameController.startGame(tutorialBoss);
+        gameController.startGame(tutorialBoss,tutorialPlayer);
 
     }
 }

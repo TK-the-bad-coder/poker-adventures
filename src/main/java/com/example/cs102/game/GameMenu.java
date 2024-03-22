@@ -118,22 +118,24 @@ public class GameMenu {
 
             System.out.println("Time for the real deal, good luck!");
             System.out.println("===================================");
+            System.out.println();
         }
         
-        //selectBoss();
+        selectBoss(player);
         
         
     }
 
-    public void selectBoss(){
+    public void selectBoss(Player player){
         Scanner sc = new Scanner(System.in);
         boolean isValid = false;
+        Boss boss=null;
         do{
             showBosses();
             System.out.println("Enter Choice of opponent:");
             try{
                 int choice = Integer.parseInt(sc.next());
-                Boss boss = this.controller.selectBoss(choice);
+                boss = this.controller.selectBoss(choice);
                 isValid = true;
             } catch (NumberFormatException e){
                 System.out.println("Please enter a number");
@@ -143,7 +145,7 @@ public class GameMenu {
 
         } while (!isValid);
 
-        controller.startGame(null);
+        controller.startGame(boss,player);
     }
 
 

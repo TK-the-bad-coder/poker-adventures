@@ -29,6 +29,13 @@ public class Player {
         this.hp = hp;
     }
 
+    //for tutorial player
+    public Player(String name, int hp) {
+        this.id = 999;
+        this.name = name;
+        this.hp = hp;
+    }
+
     public int getId(){
         return id;
     }

@@ -63,7 +63,7 @@ public class GameController {
 
     // gameDisplay method -- to move all the prints into menu
     // logic stays here
-    public void startGame(Boss boss) {
+    public void startGame(Boss boss, Player player) {
 
         List<Card> cards = new ArrayList<>();
         // new dc every time a game begins!
@@ -80,7 +80,7 @@ public class GameController {
         Scanner sc = new Scanner(System.in);
         String cardsChoice="";
         int bossHP = boss.getHp();
-        int playerHP = boss.getHp();
+        int playerHP = player.getHp();
         // line 124 to line 131 should be in menu
         while (bossHP > 0 && playerHP > 0) {
             playerHand.showHand();
@@ -119,16 +119,22 @@ public class GameController {
                     System.out.println("Your damage is " + damage);
                     // System.out.println("\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014");
                     System.out.println("=======================================");
-
+                    
                     bossHP -= damage;
                     int bossDmg=bossMove(bossHand, damage,boss.getDifficulty());
-                    System.out.println("Boss deals " + damage+" to you");
+                    playerHP-=bossDmg;
+                    System.out.println("Boss deals " + bossDmg+" to you");
+                    System.out.println("Boss hp= "+bossHP+", you have "+playerHP +" left");
                 }
                 // return the outcome to menu
 
             } while (cardsChoice.isEmpty());
+        }   
+        System.out.println("Game over!");
+        if(!player.getName().equals("trainee")){
+            System.exit(0);
         }
-
+        
     }
 
     public Player makeNewPlayer(String name) {
@@ -153,7 +159,8 @@ public class GameController {
                 // aim for up to
                 break;
             case "HARD":
-                break;
+                return 10;
+                // break;
         }
         return Combo.damage(bossChoice);
     }
