@@ -17,6 +17,14 @@ public class Boss{
         this.difficulty = difficulty;
     }
 
+    //for tutorial boss
+    public Boss(String name,double atkMultiplier,int hp) {
+        this.id=999;
+        this.name = name;
+        this.atkMultiplier=atkMultiplier;
+        this.hp= hp;
+        this.difficulty = "tutorial";
+    }
 
     public int getHp() {
         return hp;

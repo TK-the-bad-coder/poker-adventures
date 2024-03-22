@@ -108,7 +108,21 @@ public class GameMenu {
     public void welcome(Player player){
         System.out.println("===================================");
         System.out.printf("Welcome to Poker Adventure, %s!\r\n" , player.getName());
-        selectBoss();
+        
+        
+        boolean wantTutorial=GameTutorial.selectTutorial();
+        if(wantTutorial){
+            System.out.println("tutorial starts now");
+            
+            GameTutorial.actualTutorial();
+
+            System.out.println("Time for the real deal, good luck!");
+            System.out.println("===================================");
+        }
+        
+        //selectBoss();
+        
+        
     }
 
     public void selectBoss(){
@@ -129,7 +143,7 @@ public class GameMenu {
 
         } while (!isValid);
 
-        controller.startGame();
+        controller.startGame(null);
     }
 
 

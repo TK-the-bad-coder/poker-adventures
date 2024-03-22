@@ -63,7 +63,7 @@ public class GameController {
 
     // gameDisplay method -- to move all the prints into menu
     // logic stays here
-    public void startGame() {
+    public void startGame(Boss boss) {
 
         List<Card> cards = new ArrayList<>();
         // new dc every time a game begins!
@@ -78,7 +78,7 @@ public class GameController {
         BossHand bossHand = new BossHand(bossDeck);
         List<Card> currentHand = playerHand.getHand();
         Scanner sc = new Scanner(System.in);
-
+        String cardsChoice="";
         int bossHP = boss.getHp();
         int playerHP = boss.getHp();
         // line 124 to line 131 should be in menu
@@ -121,7 +121,8 @@ public class GameController {
                     System.out.println("=======================================");
 
                     bossHP -= damage;
-                    bossMove(bossHand, damage);
+                    int bossDmg=bossMove(bossHand, damage,boss.getDifficulty());
+                    System.out.println("Boss deals " + damage+" to you");
                 }
                 // return the outcome to menu
 
@@ -135,7 +136,7 @@ public class GameController {
         return login(name);
     }
 
-    private int bossMove(Hand bossHand, int playerDamage) {
+    private int bossMove(Hand bossHand, int playerDamage,String difficulty) {
         int discardSize = 1;
         List<Card> bossChoice = new ArrayList<>();
         if (playerDamage >= 15) {
@@ -143,7 +144,7 @@ public class GameController {
             discardSize = 5;
         }
 
-        switch (boss.getDifficulty()) {
+        switch (difficulty) {
             case "EASY":
                 // aim for up to two pairs
                 return 1;
