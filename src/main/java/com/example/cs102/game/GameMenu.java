@@ -53,7 +53,7 @@ public class GameMenu {
                 sc.next();
             }
         } while (choice != 2);
-
+        return;
     }
 
     public void displayIntro() {
@@ -63,6 +63,7 @@ public class GameMenu {
         System.out.println("1: Start Game");
         System.out.println("2: Quit App");
         System.out.print("Please enter your choice: ");
+        return;
     }
 
     public void start() {
@@ -82,11 +83,12 @@ public class GameMenu {
         // should retrieve whether the player exists or not.... do later
         try {
             Player player = this.controller.login(name);
+
             welcome(player);
         } catch (PlayerNotFoundException e) {
             makeNewPlayer(name);
         }
-
+        return;
     }
     // make deck for player
 
@@ -111,6 +113,7 @@ public class GameMenu {
                 System.out.println("Please enter a valid input");
             }
         } while (!isValid);
+        return;
     }
 
     public void welcome(Player player) {
@@ -118,6 +121,7 @@ public class GameMenu {
         System.out.printf("Welcome to Poker Adventure, %s!\r\n", player.getName());
         controller.initPlayer(player);
         selectBoss();
+        return;
     }
 
     public void selectBoss() {
@@ -127,9 +131,13 @@ public class GameMenu {
         do {
             showBosses();
             System.out.println("Enter Choice of opponent:");
+            String choice = sc.next();
+            if (choice.equals("b") || choice.equals("B")){
+                return;
+            }
             try {
-                int choice = Integer.parseInt(sc.next());
-                boss = this.controller.selectBoss(choice);
+                int bossChoice = Integer.parseInt(choice);
+                boss = this.controller.selectBoss(bossChoice);
                 isValid = true;
             } catch (NumberFormatException e) {
                 System.out.println("Please enter a number");
@@ -140,6 +148,7 @@ public class GameMenu {
         } while (!isValid);
         controller.initBoss(boss);
         startGame();
+        return;
     }
 
     public void showBosses() {
@@ -147,6 +156,7 @@ public class GameMenu {
         for (Boss boss : bosses) {
             System.out.println(boss);
         }
+        System.out.println("To exit to the main menu, press b");
     }
 
     public void startGame() {
@@ -184,6 +194,7 @@ public class GameMenu {
                 } else if (input.equals("f")) {
                     System.out.println("The boss laughs at you as you flee to the main menu...");
                     System.out.println();
+                    return;
                 } else if (input.isEmpty()) {
                     System.out.println("Please enter something");
                 } else {
@@ -237,6 +248,7 @@ public class GameMenu {
         }
         if (bossHp <= 0) {
             System.out.printf("Congratulations! You have defeated %s! Have a cookie\r\n", boss.getName());
+            selectBoss();
         }
         return;
     }
