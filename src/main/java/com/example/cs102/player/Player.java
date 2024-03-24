@@ -1,16 +1,14 @@
 package com.example.cs102.player;
 
-// import jakarta.persistence.Entity;
-// import jakarta.persistence.GeneratedValue;
-// import jakarta.persistence.GenerationType;
-// import jakarta.persistence.Id;
-// import lombok.Data;
+import java.util.List;
 
-// @Data
-//@Entity
+import com.example.cs102.hand.PlayerHand;
+import com.example.cs102.poker.Card;
+
 public class Player {
-    // @Id
-    // @GeneratedValue(strategy = GenerationType.IDENTITY)
+    
+    private PlayerHand playerHand;
+
     private int id;
 
     private String name;
@@ -43,12 +41,31 @@ public class Player {
     public String getName() {
         return name;
     }
+
+    public void setHand(PlayerHand playerHand) {
+        this.playerHand = playerHand;
+    }
+
+    public void clearHand() {
+        this.playerHand = null;
+    }
+
+    public List<Card> getCards() {
+        return this.playerHand.getHand();
+    }
+
+    public PlayerHand getHand() {
+        return this.playerHand;
+    }
     
     public boolean isDead(){
-        if(hp < 0){
-            return true;
-        }
-        return false;
+
+        return hp < 0;
+
+        // if(hp < 0){
+        //     return true;
+        // }
+        // return false;
     }
 
     // private final static MAX_CARDS = 10;

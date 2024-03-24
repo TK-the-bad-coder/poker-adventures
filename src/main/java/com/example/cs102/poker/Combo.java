@@ -2,6 +2,7 @@
 // Nathan passed away while refactoring this
 package com.example.cs102.poker;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -9,10 +10,30 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.IntStream;
 
 import com.example.cs102.Exceptions.InvalidHandException;
 import com.example.cs102.Exceptions.DuplicateCardException;
+
 public class Combo {
+
+    // Declare the static final map
+    private static final Map<String, Integer> COMBO_MAP;
+
+    // Initialize the static final map in a static block
+    static {
+        COMBO_MAP = new HashMap<>();
+        COMBO_MAP.put("HIGH CARD", 1);
+        COMBO_MAP.put("ONE PAIR", 3);
+        COMBO_MAP.put("TWO PAIR", 10);
+        COMBO_MAP.put("THREE OF A KIND", 15);
+        COMBO_MAP.put("STRAIGHT", 25);
+        COMBO_MAP.put("FLUSH", 40);
+        COMBO_MAP.put("FULL HOUSE", 60);
+        COMBO_MAP.put("FOUR OF A KIND", 90);
+        COMBO_MAP.put("STRAIGHT FLUSH", 150);
+        COMBO_MAP.put("ROYAL FLUSH", 300);
+    }
 
     private static final int SINGLE_HAND = 1;
     private static final int ONE_PAIR = 3;
@@ -29,10 +50,9 @@ public class Combo {
 
     public static int damage(List<Card> selectedCards) {
         cards = selectedCards;
-        // first thing first, sort the card by VALUE (ignore suit)
+        // sort the card by VALUE (ignore suit)
         cardSort();
         int cardSize = cards.size();
-        // Collections.sort(cards, Comparator.comparingInt(Card::getValue));
         // break it further
         if (cardSize < 5) {
             if (isSingleHand()) {
@@ -42,7 +62,6 @@ public class Combo {
             }
 
         } else if (cardSize == 5) {
-
 
             // this have to go first
             if (isRoyalFlush()) {
@@ -81,9 +100,8 @@ public class Combo {
                 // can also trigger error prevention by suggesting user to only throw
                 // one pair
                 return ONE_PAIR;
-            }
-            else {
-                // however, we can be nice and do a hand check for 
+            } else {
+                // however, we can be nice and do a hand check for
                 // them for "error prevention"
                 return SINGLE_HAND; // no feasible hand, returns single damage value
             }
@@ -104,12 +122,12 @@ public class Combo {
     }
 
     private static boolean isOnePair() {
-        // only used when someone keys in 5 cards 
-        for (int i = 1; i < 5; i ++) {
-            if (isPair(cards.get(i-1), cards.get(i))) {
+        // only used when someone keys in 5 cards
+        for (int i = 1; i < 5; i++) {
+            if (isPair(cards.get(i - 1), cards.get(i))) {
                 return true;
+            }
         }
-    }
         return false;
     }
 
@@ -194,9 +212,9 @@ public class Combo {
             return isFlush() && isStraight();
         }
         return false;
-        //     if (isFlush() && isStraight()) {
-        //         return true;
-        //     }
+        // if (isFlush() && isStraight()) {
+        // return true;
+        // }
         // }
 
         // return false;
@@ -216,11 +234,11 @@ public class Combo {
      * selected cards 1: [2, 4, 2, 4, 2] -> [2, 2, 2, 4, 4]
      * selected cards 2: [4, 9, 4, 4, 9] -> [4, 4, 4, 9, 9]
      * selected cards 3: [1, 9, 7, 9, 7] -> [7, 7, 9, 9, 1]
-     * selected cards 4: [4, 9, 1, 2, 5] -> [1, 2, 4, 5, 9] 
+     * selected cards 4: [4, 9, 1, 2, 5] -> [1, 2, 4, 5, 9]
      */
     private static void cardSort() {
-        
-        // create a hashmap that contains 
+
+        // create a hashmap that contains
         Map<Integer, Integer> frequencyMap = new HashMap<>();
 
         // put card into maps based by value
@@ -232,7 +250,7 @@ public class Combo {
         Collections.sort(cards, (card1, card2) -> {
             // compare the number of frequency of the value in the map
             int freqCompare = frequencyMap.get(card2.getValue()).compareTo(frequencyMap.get(card1.getValue()));
-            
+
             // if frequency is exactly the same, or all cards are unique
             // sort in ascending order
             if (freqCompare == 0) {
@@ -242,15 +260,28 @@ public class Combo {
             return freqCompare;
         });
     }
-    public static void handChecker(List<Card> hand){
-        int handSize = hand.size();
-        if (handSize != 1 && handSize != 2 && handSize != 5 ){
-            throw new InvalidHandException();
+
+    public static void handChecker(int[] input) {
+        int handSize = input.length;
+
+        IntStream integerStream = Arrays.stream(input);
+        // error checking
+
+        if (handSize != 1 || handSize != 2 || handSize > 5) {
+            throw new InvalidHandException("Please enter a valid hand length!");
+        } else if (integerStream.distinct().toArray().length != handSize) {
+            throw new DuplicateCardException("Hand contains duplicate choices! Please ensure all numbers are unique.");
+        } else if (integerStream.filter(num -> num < 0 || num > 9).toArray().length > 0) {
+            throw new IllegalArgumentException(
+                    "Your input contains an invalid number! Please key in numbers only from 0 to 9");
         }
-        // checking for duplicates
-        Set <Card> handSet= new HashSet<Card>(hand);
-        if (handSet.size() != hand.size()){
-            throw new DuplicateCardException();
-        }
+        // if (handSize != 1 && handSize != 2 && handSize != 5 ){
+        // throw new InvalidHandException();
+        // }
+        // // checking for duplicates
+        // Set <Card> handSet= new HashSet<Card>(hand);
+        // if (handSet.size() != hand.size()){
+        // throw new DuplicateCardException();
+        // }
     }
 }

@@ -1,22 +1,25 @@
 package com.example.cs102.boss;
 
-public class Boss{
+import com.example.cs102.hand.BossHand;
+import com.example.cs102.hand.Hand;
 
+public class Boss {
+
+    private Hand bossHand;
     private int id;
     private String name;
     private double atkMultiplier;
     private int hp;
     private String difficulty;
 
-    //create boss
-    public Boss(int id, String name,double atkMultiplier,int hp, String difficulty) {
+    // create boss
+    public Boss(int id, String name, double atkMultiplier, int hp, String difficulty) {
         this.id = id;
         this.name = name;
-        this.atkMultiplier=atkMultiplier;
-        this.hp= hp;
+        this.atkMultiplier = atkMultiplier;
+        this.hp = hp;
         this.difficulty = difficulty;
     }
-
 
     public int getHp() {
         return hp;
@@ -29,23 +32,33 @@ public class Boss{
     public String getName() {
         return name;
     }
+
     public String getDifficulty() {
         return difficulty;
     }
 
-    public double getAtkMultiplier(){
+    public double getAtkMultiplier() {
         return atkMultiplier;
     }
 
-    public int getId(){
+    public int getId() {
         return id;
     }
-    public String toString(){
+
+    public void setHand(BossHand bossHand) {
+        this.bossHand = bossHand;
+    }
+
+    public Hand getHand() {
+        return this.bossHand;
+    }
+
+    public String toString() {
         String result = "";
-        result += id ;
+        result += id;
         result += ") Name: " + name;
-        result +=", Difficulty = " + difficulty;
-        result +=" Press "+ id;
+        result += ", Difficulty = " + difficulty;
+        result += " Press " + id;
         return result;
     }
 }

@@ -1,11 +1,8 @@
 package com.example.cs102.game;
 
 import java.util.ArrayList;
-
-
+import java.util.Arrays;
 import java.util.List;
-
-
 
 import com.example.cs102.boss.Boss;
 import com.example.cs102.boss.BossDAO;
@@ -20,6 +17,9 @@ import com.example.cs102.poker.Deck;
 import com.example.cs102.poker.DeckController;
 import com.example.cs102.Exceptions.PlayerNotFoundException;
 import com.example.cs102.Exceptions.BossNotFoundException;
+import com.example.cs102.Exceptions.DuplicateCardException;
+import com.example.cs102.Exceptions.InvalidHandException;
+
 public class GameController {
 
     // private final GameService service;
@@ -30,18 +30,15 @@ public class GameController {
     private Boss boss;
 
     public GameController() {
-        // this.service = service;
         playerDAO = new PlayerDAO();
         bossDAO = new BossDAO();
     }
 
-    public void displayPlayers() {
-        // playerDAO // may not be used
-    }
+    // public void displayPlayers() {
+    // // playerDAO // may not be used
+    // }
 
     public Player login(String name) {
-
-        // List<Player> players = playerDAO.retrievePlayers();
         player = playerDAO.retrieve(name);
         // if the player is not in the database
         if (player == null) {
@@ -54,29 +51,30 @@ public class GameController {
     public Boss selectBoss(int n) {
 
         Boss boss = bossDAO.retrieve(n);
-        if (boss == null){
+        if (boss == null) {
             throw new BossNotFoundException();
         }
         return boss;
-        }
+    }
 
-
-    public List<Boss> loadBosses(){
+    public List<Boss> loadBosses() {
         return bossDAO.retrieveBosses();
     }
 
-    //loading the player and boss into the controller
-    public void initPlayer(Player player){
+    // loading the player and boss into the controller
+    public void initPlayer(Player player) {
         this.player = player;
     }
-    public void initBoss(Boss boss){
+
+    public void initBoss(Boss boss) {
         this.boss = boss;
     }
 
-    public Boss getBoss(){
+    public Boss getBoss() {
         return boss;
     }
-    public Player getPlayer(){
+
+    public Player getPlayer() {
         return player;
     }
 
@@ -85,7 +83,10 @@ public class GameController {
         return login(name);
     }
 
-    public int bossMove(Hand bossHand, int playerDamage) {
+    public int bossMove(int playerDamage) {
+        // to translate to retrieve from Boss
+        Hand bossHand = boss.getHand();
+
         int discardSize = 1;
         int baseDamage = 0;
         List<Card> bossChoice = new ArrayList<>();
@@ -106,11 +107,11 @@ public class GameController {
                 break;
             case "HARD":
                 baseDamage = 20;
-                comboDamage *=2;
+                comboDamage *= 2;
                 break;
             case "ASIAN":
                 baseDamage = 50; // literally one hit KO regardless of hand for new players
-                comboDamage *=3;
+                comboDamage *= 3;
                 break;
             default:
                 // unknown case
@@ -118,7 +119,39 @@ public class GameController {
         }
         return baseDamage + comboDamage;
     }
-    public int playTurn(List <Card> played){
+
+    public int playTurn(List<Card> played) {
         return Combo.damage(played);
     }
+
+    public int playerMove(int[] input) {
+        PlayerHand playerHand = player.getHand();
+        List<Card> currentHand = player.getCards();
+        int handSize = input.length;
+        // error checking
+
+        if (handSize != 1 && handSize != 2 && handSize != 5) {
+            throw new InvalidHandException("Please enter a valid hand length!");
+        } else if (Arrays.stream(input).distinct().toArray().length != handSize) {
+            throw new DuplicateCardException("Hand contains duplicate choices! Please ensure all numbers are unique.");
+        } else if (Arrays.stream(input).filter(num -> num < 0 || num > 9).toArray().length > 0) {
+            throw new IllegalArgumentException(
+                    "Your input contains an invalid number! Please key in numbers only from 0 to 9");
+        }
+        List<Card> cardSelection = new ArrayList<>();
+        // getting the cards selected
+        for (int number : input) {
+            cardSelection.add(currentHand.get(number));
+        }
+
+        // as long as no error is raised and reaches here successfully
+        // discard cards
+        playerHand.discard(cardSelection);
+        
+        // draw card
+        playerHand.addToHand();
+
+        return Combo.damage(cardSelection);
+    }
+
 }

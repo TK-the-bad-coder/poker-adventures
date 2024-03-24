@@ -11,6 +11,7 @@ import java.util.Locale;
 import com.example.cs102.Comparators.SuitComparator;
 import com.example.cs102.Comparators.ValueComparator;
 import com.example.cs102.Exceptions.BossNotFoundException;
+import com.example.cs102.Exceptions.DuplicateCardException;
 import com.example.cs102.Exceptions.InvalidHandException;
 import com.example.cs102.Exceptions.PlayerNotFoundException;
 import com.example.cs102.player.Player;
@@ -134,8 +135,8 @@ public class GameMenu {
         do {
             showBosses();
             System.out.println("Enter Choice of opponent:");
-            String choice = sc.next();
-            if (choice.equals("b") || choice.equals("B")) {
+            String choice = sc.next().toLowerCase(Locale.ENGLISH);
+            if (choice.equals("b")) {
                 return;
             }
             try {
@@ -145,7 +146,7 @@ public class GameMenu {
             } catch (NumberFormatException e) {
                 System.out.println("Please enter a number");
             } catch (BossNotFoundException e) {
-                System.out.println("Please enter a valid id");
+                System.out.println("Please enter a valid choice");
             }
 
         } while (!isValid);
@@ -161,6 +162,9 @@ public class GameMenu {
     }
 
     public void startGame() {
+        Boss boss = controller.getBoss();
+        Player player = controller.getPlayer();
+
         List<Card> cards = new ArrayList<>();
         DeckController deckControl = new DeckController(cards);
         cards = deckControl.initCards();
@@ -168,14 +172,12 @@ public class GameMenu {
         Deck playerDeck = new Deck(new ArrayList<>(cards));
         Deck bossDeck = new Deck(new ArrayList<>(cards));
 
-        PlayerHand playerHand = new PlayerHand(playerDeck);
-        BossHand bossHand = new BossHand(bossDeck);
-        List<Card> currentHand = playerHand.getHand();
+        player.setHand(new PlayerHand(playerDeck));
+        boss.setHand(new BossHand(bossDeck));
+        List<Card> currentHand = player.getCards();
         Scanner sc = new Scanner(System.in);
 
-        Boss boss = controller.getBoss();
-        Player player = controller.getPlayer();
-        GameState gamePlayed = new GameState(player, boss);
+        GameState gameState = new GameState(player.getHp(), boss.getHp());
         int bossMaxHp = boss.getHp();
         int playerMaxHp = player.getHp();
         int bossHp = bossMaxHp;
@@ -187,7 +189,7 @@ public class GameMenu {
             boolean turnPlayed = false;
             do {
                 currentHand.sort(displayChoice);
-                showGameState(gamePlayed);
+                showGameState(gameState);
                 showHand(currentHand);
                 requestPlayerCombo();
                 input = sc.nextLine().toLowerCase(Locale.ENGLISH);
@@ -202,56 +204,62 @@ public class GameMenu {
                     case "f":
                         System.out.println("The boss laughs at you as you flee to the main menu...");
                         System.out.println();
-                        break;
+                        return;
                     default:
                         // continue on
                         if (input.isEmpty()) {
                             System.out.println("Please enter something");
                         } else {
                             String[] splittedCards = input.split(" ");
+
                             try {
-                                List<Card> out = new ArrayList<>();
-                                // getting the cards selected
-                                for (String splittedCard : splittedCards) {
-                                    out.add(currentHand.get(Integer.parseInt(splittedCard)));
-                                }
-                                Combo.handChecker(out);
+                                int[] intInput = Arrays.stream(splittedCards)
+                                        .mapToInt(number -> Integer.parseInt(number)).toArray();
+
+                                // pass to controller
+                                damage = controller.playerMove(intInput);
                                 // the player played a turn
                                 turnPlayed = true;
-                                damage = controller.playTurn(out);
-                                // remove the played cards from the hand
-                                playerHand.discard(out);
-                                // display the cards played
-
-                                showPlayedHand(out);
-                                // draw cards
-                                playerHand.addToHand();
-                                currentHand = playerHand.getHand();
                                 // show damage dealt
                                 System.out.printf("You dealt %d damage to %s\r\n", damage, boss.getName());
 
                                 // bossHp -= damage;
-                                gamePlayed.doDamageTo(boss, damage);
-                                // gamePlayed.doDamageTo(player, controller.bossMove(bossHand, damage));
-                                if (gamePlayed.getBossCurrentHp() <= 0) {
+                                gameState.doDamageTo(boss, damage);
+                                if (gameState.getBossCurrentHp() <= 0) {
                                     System.out.printf("Congratulations! You Beat %s! Have a cookie!\r\n",
                                             boss.getName());
                                     return;
                                 }
 
                                 // boss damage
-                                damage = controller.bossMove(bossHand, damage);
+                                damage = controller.bossMove(damage);
 
-                                gamePlayed.doDamageTo(player, damage);
-                                System.out.printf("%s did %d damage to you", boss.getName(), damage);
-                                if (gamePlayed.getPlayerCurrentHp() <= 0) {
+                                // update the currentHand on menu display
+                                currentHand = player.getCards();
+
+                                gameState.doDamageTo(player, damage);
+                                System.out.printf("%s did %d damage to you\n", boss.getName(), damage);
+                                if (gameState.getPlayerCurrentHp() <= 0) {
                                     System.out.printf("%s laughs over your wounded body", boss.getName());
+                                    return;
                                 }
 
+                            } catch (IndexOutOfBoundsException e) {
+                                System.out.println("Um... you dont have that many cards ah");
+
+                            } catch (DuplicateCardException e) {
+                                System.out.println(e.getMessage());
+                            }
+
+                            catch (InvalidHandException e) {
+                                System.out.println("Hand should only contain either 1, 2 or 5 cards");
+                                System.out.println(e.getMessage());
+                                InvalidHandException.showValidChoices();
                             } catch (NumberFormatException e) {
                                 System.out.println("|ERROR| Please enter a valid input");
-                            } catch (ArrayIndexOutOfBoundsException e) {
-                                System.out.println("Um... you dont have that many cards ah");
+                                InvalidHandException.showValidChoices();
+                            } catch (IllegalArgumentException e) {
+                                System.out.println("|ERROR| " + e.getMessage());
                             }
                         }
                 }
@@ -262,19 +270,21 @@ public class GameMenu {
     }
 
     public void showGameState(GameState gameState) {
+        Boss boss = gameState.getBoss();
+        Player player = gameState.getPlayer();
         int playerCurrentHp = gameState.getPlayerCurrentHp();
-        int playerMaxHp = gameState.getPlayerMaxHp();
+        int playerMaxHp = player.getHp();
 
         int bossCurrentHp = gameState.getBossCurrentHp();
-        int bossMaxHp = gameState.getBossMaxHp();
+        int bossMaxHp = boss.getHp();
 
         System.out.println("=======================================");
-        System.out.println(gameState.getPlayerName() + ":");
+        System.out.println(player.getName() + ":");
         System.out.println("Health: " + playerCurrentHp + "/" + playerMaxHp);
         showHealthBar(playerCurrentHp, playerMaxHp);
 
         System.out.println("=======================================");
-        System.out.println(gameState.getBossName() + ":");
+        System.out.println(boss.getName() + ":");
         System.out.println("Health: " + bossCurrentHp + "/" + bossMaxHp);
         showHealthBar(bossCurrentHp, bossMaxHp);
         System.out.println("=======================================");
@@ -283,12 +293,20 @@ public class GameMenu {
     // showing
     // cards--------------------------------------------------------------------------------------------------
     public void showHand(List<Card> currentHand) {
+        String row1 = "";
+        String row2 = "";
+        int index = 0;
         for (Card card : currentHand) {
-            System.out.print("|");
-            System.out.print(card.getSpecialOutput());
+            row1 += "|" + card.getSpecialOutput();
+            row2 += "| " + index + " ";
+            index++;
         }
-        System.out.print("|\n");
-        System.out.println("| 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 |");
+        row1 += "|";
+        row2 += "|";
+        // System.out.print("|\n");
+        // System.out.println("| 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 |");
+        System.out.println(row1);
+        System.out.println(row2);
         System.out.println("Enter 's' to sort by suit");
         System.out.println("Enter 'v' to sort by value");
         System.out.println("Enter 'f' to flee");
