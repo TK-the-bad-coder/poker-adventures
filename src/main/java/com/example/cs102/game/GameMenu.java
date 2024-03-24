@@ -6,10 +6,12 @@ import java.util.Comparator;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 import java.util.List;
+import java.util.Locale;
 
 import com.example.cs102.Comparators.SuitComparator;
 import com.example.cs102.Comparators.ValueComparator;
 import com.example.cs102.Exceptions.BossNotFoundException;
+import com.example.cs102.Exceptions.InvalidHandException;
 import com.example.cs102.Exceptions.PlayerNotFoundException;
 import com.example.cs102.player.Player;
 import com.example.cs102.poker.Card;
@@ -56,7 +58,6 @@ public class GameMenu {
                 sc.next();
             }
         } while (choice != 2);
-
     }
 
     public void displayIntro() {
@@ -66,6 +67,7 @@ public class GameMenu {
         System.out.println("1: Start Game");
         System.out.println("2: Quit App");
         System.out.print("Please enter your choice: ");
+        return;
     }
 
     public void start() {
@@ -85,11 +87,12 @@ public class GameMenu {
         // should retrieve whether the player exists or not.... do later
         try {
             Player player = this.controller.login(name);
+
             welcome(player);
         } catch (PlayerNotFoundException e) {
             makeNewPlayer(name);
         }
-
+        return;
     }
     // make deck for player
 
@@ -121,6 +124,7 @@ public class GameMenu {
         System.out.printf("Welcome to Poker Adventure, %s!\r\n", player.getName());
         controller.initPlayer(player);
         selectBoss();
+        return;
     }
 
     public void selectBoss() {
@@ -130,9 +134,13 @@ public class GameMenu {
         do {
             showBosses();
             System.out.println("Enter Choice of opponent:");
+            String choice = sc.next();
+            if (choice.equals("b") || choice.equals("B")) {
+                return;
+            }
             try {
-                int choice = Integer.parseInt(sc.next());
-                boss = this.controller.selectBoss(choice);
+                int bossChoice = Integer.parseInt(choice);
+                boss = this.controller.selectBoss(bossChoice);
                 isValid = true;
             } catch (NumberFormatException e) {
                 System.out.println("Please enter a number");
@@ -167,6 +175,7 @@ public class GameMenu {
 
         Boss boss = controller.getBoss();
         Player player = controller.getPlayer();
+        GameState gamePlayed = new GameState(player, boss);
         int bossMaxHp = boss.getHp();
         int playerMaxHp = player.getHp();
         int bossHp = bossMaxHp;
@@ -178,100 +187,96 @@ public class GameMenu {
             boolean turnPlayed = false;
             do {
                 currentHand.sort(displayChoice);
-                showGameState(player.getName(), playerMaxHp, playerHp, boss.getName(), bossMaxHp, bossHp);
+                showGameState(gamePlayed);
                 showHand(currentHand);
                 requestPlayerCombo();
-                input = sc.nextLine();
-                if (input.equals("s")) {
-                    // currentHand.sort(new SuitComparator());
-                    displayChoice = SC;
-                    // break;
-                    // System.out.println("Sorting by suit");
-                } else if (input.equals("v")) {
-                    // currentHand.sort(new ValueComparator());
-                    displayChoice = VC;
-                    // break;
-                }
+                input = sc.nextLine().toLowerCase(Locale.ENGLISH);
 
-                else if (input.equals("f")) {
-                    System.out.println("The boss laughs at you as you flee to the main menu...");
-                    System.out.println();
-                    return; // exit the program
-                } else if (input.isEmpty()) {
-                    System.out.println("Please enter something");
-                } else {
-                    String[] splittedCards = input.split(" ");
-                    // check if input contains values within 0 to 9
-                    // and only appears once
-                    try {
-                        List<Card> out = new ArrayList<>();
-                        // getting the cards selected
+                switch (input) {
+                    case "s":
+                        displayChoice = SC;
+                        break;
+                    case "v":
+                        displayChoice = VC;
+                        break;
+                    case "f":
+                        System.out.println("The boss laughs at you as you flee to the main menu...");
+                        System.out.println();
+                        break;
+                    default:
+                        // continue on
+                        if (input.isEmpty()) {
+                            System.out.println("Please enter something");
+                        } else {
+                            String[] splittedCards = input.split(" ");
+                            try {
+                                List<Card> out = new ArrayList<>();
+                                // getting the cards selected
+                                for (String splittedCard : splittedCards) {
+                                    out.add(currentHand.get(Integer.parseInt(splittedCard)));
+                                }
+                                Combo.handChecker(out);
+                                // the player played a turn
+                                turnPlayed = true;
+                                damage = controller.playTurn(out);
+                                // remove the played cards from the hand
+                                playerHand.discard(out);
+                                // display the cards played
 
-                        int[] intInput = Arrays.stream(splittedCards).mapToInt(number -> Integer.parseInt(number))
-                                .distinct().toArray();
-                        if (intInput.length != splittedCards.length) {
-                            // if items are not distinct
-                            // should we raise a new error for this?
-                            System.out.println("Duplicate card choice detected. Please try again");
-                            break;
-                        }
-                        if (intInput.length != 1 || intInput.length != 2 || intInput.length > 5) {
-                            // please help me look through this as well
-                            throw new InputMismatchException();
-                        }
-                        for (int num : intInput) {
-                            if (num < 0 || num > 9) {
-                                throw new InputMismatchException();
+                                showPlayedHand(out);
+                                // draw cards
+                                playerHand.addToHand();
+                                currentHand = playerHand.getHand();
+                                // show damage dealt
+                                System.out.printf("You dealt %d damage to %s\r\n", damage, boss.getName());
+
+                                // bossHp -= damage;
+                                gamePlayed.doDamageTo(boss, damage);
+                                // gamePlayed.doDamageTo(player, controller.bossMove(bossHand, damage));
+                                if (gamePlayed.getBossCurrentHp() <= 0) {
+                                    System.out.printf("Congratulations! You Beat %s! Have a cookie!\r\n",
+                                            boss.getName());
+                                    return;
+                                }
+
+                                // boss damage
+                                damage = controller.bossMove(bossHand, damage);
+
+                                gamePlayed.doDamageTo(player, damage);
+                                System.out.printf("%s did %d damage to you", boss.getName(), damage);
+                                if (gamePlayed.getPlayerCurrentHp() <= 0) {
+                                    System.out.printf("%s laughs over your wounded body", boss.getName());
+                                }
+
+                            } catch (NumberFormatException e) {
+                                System.out.println("|ERROR| Please enter a valid input");
+                            } catch (ArrayIndexOutOfBoundsException e) {
+                                System.out.println("Um... you dont have that many cards ah");
                             }
-                            out.add(currentHand.get(num));
                         }
-                        // the player played a turn
-                        turnPlayed = true;
-                        damage = controller.playTurn(out);
-                        // remove the played cards from the hand
-                        playerHand.discard(out);
-                        // display the cards played
-
-                        showPlayedHand(out);
-                        // draw cards
-                        playerHand.addToHand();
-                        currentHand = playerHand.getHand();
-                        // currentHand.sort(comparatorChoice);
-                        // show damage dealt
-                        System.out.printf("You dealt %d damage to %s\r\n", damage, boss.getName());
-
-                        bossHp -= damage;
-
-                    } catch (NumberFormatException e) {
-                        System.out.println("|ERROR| Please enter a valid input");
-                    } catch (ArrayIndexOutOfBoundsException e) {
-                        System.out.println("Um... you dont have that many cards ah");
-                    } catch (InputMismatchException e) {
-                        System.out.println("|ERROR| Please enter a valid number between 0 to 9");
-                    }
                 }
+
             } while (!turnPlayed);
-            playerHp -= controller.bossMove(bossHand, damage);
+
         }
-        // someone died already
-        if (playerHp <= 0) {
-            System.out.printf("%s laughs over your demise... returning to main menu");
-        } else if (bossHp <= 0) {
-            System.out.printf("Congratulations! You have defeated %s! Have a cookie\r\n", boss.getName());
-        }
-        // return;
     }
 
-    public void showGameState(String playerName, int playerMaxHp, int playerHp, String bossName, int bossMaxHp,
-            int bossHp) {
+    public void showGameState(GameState gameState) {
+        int playerCurrentHp = gameState.getPlayerCurrentHp();
+        int playerMaxHp = gameState.getPlayerMaxHp();
+
+        int bossCurrentHp = gameState.getBossCurrentHp();
+        int bossMaxHp = gameState.getBossMaxHp();
+
         System.out.println("=======================================");
-        System.out.println(playerName + ":");
-        System.out.println("Health" + playerHp + "/" + playerMaxHp);
-        showHealthBar(playerHp, playerMaxHp);
+        System.out.println(gameState.getPlayerName() + ":");
+        System.out.println("Health: " + playerCurrentHp + "/" + playerMaxHp);
+        showHealthBar(playerCurrentHp, playerMaxHp);
+
         System.out.println("=======================================");
-        System.out.println(bossName + ":");
-        System.out.println("Health" + bossHp + "/" + bossMaxHp);
-        showHealthBar(bossHp, bossMaxHp);
+        System.out.println(gameState.getBossName() + ":");
+        System.out.println("Health: " + bossCurrentHp + "/" + bossMaxHp);
+        showHealthBar(bossCurrentHp, bossMaxHp);
         System.out.println("=======================================");
     }
 
