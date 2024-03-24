@@ -11,8 +11,9 @@ import com.example.cs102.hand.Hand;
 import com.example.cs102.hand.PlayerHand;
 import com.example.cs102.player.Player;
 import com.example.cs102.player.PlayerDAO;
+import com.example.cs102.poker.BestHandUtility;
 import com.example.cs102.poker.Card;
-import com.example.cs102.poker.Combo;
+import com.example.cs102.poker.ComboUtility;
 import com.example.cs102.poker.Deck;
 import com.example.cs102.poker.DeckController;
 import com.example.cs102.Exceptions.PlayerNotFoundException;
@@ -83,20 +84,26 @@ public class GameController {
         return login(name);
     }
 
-    public int bossMove(int playerDamage) {
+    public String bossMove() {
         // to translate to retrieve from Boss
         Hand bossHand = boss.getHand();
+        List<Card> bossSelection = BestHandUtility.getBestHand(boss.getCards());
 
-        int discardSize = 1;
+        bossHand.discard(bossSelection);
+        bossHand.addToHand();
+        return ComboUtility.getHandValue(bossSelection);
+        // return handValue;
+        
+    }
+
+    public int playTurn(String comboMove) {
+        return ComboUtility.getDamageValue(comboMove);
+    }
+
+    public int bossTurn(String comboMove) {
         int baseDamage = 0;
-        List<Card> bossChoice = new ArrayList<>();
-        if (playerDamage >= 15) {
-            // boss will discard five card if possible!
-            discardSize = 5;
-        }
 
-        int comboDamage = Combo.damage(bossChoice);
-
+        int comboDamage = ComboUtility.getDamageValue(comboMove);
         switch (boss.getDifficulty()) {
             case "EASY":
                 baseDamage = 1;
@@ -120,11 +127,7 @@ public class GameController {
         return baseDamage + comboDamage;
     }
 
-    public int playTurn(List<Card> played) {
-        return Combo.damage(played);
-    }
-
-    public int playerMove(int[] input) {
+    public String playerMove(int[] input) {
         PlayerHand playerHand = player.getHand();
         List<Card> currentHand = player.getCards();
         int handSize = input.length;
@@ -144,6 +147,8 @@ public class GameController {
             cardSelection.add(currentHand.get(number));
         }
 
+        // check the hand value
+
         // as long as no error is raised and reaches here successfully
         // discard cards
         playerHand.discard(cardSelection);
@@ -151,7 +156,8 @@ public class GameController {
         // draw card
         playerHand.addToHand();
 
-        return Combo.damage(cardSelection);
+        
+        return ComboUtility.getHandValue(cardSelection);
     }
 
 }

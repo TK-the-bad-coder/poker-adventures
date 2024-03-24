@@ -16,7 +16,6 @@ import com.example.cs102.Exceptions.InvalidHandException;
 import com.example.cs102.Exceptions.PlayerNotFoundException;
 import com.example.cs102.player.Player;
 import com.example.cs102.poker.Card;
-import com.example.cs102.poker.Combo;
 import com.example.cs102.poker.Deck;
 import com.example.cs102.poker.DeckController;
 import com.example.cs102.boss.Boss;
@@ -68,7 +67,6 @@ public class GameMenu {
         System.out.println("1: Start Game");
         System.out.println("2: Quit App");
         System.out.print("Please enter your choice: ");
-        return;
     }
 
     public void start() {
@@ -93,7 +91,6 @@ public class GameMenu {
         } catch (PlayerNotFoundException e) {
             makeNewPlayer(name);
         }
-        return;
     }
     // make deck for player
 
@@ -106,7 +103,7 @@ public class GameMenu {
         do {
             System.out.println("Would you like to make a new account? y/n");
             Scanner sc = new Scanner(System.in);
-            String input = sc.next().toLowerCase();
+            String input = sc.next().toLowerCase(Locale.ENGLISH);
 
             if (input.equals("n")) {
                 System.out.println("Ok, exiting to main menu.");
@@ -177,12 +174,13 @@ public class GameMenu {
         List<Card> currentHand = player.getCards();
         Scanner sc = new Scanner(System.in);
 
-        GameState gameState = new GameState(player.getHp(), boss.getHp());
+        GameState gameState = new GameState(player, boss);
         int bossMaxHp = boss.getHp();
         int playerMaxHp = player.getHp();
         int bossHp = bossMaxHp;
         int playerHp = playerMaxHp;
-        int damage = 0;
+        int playerDamage = 0;
+        int bossDamage = 0;
         Comparator<Card> displayChoice = VC;
         while (bossHp > 0 && playerHp > 0) {
             String input = "";
@@ -217,28 +215,35 @@ public class GameMenu {
                                         .mapToInt(number -> Integer.parseInt(number)).toArray();
 
                                 // pass to controller
-                                damage = controller.playerMove(intInput);
+                                String playerMove = controller.playerMove(intInput);
+                                System.out.print("You have made the following move - " + playerMove + "\n");
+                                // System.out.print(playerMove + "\n");
+
+
                                 // the player played a turn
                                 turnPlayed = true;
-                                // show damage dealt
-                                System.out.printf("You dealt %d damage to %s\r\n", damage, boss.getName());
-
+                                // get and show damage dealt
+                                playerDamage = controller.playTurn(playerMove);
+                                System.out.printf("You dealt %d damage to %s\r\n", playerDamage, boss.getName());
+                                
                                 // bossHp -= damage;
-                                gameState.doDamageTo(boss, damage);
+                                gameState.doDamageTo(boss, playerDamage);
                                 if (gameState.getBossCurrentHp() <= 0) {
                                     System.out.printf("Congratulations! You Beat %s! Have a cookie!\r\n",
                                             boss.getName());
                                     return;
                                 }
+                                System.out.println();
+                                String bossMove = controller.bossMove();
+                                System.out.print(boss.getName() +" made the following move - " + bossMove + "\n");
 
-                                // boss damage
-                                damage = controller.bossMove(damage);
+                                bossDamage = controller.bossTurn(bossMove);
 
                                 // update the currentHand on menu display
                                 currentHand = player.getCards();
 
-                                gameState.doDamageTo(player, damage);
-                                System.out.printf("%s did %d damage to you\n", boss.getName(), damage);
+                                gameState.doDamageTo(player, bossDamage);
+                                System.out.printf("%s did %d damage to you\n", boss.getName(), bossDamage);
                                 if (gameState.getPlayerCurrentHp() <= 0) {
                                     System.out.printf("%s laughs over your wounded body", boss.getName());
                                     return;

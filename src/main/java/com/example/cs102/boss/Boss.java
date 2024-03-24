@@ -1,7 +1,10 @@
 package com.example.cs102.boss;
 
+import java.util.List;
+
 import com.example.cs102.hand.BossHand;
 import com.example.cs102.hand.Hand;
+import com.example.cs102.poker.Card;
 
 public class Boss {
 
@@ -50,7 +53,11 @@ public class Boss {
     }
 
     public Hand getHand() {
-        return this.bossHand;
+        return bossHand;
+    }
+
+    public List<Card> getCards() {
+        return this.bossHand.getHand();
     }
 
     public String toString() {

@@ -4,22 +4,17 @@ import com.example.cs102.boss.Boss;
 import com.example.cs102.player.Player;
 
 public class GameState {
-    private final int playerMaxHp;
     private int playerCurrentHp;
-    private final int bossMaxHp;
     private int bossCurrentHp;
 
     private Player player;
     private Boss boss;
 
     public GameState(Player player, Boss boss) {
-        // playerName = player.getName();
-        playerMaxHp = player.getHp();
-        playerCurrentHp = playerMaxHp;
-
-        // bossName = boss.getName();
-        bossMaxHp = boss.getHp();
-        this.bossCurrentHp = bossMaxHp;
+        this.player = player;
+        this.boss = boss;
+        playerCurrentHp = player.getHp();
+        bossCurrentHp = boss.getHp();
     }
 
     public Boss getBoss() {
@@ -29,8 +24,6 @@ public class GameState {
     public Player getPlayer() {
         return player;
     }
-
-
 
     public int getPlayerCurrentHp() {
         return playerCurrentHp;
