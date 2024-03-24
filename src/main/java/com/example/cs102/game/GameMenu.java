@@ -215,7 +215,7 @@ public class GameMenu {
                             System.out.println("Duplicate card choice detected. Please try again");
                             break;
                         }
-                        if (intInput.length != 1 || intInput.length != 2 || intInput.length > 5) {
+                        if (intInput.length != 1 && intInput.length != 2 && intInput.length > 5) {
                             // please help me look through this as well
                             throw new InputMismatchException();
                         }
