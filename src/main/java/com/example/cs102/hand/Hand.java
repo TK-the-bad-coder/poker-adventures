@@ -17,11 +17,7 @@ public class Hand {
     public Hand(Deck deck) {
         this.deck = deck;
         this.currentHand = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            Card card = this.deck.drawCard();
-            this.currentHand.add(card);
-        }
-        // showHand();
+        addToHand();
     }
 
     public List<Card> getHand() {
@@ -34,12 +30,21 @@ public class Hand {
             currentHand.add(deck.drawCard());
         }
     }
-    // figure out a way to remove card from hand
 
-    public void discard(List<Card> cards) {
-        currentHand = currentHand.stream().filter(card -> !cards.contains(card)).collect(Collectors.toList());
+    public void discard(List<Card> discards) {
+        for (Card discard : discards) {
+                currentHand.removeIf(card -> card.getValue() == discard.getValue() && card.getSuit() == discard.getSuit());
+                deck.addToDiscardPile(discard);
+        }
+        showDiscards(discards);
     }
 
-
+    private void showDiscards(List<Card> cards) {
+        for (Card card : cards) {
+            System.out.print("|");
+            System.out.print(card.getSpecialOutput());
+        }
+        System.out.print("|\n");
+    }
 
 }

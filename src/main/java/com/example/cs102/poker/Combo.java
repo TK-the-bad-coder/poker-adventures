@@ -101,8 +101,8 @@ public class Combo {
 
     private static boolean isOnePair() {
         // only used when someone keys in 5 cards 
-        for (int i = 0; i < 5; i ++) {
-            if (isPair(cards.get(i), cards.get(i + 1))) {
+        for (int i = 1; i < 5; i ++) {
+            if (isPair(cards.get(i-1), cards.get(i))) {
                 return true;
             }
         }

@@ -24,3 +24,13 @@ public class PlayerHand extends Hand {
     }
 
 }
+
+/*
+ * game menu
+ * do while string input is empty
+ * break when string input is "f" or "F"
+ * pass cardsChoice to gameState combo size must be 1, 2, or 5 after split logic
+ * gameState handles logic (check if hand is valid, input is valid)
+ * gameState will update hp of boss and player object
+ * 
+ */
