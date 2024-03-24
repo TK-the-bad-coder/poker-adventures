@@ -33,9 +33,12 @@ public class Hand {
         }
     }
 
-    public void discard(List<Card> cards) {
-        currentHand = currentHand.stream().filter(card -> !cards.contains(card)).collect(Collectors.toList());
-        showDiscards(cards);
+    public void discard(List<Card> discards) {
+        for (Card discard : discards) {
+                currentHand.removeIf(card -> card.getValue() == discard.getValue() && card.getSuit() == discard.getSuit());
+                deck.addToDiscardPile(discard);
+        }
+        showDiscards(discards);
     }
 
     private void showDiscards(List<Card> cards) {

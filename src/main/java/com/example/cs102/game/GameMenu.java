@@ -174,40 +174,46 @@ public class GameMenu {
 
         Boss boss = controller.getBoss();
         Player player = controller.getPlayer();
-        int bossMaxHp = boss.getHp();
-        int playerMaxHp = player.getHp();
-        int bossHp = bossMaxHp;
-        int playerHp = playerMaxHp;
-        while (bossHp > 0 && playerHp > 0) {
+
+        GameState gamePlayed = new GameState(player, boss);
+        char prefferedSort = 'v';
+        while (true) {
             String input = "";
-            boolean turnPlayed = true;
-            do {
-                showGameState(player.getName(), playerMaxHp, playerHp, boss.getName(), bossMaxHp, bossHp);
-                showHand(currentHand);
-                requestPlayerCombo();
-                input = sc.nextLine();
-                if (input.equals("s")) {
+            showGameState(gamePlayed);
+            showHand(currentHand);
+            requestPlayerCombo();
+            input = sc.nextLine();
+            switch (input){
+                case "":
+                    System.out.println("Please enter something");
+                    break;
+                case "s":
+                case "S":
                     currentHand.sort(new SuitComparator());
                     System.out.println("Sorting by suit");
-                } else if (input.equals("v")) {
+                    prefferedSort = 's';
+                    break;
+                case "v":
+                case "V":
                     currentHand.sort(new ValueComparator());
-                } else if (input.equals("f")) {
-                    System.out.println("The boss laughs at you as you flee to the main menu...");
+                    System.out.println("Sorting by value");
+                    prefferedSort = 'v';
+                    break;
+                case "f":
+                case "F":
+                    System.out.printf("%s laughs at you as you flee to the main menu..." , boss.getName());
                     System.out.println();
                     return;
-                } else if (input.isEmpty()) {
-                    System.out.println("Please enter something");
-                } else {
-                    String[] splittedCards = input.split(" ");
+                default:
+                String[] splittedCards = input.split(" ");
                     try {
                         List<Card> out = new ArrayList<>();
                         // getting the cards selected
-                        for (int i = 0; i < splittedCards.length; i++) {
-                            out.add(currentHand.get(Integer.parseInt(splittedCards[i])));
+                        for (String s : splittedCards) {
+                            out.add(currentHand.get(Integer.parseInt(s)));
                         }
                         Combo.handChecker(out);
                         // the player played a turn
-                        turnPlayed = true;
                         int damage = controller.playTurn(out);
                         // remove the played cards from the hand
                         playerHand.discard(out);
@@ -217,13 +223,25 @@ public class GameMenu {
                         // draw cards
                         playerHand.addToHand();
                         currentHand = playerHand.getHand();
-                        currentHand.sort(new ValueComparator());
+                        if (prefferedSort == 'v'){
+                            currentHand.sort(new ValueComparator());
+                        }else{
+                            currentHand.sort(new SuitComparator());
+                        }
                         // show damage dealt
+                        gamePlayed.doDamage(boss, damage);
                         System.out.printf("You dealt %d damage to %s\r\n", damage, boss.getName());
 
-                        bossHp -= damage;
-                        playerHp -= controller.bossMove(bossHand, damage);
-
+                        if (gamePlayed.getBossCurrentHp() <= 0){
+                            System.out.printf("Congratulations! You Beat %s! Have a cookie!\r\n" , boss.getName());
+                            return;
+                        }
+                        int bossDamage = controller.bossMove(bossHand, damage);
+                        gamePlayed.doDamage(player, bossDamage);
+                        System.out.printf("%s did %d damage to you" , boss.getName() , bossDamage);
+                        if (gamePlayed.getPlayerCurrentHp() <= 0){
+                            System.out.printf("%s laughs over your wounded body" , boss.getName());
+                        }
                     } catch (IndexOutOfBoundsException e) {
                         System.out.println("Um... you dont have that many cards ah");
                         
@@ -238,31 +256,25 @@ public class GameMenu {
                         InvalidHandException.showValidChoices();
                     }
                 }
-
-            } while (!turnPlayed);
-
-        }
-        // someone died already
-        if (playerHp <= 0) {
-            System.out.printf("%s laughs over your demise... returning to main menu");
-        }
-        if (bossHp <= 0) {
-            System.out.printf("Congratulations! You have defeated %s! Have a cookie\r\n", boss.getName());
-            selectBoss();
-        }
-        return;
+            }
     }
 
-    public void showGameState(String playerName, int playerMaxHp, int playerHp, String bossName, int bossMaxHp,
-            int bossHp) {
+    public void showGameState(GameState gameState) {
+        int playerCurrentHp = gameState.getPlayerCurrentHp();
+        int playerMaxHp = gameState.getPlayerMaxHp();
+
+        int bossCurrentHp = gameState.getBossCurrentHp();
+        int bossMaxHp = gameState.getBossMaxHp();
+
         System.out.println("=======================================");
-        System.out.println(playerName + ":");
-        System.out.println("Health: " + playerHp + "/" + playerMaxHp + "");
-        showHealthBar(playerHp, playerMaxHp);
+        System.out.println(gameState.getPlayerName() + ":");
+        System.out.println("Health: " + playerCurrentHp + "/" + playerMaxHp);
+        showHealthBar(playerCurrentHp, playerMaxHp);
+
         System.out.println("=======================================");
-        System.out.println(bossName + ":");
-        System.out.println("Health: " + bossHp + "/" + bossMaxHp + "");
-        showHealthBar(bossHp, bossMaxHp);
+        System.out.println(gameState.getBossName() + ":");
+        System.out.println("Health: " + bossCurrentHp + "/" + bossMaxHp);
+        showHealthBar(bossCurrentHp, bossMaxHp);
         System.out.println("=======================================");
     }
 
