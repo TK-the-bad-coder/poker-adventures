@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 
 public class Hand {
     protected List<Card> currentHand;
-    private final int MAXHAND = 10;
+    private static final int MAXHAND = 10;
     protected Deck deck;
     // private static final String ANSI_RESET = "\u001B[0m";
     // private static final String ANSI_BLACK = "\u001B[30m";

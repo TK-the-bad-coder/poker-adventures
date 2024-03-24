@@ -24,8 +24,6 @@ public class Deck {
 
         Card toReturn = null;
 
-        // System.out.println(cards.toString());
-        // cards.remove(0);
         if (getDeckLength() == 0 && refreshCount != 2) {
             refreshDeck();
             refreshCount++;
@@ -46,7 +44,6 @@ public class Deck {
 
     // if current deck is empty, fill up all the cards that has been used
     private void refreshDeck() {
-        System.out.println("===========DECK REFRESHED==========" + usedCards.size());
         for (Card card : usedCards) {
             cards.add(card);
         }

@@ -149,24 +149,36 @@ public class GameController {
 
     public int bossMove(Hand bossHand, int playerDamage) {
         int discardSize = 1;
+        int baseDamage = 0;
         List<Card> bossChoice = new ArrayList<>();
         if (playerDamage >= 15) {
             // boss will discard five card if possible!
             discardSize = 5;
         }
 
+        int comboDamage = Combo.damage(bossChoice);
+
         switch (boss.getDifficulty()) {
             case "EASY":
-                // aim for up to two pairs
-                return 1;
-            // break;
+                baseDamage = 1;
+                break;
             case "NORMAL":
                 // aim for up to
+                baseDamage = 5;
                 break;
             case "HARD":
+                baseDamage = 20;
+                comboDamage *=2;
+                break;
+            case "ASIAN":
+                baseDamage = 50; // literally one hit KO regardless of hand for new players
+                comboDamage *=3;
+                break;
+            default:
+                // unknown case
                 break;
         }
-        return Combo.damage(bossChoice);
+        return baseDamage + comboDamage;
     }
     public int playTurn(List <Card> played){
         return Combo.damage(played);
