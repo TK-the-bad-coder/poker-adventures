@@ -155,12 +155,16 @@ public class BestHandUtility extends ComboUtility {
         
         boolean fullHouseChecker = false;
         if(fullHouse != null){
-            
+            int counter =0;
             for(int i=1; i< bossHand.size(); i++){
+                if(counter == 1){
+                    break;
+                }
                 if(bossHand.get(i-1).getValue() != fullHouse.get(0).getValue()){
                     if(bossHand.get(i-1).getValue() == bossHand.get(i).getValue()){
                         fullHouse.add(bossHand.get(i-1));
                         fullHouse.add(bossHand.get(i));
+                        counter++;
                         fullHouseChecker = true;
                     }
                 }

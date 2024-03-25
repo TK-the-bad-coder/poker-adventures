@@ -9,8 +9,6 @@ public class GameState {
 
     private Player player;
     private Boss boss;
-
-    private boolean hasFlee = false;
     public GameState(Player player, Boss boss) {
         this.player = player;
         this.boss = boss;
@@ -61,10 +59,5 @@ public class GameState {
         System.out.println("Health: " + bossCurrentHp + "/" + boss.getHp());
         System.out.println("=======================================");
     }
-    public void flee(){
-        hasFlee = true;
-    }
-    public boolean checkFlee(){
-        return hasFlee;
-    }
+
 }

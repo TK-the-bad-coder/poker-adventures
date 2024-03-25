@@ -161,8 +161,11 @@ public class GameMenu {
 
     public void startGame() {
         controller.startGame();
-        while (true) {
+        while (!controller.hasFled()) {
             playerTurn();
+            if (controller.hasFled()){
+                return;
+            }
             if (controller.getGameState().isBossDead()) {
                 System.out.printf("Congratulations! You Beat %s! Have a cookie!\r\n",
                         controller.getBoss().getName());
@@ -199,10 +202,10 @@ public class GameMenu {
                 break;
 
             case "f":
-                controller.getGameState().flee();
+                controller.flee();
                 System.out.println("The boss laughs at you as you flee to the main menu...");
                 System.out.println();
-                break;
+                return;
 
             default:
                 String[] splittedCards = input.split(" ");

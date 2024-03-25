@@ -35,7 +35,7 @@ public class GameController {
     private Deck playerDeck;
     private Deck bossDeck;
     private GameState gameState;
-
+    private boolean hasFlee = false;
     public GameController() {
         playerDAO = new PlayerDAO();
         bossDAO = new BossDAO();
@@ -165,6 +165,7 @@ public class GameController {
         player.setHand(new PlayerHand(playerDeck));
         boss.setHand(new BossHand(bossDeck));
         gameState = new GameState(player, boss);
+        hasFlee = false;
     }
 
     public GameState getGameState() {
@@ -175,17 +176,24 @@ public class GameController {
         String combo = ComboUtility.getHandValue(selectedCards);
         int damage = ComboUtility.getDamageValue(combo);
         gameState.doDamageTo(boss, damage);
+
         PlayerHand playerHand = player.getHand();
         playerHand.discard(selectedCards);
-        // draw card
         playerHand.addToHand();
     }
     public void bossMove(List<Card> selectedCards){
         String combo = ComboUtility.getHandValue(selectedCards);
         int damage = ComboUtility.getDamageValue(combo);
         gameState.doDamageTo(player, damage);
+
         Hand bossHand = boss.getHand();
         bossHand.discard(selectedCards);
         bossHand.addToHand();
+    }
+    public void flee(){
+        hasFlee = true;
+    }
+    public boolean hasFled(){
+        return hasFlee;
     }
 }
