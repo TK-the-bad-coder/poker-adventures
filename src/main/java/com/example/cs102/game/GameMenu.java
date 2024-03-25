@@ -209,9 +209,10 @@ public class GameMenu {
 
             default:
                 String[] splittedCards = input.split(" ");
-                int[] intInput = Arrays.stream(splittedCards)
-                    .mapToInt(number -> Integer.parseInt(number)).toArray();
+
                 try{
+                    int[] intInput = Arrays.stream(splittedCards)
+                    .mapToInt(number -> Integer.parseInt(number)).toArray();
                     controller.checkMove(intInput);
                     List<Card> selectedCards = controller.playerMove(intInput);
                     confirmed = confirmSelection(selectedCards);
