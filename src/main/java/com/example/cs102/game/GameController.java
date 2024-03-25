@@ -30,6 +30,12 @@ public class GameController {
     private Player player;
     private Boss boss;
 
+    private List<Card> cards;
+    private DeckController deckController;
+    private Deck playerDeck;
+    private Deck bossDeck;
+    private GameState gameState;
+
     public GameController() {
         playerDAO = new PlayerDAO();
         bossDAO = new BossDAO();
@@ -84,16 +90,11 @@ public class GameController {
         return login(name);
     }
 
-    public String bossMove() {
+    public List<Card> bossMove() {
         // to translate to retrieve from Boss
-        Hand bossHand = boss.getHand();
-        List<Card> bossSelection = BestHandUtility.getBestHand(boss.getCards());
-
-        bossHand.discard(bossSelection);
-        bossHand.addToHand();
-        return ComboUtility.getHandValue(bossSelection);
+    return BestHandUtility.getBestHand(boss.getCards());
         // return handValue;
-        
+
     }
 
     public int playTurn(String comboMove) {
@@ -101,6 +102,8 @@ public class GameController {
     }
 
     public int bossTurn(String comboMove) {
+        Hand bossHand = boss.getHand();
+
         int baseDamage = 0;
 
         int comboDamage = ComboUtility.getDamageValue(comboMove);
@@ -127,37 +130,62 @@ public class GameController {
         return baseDamage + comboDamage;
     }
 
-    public String playerMove(int[] input) {
-        PlayerHand playerHand = player.getHand();
-        List<Card> currentHand = player.getCards();
+    public void checkMove(int[] input) {
         int handSize = input.length;
-        // error checking
-
         if (handSize != 1 && handSize != 2 && handSize != 5) {
             throw new InvalidHandException("Please enter a valid hand length!");
-        } else if (Arrays.stream(input).distinct().toArray().length != handSize) {
+        }
+        if (Arrays.stream(input).distinct().toArray().length != handSize) {
             throw new DuplicateCardException("Hand contains duplicate choices! Please ensure all numbers are unique.");
-        } else if (Arrays.stream(input).filter(num -> num < 0 || num > 9).toArray().length > 0) {
+        }
+        if (Arrays.stream(input).filter(num -> num < 0 || num > 9).toArray().length > 0) {
             throw new IllegalArgumentException(
                     "Your input contains an invalid number! Please key in numbers only from 0 to 9");
         }
+    }
+
+    public List<Card> playerMove(int[] input) {
+        List<Card> currentHand = player.getCards();
         List<Card> cardSelection = new ArrayList<>();
         // getting the cards selected
         for (int number : input) {
             cardSelection.add(currentHand.get(number));
         }
-
-        // check the hand value
-
-        // as long as no error is raised and reaches here successfully
-        // discard cards
-        playerHand.discard(cardSelection);
-        
-        // draw card
-        playerHand.addToHand();
-
-        
-        return ComboUtility.getHandValue(cardSelection);
+        return cardSelection;
     }
 
+    public void startGame() {
+        List<Card> cards = new ArrayList<>();
+        DeckController deckControl = new DeckController(cards);
+        cards = deckControl.initCards();
+
+        Deck playerDeck = new Deck(new ArrayList<>(cards));
+        Deck bossDeck = new Deck(new ArrayList<>(cards));
+
+        player.setHand(new PlayerHand(playerDeck));
+        boss.setHand(new BossHand(bossDeck));
+        gameState = new GameState(player, boss);
+    }
+
+    public GameState getGameState() {
+        return gameState;
+    }
+
+    public void playCombo(List<Card> selectedCards) {
+        String combo = ComboUtility.getHandValue(selectedCards);
+        int damage = ComboUtility.getDamageValue(combo);
+        gameState.doDamageTo(boss, damage);
+        PlayerHand playerHand = player.getHand();
+        playerHand.discard(selectedCards);
+        // draw card
+        playerHand.addToHand();
+    }
+    public void bossMove(List<Card> selectedCards){
+        String combo = ComboUtility.getHandValue(selectedCards);
+        int damage = ComboUtility.getDamageValue(combo);
+        gameState.doDamageTo(player, damage);
+        Hand bossHand = boss.getHand();
+        bossHand.discard(selectedCards);
+        bossHand.addToHand();
+    }
 }

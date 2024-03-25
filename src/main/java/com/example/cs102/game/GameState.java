@@ -10,6 +10,7 @@ public class GameState {
     private Player player;
     private Boss boss;
 
+    private boolean hasFlee = false;
     public GameState(Player player, Boss boss) {
         this.player = player;
         this.boss = boss;
@@ -42,15 +43,28 @@ public class GameState {
             bossCurrentHp -= damage;
         }
     }
-
-    public String checkGameProgress() {
-        if (playerCurrentHp > 0 && bossCurrentHp > 0) {
-            return "Game ongoing";
-        }
-        if (playerCurrentHp <= 0) {
-            return "Player died";
-        }
-        return "Boss died";
+    public boolean isPlayerDead(){
+        return playerCurrentHp <= 0;
+    }
+    public boolean isBossDead(){
+        return bossCurrentHp <= 0;
+    }
+    //------------------------------------------------------------------------------------
+    public void showPlayerHealth() {
+        System.out.println("=======================================");
+        System.out.println(player.getName() + ":");
+        System.out.println("Health: " + playerCurrentHp + "/" + player.getHp());
     }
 
+    public void showBossHealth(){
+        System.out.println(boss.getName() + ":");
+        System.out.println("Health: " + bossCurrentHp + "/" + boss.getHp());
+        System.out.println("=======================================");
+    }
+    public void flee(){
+        hasFlee = true;
+    }
+    public boolean checkFlee(){
+        return hasFlee;
+    }
 }

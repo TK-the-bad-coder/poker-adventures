@@ -265,7 +265,7 @@ public class BestHandUtility extends ComboUtility {
                 twoPairs.add(pairs.get(i));
             }
         }
-        if(twoPairs != null){
+        if(twoPairs.size() >= 4){
             int counter =0;
             for(Card c: bossHand){
                 if(counter != 1){
@@ -274,10 +274,9 @@ public class BestHandUtility extends ComboUtility {
                         counter++;
                     }
                 }
-                
             }
+            return twoPairs;
         }
-
         return null;
     }
     
