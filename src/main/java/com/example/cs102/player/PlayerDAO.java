@@ -26,7 +26,7 @@ public class PlayerDAO {
             sc = new Scanner(new File("data/players.csv"));
             sc.useDelimiter(",|\n|\r\n");
             while (sc.hasNext()) {
-                players.add(new Player(sc.nextInt(), sc.next(), sc.nextInt()));
+                players.add(new Player(sc.nextInt(), sc.next(), sc.nextInt(), sc.nextInt()));
             }
         } catch (FileNotFoundException e) {
             System.out.println("Shag, file maybe not found ah...");
@@ -38,6 +38,7 @@ public class PlayerDAO {
         }
     }
 
+
     // returns the whole ArrayList of Player objects
     public List<Player> retrievePlayers() {
         return players;
@@ -47,9 +48,9 @@ public class PlayerDAO {
     // or null if there is no matching player
     public Player retrieve(String name) {
        
-        Optional<Player> playerEl = players.stream().filter(player -> player.getName().equals(name)).findFirst();
-
-        return playerEl.orElse(null);
+        return players.stream()
+                    .filter(player -> player.getName().equals(name))
+                    .findFirst().orElse(null);
     }
 
     // adds a new player into playerList with a name
@@ -59,9 +60,64 @@ public class PlayerDAO {
         Player added = new Player(nextId,name);
         players.add(added);
         try (PrintStream out = new PrintStream(new FileOutputStream("data/players.csv", true))){
-            out.printf("%d,%s,%d\r\n", added.getId() , added.getName() , added.getHp());
+            out.printf("%d,%s,%d\r\n", added.getId() , added.getName() , added.getHp(), added.getGold());
         } catch (FileNotFoundException e){
              System.out.println("Error with adding player name");
         }
+    }
+
+    public void save(String name, int newHp, int newGold) {
+        Player p = retrieve(name);
+    
+        try (RandomAccessFile file = new RandomAccessFile("data/players.csv", "rw")){
+            String line;
+            while ((line = file.readLine()) != null) {
+                String[] parts = line.split(",");
+                if (parts.length >= 4 && parts[1].equals(p.getName())) {
+                    parts[0] = Integer.toString(p.getId());
+                    parts[1] = p.getName();
+                    parts[2] = Integer.toString(newHp);
+                    parts[3] = Integer.toString(newGold);
+                    line = String.join(",", parts);
+                    // Seek to the start of the line and overwrite it with the updated information
+                    file.seek(file.getFilePointer() - line.length() - 2); // -2 to account for CRLF characters
+                    file.writeBytes(line + "\r\n");
+                    break;
+                }
+            }
+        } catch (FileNotFoundException e){
+            System.out.println("File not found");
+        } catch (IOException e){
+            System.out.println("Error saving player");
+        }
+        
+        
+    }
+
+    public void saveAfterBattle(String name, int newGold) {
+        Player p = retrieve(name);
+    
+        try (RandomAccessFile file = new RandomAccessFile("data/players.csv", "rw")){
+            String line;
+            while ((line = file.readLine()) != null) {
+                String[] parts = line.split(",");
+                if (parts.length >= 4 && parts[1].equals(p.getName())) {
+                    parts[0] = Integer.toString(p.getId());
+                    parts[1] = p.getName();
+                    parts[3] = Integer.toString(newGold);
+                    line = String.join(",", parts);
+                    // Seek to the start of the line and overwrite it with the updated information
+                    file.seek(file.getFilePointer() - line.length() - 2); // -2 to account for CRLF characters
+                    file.writeBytes(line + "\r\n");
+                    break;
+                }
+            }
+        } catch (FileNotFoundException e){
+            System.out.println("File not found");
+        } catch (IOException e){
+            System.out.println("Error saving player");
+        }
+        
+        
     }
 }

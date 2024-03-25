@@ -6,8 +6,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 
-// import org.springframework.stereotype.Service;
-
 import java.util.Collections;
 import java.util.InputMismatchException;
 import java.util.List;
@@ -32,7 +30,7 @@ public class BossDAO {
             sc.useDelimiter(",|\n|\r\n");
             while (sc.hasNext()) {
                 // System.out.println(sc.next());
-                bosses.add(new Boss(sc.nextInt(),sc.next(),sc.nextDouble(), sc.nextInt(),sc.next()));
+                bosses.add(new Boss(sc.nextInt(),sc.next(),sc.nextDouble(), sc.nextInt(),sc.next(), sc.nextInt()));
             }
         } catch (FileNotFoundException e) {
             System.out.println("Shag, file maybe not found ah...");

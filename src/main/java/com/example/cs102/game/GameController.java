@@ -1,31 +1,39 @@
 package com.example.cs102.game;
 
+import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import com.example.cs102.boss.Boss;
 import com.example.cs102.boss.BossDAO;
+import com.example.cs102.boss.BossImg;
 import com.example.cs102.hand.BossHand;
 import com.example.cs102.hand.Hand;
 import com.example.cs102.hand.PlayerHand;
 import com.example.cs102.player.Player;
 import com.example.cs102.player.PlayerDAO;
+import com.example.cs102.potion.Potion;
+import com.example.cs102.potion.PotionDAO;
 import com.example.cs102.poker.BestHandUtility;
 import com.example.cs102.poker.Card;
 import com.example.cs102.poker.ComboUtility;
 import com.example.cs102.poker.Deck;
 import com.example.cs102.poker.DeckController;
 import com.example.cs102.Exceptions.PlayerNotFoundException;
+import com.example.cs102.Exceptions.PotionNotFoundException;
 import com.example.cs102.Exceptions.BossNotFoundException;
 import com.example.cs102.Exceptions.DuplicateCardException;
+import com.example.cs102.Exceptions.InsufficientGoldException;
 import com.example.cs102.Exceptions.InvalidHandException;
+
 
 public class GameController {
 
     // private final GameService service;
     private PlayerDAO playerDAO;
     private BossDAO bossDAO;
+    private PotionDAO potionDAO;
 
     private Player player;
     private Boss boss;
@@ -39,6 +47,7 @@ public class GameController {
     public GameController() {
         playerDAO = new PlayerDAO();
         bossDAO = new BossDAO();
+        potionDAO = new PotionDAO();
     }
 
     // public void displayPlayers() {
@@ -67,6 +76,43 @@ public class GameController {
     public List<Boss> loadBosses() {
         return bossDAO.retrieveBosses();
     }
+
+    public List<Potion> loadPotions() {
+        return potionDAO.retrievePotion();
+    }
+
+    public Potion selectPotion(int n) {
+
+        Potion potion = potionDAO.retrieve(n);
+        if (potion == null) {
+            throw new PotionNotFoundException();
+        }
+        return potion;
+    }
+    // shop
+    public void purchasePotion(int hp, int gold) throws InsufficientGoldException{
+        
+        if(player.getGold() < gold){
+            throw new InsufficientGoldException("Not enough credit");
+
+        }
+        player.setHp(player.getHp() + hp);
+        player.setGold(player.getGold() - gold);
+        System.out.println("");
+        System.out.println("Thank you for purchasing with us");
+        System.out.println("Your new stats are " + player.toString());
+        System.out.println("");
+        playerDAO.save(player.getName(), player.getHp(), player.getGold());
+    }
+
+    public void increaseGold(){
+        // reward for player
+        player.setGold(player.getGold() + boss.getGold());
+        
+        System.out.println("Your new stats are " + player.toString());
+        playerDAO.saveAfterBattle(player.getName(), player.getGold());
+    }
+
 
     // loading the player and boss into the controller
     public void initPlayer(Player player) {
@@ -195,5 +241,21 @@ public class GameController {
     }
     public boolean hasFled(){
         return hasFlee;
+    }
+    public void displayBoss(){
+        if(boss.getId() == 1){
+            BossImg.DisplayBullDemonKing();
+        }
+        else if(boss.getId() == 2){
+            BossImg.DisplayGrimReaper();
+        }
+    }
+    public void displayBossDead(){
+        if(boss.getId() == 1){
+            BossImg.DisplayBullDemonKingDead();
+        }
+        else if(boss.getId() == 2){
+            BossImg.DisplayGrimReaper();
+        }
     }
 }

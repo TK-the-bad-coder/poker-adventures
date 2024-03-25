@@ -258,7 +258,6 @@ public class BestHandUtility extends ComboUtility {
                                 .filter(cards -> cards.size() > 1) 
                                 .flatMap(List::stream) 
                                 .collect(Collectors.toList());
-        System.out.println(pairs.toString());
         
         List<Card> twoPairs = new ArrayList<>();
         if(pairs.size() >= 4){

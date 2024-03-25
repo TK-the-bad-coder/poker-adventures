@@ -12,14 +12,18 @@ import com.example.cs102.Comparators.SuitComparator;
 import com.example.cs102.Comparators.ValueComparator;
 import com.example.cs102.Exceptions.BossNotFoundException;
 import com.example.cs102.Exceptions.DuplicateCardException;
+import com.example.cs102.Exceptions.InsufficientGoldException;
 import com.example.cs102.Exceptions.InvalidHandException;
 import com.example.cs102.Exceptions.PlayerNotFoundException;
+import com.example.cs102.Exceptions.PotionNotFoundException;
 import com.example.cs102.player.Player;
+import com.example.cs102.potion.Potion;
 import com.example.cs102.poker.Card;
 import com.example.cs102.poker.ComboUtility;
 import com.example.cs102.poker.Deck;
 import com.example.cs102.poker.DeckController;
 import com.example.cs102.boss.Boss;
+import com.example.cs102.boss.BossImg;
 import com.example.cs102.hand.BossHand;
 import com.example.cs102.hand.PlayerHand;
 
@@ -87,9 +91,9 @@ public class GameMenu {
         } while (name.isEmpty());
         // should retrieve whether the player exists or not.... do later
         try {
-            Player player = this.controller.login(name);
-
-            welcome(player);
+            Player player = controller.login(name);
+            clearScreen();
+            gamemenu(player);
         } catch (PlayerNotFoundException e) {
             makeNewPlayer(name);
         }
@@ -111,7 +115,7 @@ public class GameMenu {
                 System.out.println("Ok, exiting to main menu.");
             } else if (input.equals("y")) {
                 Player player = this.controller.makeNewPlayer(name);
-                welcome(player);
+                gamemenu(player);
             } else {
                 isValid = false;
                 System.out.println("Please enter a valid input");
@@ -119,11 +123,85 @@ public class GameMenu {
         } while (!isValid);
     }
 
+    public void gamemenu(Player player){
+        clearScreen();
+        welcome(player);
+        Scanner sc = new Scanner(System.in);
+        String choice = "";
+        do{
+        System.out.println("1) To go on an adventure - PRESS 1");
+        System.out.println("2) To upgrade your stats - press 2");
+        System.out.println("3) To exit - press 3");
+        
+            System.out.print("Enter Choice of Menu:");
+            choice = sc.next().toLowerCase(Locale.ENGLISH);
+            if ("3".equals(choice)) {
+                break;
+            }
+            try {
+                int menuOption = Integer.parseInt(choice);
+                // play game
+                if(menuOption == 1){
+                    clearScreen();
+                    controller.initPlayer(player);
+                    selectBoss();
+                    
+                }
+                else if(menuOption == 2){
+                    clearScreen();
+                    displayShop();
+                    welcomeShop(player);
+                    controller.initPlayer(player);
+                    selectshop(player);
+
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Please enter a number");
+            } 
+
+        } while (!("3".equals(choice)));
+        
+    }
+
     public void welcome(Player player) {
-        System.out.println("===================================");
+        System.out.println("===============================================");
         System.out.printf("Welcome to Poker Adventure, %s!\r\n", player.getName());
-        controller.initPlayer(player);
-        selectBoss();
+        
+    }
+
+    public void welcomeShop(Player player){
+        System.out.printf("Welcome to Poker Adventure Shop,  %s!\r\n" , player.getName());
+        System.out.println("");
+        System.out.println(player.toString());
+        System.out.println("");
+    }
+
+    public void selectshop(Player player) {
+        Scanner sc = new Scanner(System.in);
+        Potion potion = null;
+        String choice = "";
+        do{
+            showPotions();
+            System.out.print("Enter Choice of Potion:");
+            choice = sc.next().toLowerCase(Locale.ENGLISH);
+            if ("e".equals(choice)) {
+                gamemenu(player);
+            }
+            try {
+                int potionChoice = Integer.parseInt(choice);
+                potion = this.controller.selectPotion(potionChoice);
+                controller.purchasePotion(potion.getHp(), potion.getGold());
+                
+            } catch (NumberFormatException e) {
+                System.out.println("Please enter a number");
+            } catch (PotionNotFoundException e){
+                System.out.println("Please enter a valid Potion choice");
+            } catch (InsufficientGoldException e){
+                System.out.println("Insufficent Gold, please enter another Potion");
+            }
+
+        } while (!("e".equals(choice)));
+
     }
 
     public void selectBoss() {
@@ -134,8 +212,8 @@ public class GameMenu {
             showBosses();
             System.out.println("Enter Choice of opponent:");
             choice = sc.next().toLowerCase(Locale.ENGLISH);
-            if ("b".equals(choice)) {
-                break;
+            if ("e".equals(choice)) {
+                return;
             }
             try {
                 int bossChoice = Integer.parseInt(choice);
@@ -148,7 +226,7 @@ public class GameMenu {
                 System.out.println("Please enter a valid choice");
             }
 
-        } while (!("b".equals(choice)));
+        } while (!("e".equals(choice)));
 
     }
 
@@ -157,7 +235,28 @@ public class GameMenu {
         for (Boss boss : bosses) {
             System.out.println(boss);
         }
+        System.out.println("To exit - PRESS e");
     }
+
+    public void showPotions() {
+        List<Potion> potions = this.controller.loadPotions();
+
+        for (Potion p : potions) {
+            System.out.println("" + p.getId() + ")" + " " + p.getItemName() + " (gold " + p.getGold() + ") : Increase " + p.getHp() + "HP - PRESS " + p.getId() );
+        }
+        System.out.println("e) EXIT");
+    }
+
+    public void displayShop(){
+        System.out.println("..._____________|__|_...");
+        System.out.println("../                  \\..");
+        System.out.println("./ YL's potion Shop   \\..");
+        System.out.println("/______________________\\");
+        System.out.println(".|        ___         |.");
+        System.out.println(".|  [ ]  |   |  [ ]   |.");
+        System.out.println(".|_______|__'|________|.");
+    }
+    
 
     public void startGame() {
         controller.startGame();
@@ -167,10 +266,13 @@ public class GameMenu {
                 return;
             }
             if (controller.getGameState().isBossDead()) {
-                System.out.printf("Congratulations! You Beat %s! Have a cookie!\r\n",
+                controller.displayBossDead();
+                controller.increaseGold();
+                System.out.printf("Congratulations! You Beat %s! \r\n",
                         controller.getBoss().getName());
                 return;
             }
+            
             bossTurn();
             if (controller.getGameState().isPlayerDead()){
                 System.out.printf("%s laughs over your demise.....\r\n" , controller.getBoss().getName());
@@ -241,6 +343,7 @@ public class GameMenu {
         }while (!confirmed);
     }
     public void bossTurn(){
+        controller.displayBoss();
         List<Card> combo = controller.bossMove();
         showBossMove(combo);
         controller.bossMove(combo);
@@ -340,4 +443,9 @@ public class GameMenu {
         String comboValue = ComboUtility.getHandValue(combo);
         System.out.printf("%s played a %s , and dealt %d damage\r\n" , controller.getBoss().getName() , comboValue , ComboUtility.getDamageValue(comboValue));
     }
+
+    public static void clearScreen() {  
+        System.out.print("\033[H\033[2J");  
+        System.out.flush();  
+    }  
 }

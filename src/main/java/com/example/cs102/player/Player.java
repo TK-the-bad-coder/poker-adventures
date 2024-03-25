@@ -15,16 +15,19 @@ public class Player {
 
     private int hp = 50; // default value
 
+    private int gold;
+
     public Player(int id, String name) {
         this.id = id;
         this.name = name;
     }
 
     // overload for existing players
-    public Player(int id, String name, int hp) {
+    public Player(int id, String name, int hp, int gold) {
         this.id = id;
         this.name = name;
         this.hp = hp;
+        this.gold = gold;
     }
 
     public int getId(){
@@ -33,17 +36,21 @@ public class Player {
     public int getHp() {
         return hp;
     }
+    public String getName() {
+        return name;
+    }
+    public int getGold() {
+        return gold;
+    }
 
     public void setHp(int hp) {
         this.hp = hp;
     }
-
-    public String getName() {
-        return name;
-    }
-
     public void setHand(PlayerHand playerHand) {
         this.playerHand = playerHand;
+    }
+    public void setGold(int gold){
+        this.gold = gold;
     }
 
     public void clearHand() {
@@ -58,14 +65,8 @@ public class Player {
         return this.playerHand;
     }
     
-    public boolean isDead(){
-
-        return hp < 0;
-
-        // if(hp < 0){
-        //     return true;
-        // }
-        // return false;
+    public String toString(){
+        return "Name: " + name + ", Hp: " + hp + " Gold:" + gold;
     }
 
     // private final static MAX_CARDS = 10;
