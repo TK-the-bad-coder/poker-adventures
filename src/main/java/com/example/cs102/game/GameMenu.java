@@ -49,7 +49,7 @@ public class GameMenu {
                         break;
 
                     case 2:
-                        System.out.println("Bye Bye");
+                        System.out.ntln("Bye Bye");
                         break;
 
                     default:
@@ -169,79 +169,83 @@ public class GameMenu {
                 return;
             }
             bossTurn();
-            if (controller.getGameState().isPlayerDead()){
-                System.out.printf("%s laughs over your demise.....\r\n" , controller.getBoss().getName());
+            if (controller.getGameState().isPlayerDead()) {
+                System.out.printf("%s laughs over your demise.....\r\n", controller.getBoss().getName());
                 return;
             }
         }
     }
 
-    public void playerTurn(){
+    public void playerTurn() {
         Scanner sc = new Scanner(System.in);
         boolean confirmed = false;
-        do{
+        do {
             showGameState(controller.getGameState());
             List<Card> playerHand = controller.getPlayer().getCards();
             playerHand.sort(preferredComparator);
             showHand(playerHand);
             requestPlayerCombo();
             String input = sc.nextLine().toLowerCase(Locale.ENGLISH);
-            switch(input){
-            case "":
-                System.out.println("Please enter something");
-                break;
-            case "s":
-                preferredComparator = SC;
-                break;
+            switch (input) {
+                case "":
+                    System.out.println("Please enter something");
+                    break;
+                case "s":
+                    preferredComparator = SC;
+                    break;
 
-            case "v":
-                preferredComparator = VC;
-                break;
+                case "v":
+                    preferredComparator = VC;
+                    break;
 
-            case "f":
-                controller.getGameState().flee();
-                System.out.println("The boss laughs at you as you flee to the main menu...");
-                System.out.println();
-                break;
+                case "f":
+                    controller.getGameState().flee();
+                    System.out.println("The boss laughs at you as you flee to the main menu...");
+                    System.out.println();
+                    break;
 
-            default:
-                String[] splittedCards = input.split(" ");
-                int[] intInput = Arrays.stream(splittedCards)
-                    .mapToInt(number -> Integer.parseInt(number)).toArray();
-                try{
-                    controller.checkMove(intInput);
-                    List<Card> selectedCards = controller.playerMove(intInput);
-                    confirmed = confirmSelection(selectedCards);
-                    if (confirmed){
-                        String comboPlayed = ComboUtility.getHandValue(selectedCards);
-                        showComboPlayed(comboPlayed);
-                        controller.playCombo(selectedCards);
-                        int damage = ComboUtility.getDamageValue(comboPlayed);
-                        System.out.printf("You dealt %d damage to %s\r\n" , damage , controller.getBoss().getName());
+                default:
+
+                    String[] splittedCards = input.split(" ");
+                    int[] intInput = Arrays.stream(splittedCards)
+                            .mapToInt(number -> Integer.parseInt(number)).toArray();
+                    try {
+
+                        controller.checkMove(intInput);
+                        List<Card> selectedCards = controller.playerMove(intInput);
+                        confirmed = confirmSelection(selectedCards);
+
+                        if (confirmed) {
+                            String comboPlayed = ComboUtility.getHandValue(selectedCards);
+                            showComboPlayed(comboPlayed);
+                            controller.playCombo(selectedCards);
+                            int damage = ComboUtility.getDamageValue(comboPlayed);
+                            System.out.printf("You dealt %d damage to %s\r\n", damage, controller.getBoss().getName());
+                        }
+                    } catch (IndexOutOfBoundsException e) {
+                        System.out.println("Um... you dont have that many cards ah");
+                    } catch (DuplicateCardException e) {
+                        System.out.println(e.getMessage());
+                    } catch (InvalidHandException e) {
+                        System.out.println("Hand should only contain either 1, 2 or 5 cards");
+                        System.out.println(e.getMessage());
+                        InvalidHandException.showValidChoices();
+                    } catch (NumberFormatException e) {
+                        System.out.println("|ERROR| Please enter a valid input");
+                        InvalidHandException.showValidChoices();
+                    } catch (IllegalArgumentException e) {
+                        System.out.println("|ERROR| " + e.getMessage());
                     }
-                }catch (IndexOutOfBoundsException e) {
-                System.out.println("Um... you dont have that many cards ah");
-                } catch (DuplicateCardException e) {
-                System.out.println(e.getMessage());
-                }
-                catch (InvalidHandException e) {
-                    System.out.println("Hand should only contain either 1, 2 or 5 cards");
-                    System.out.println(e.getMessage());
-                    InvalidHandException.showValidChoices();
-                } catch (NumberFormatException e) {
-                    System.out.println("|ERROR| Please enter a valid input");
-                    InvalidHandException.showValidChoices();
-                } catch (IllegalArgumentException e) {
-                    System.out.println("|ERROR| " + e.getMessage());
-                }
             }
-        }while (!confirmed);
+        } while (!confirmed);
     }
-    public void bossTurn(){
+
+    public void bossTurn() {
         List<Card> combo = controller.bossMove();
         showBossMove(combo);
         controller.bossMove(combo);
     }
+
     public void showGameState(GameState gameState) {
         int playerCurrentHp = gameState.getPlayerCurrentHp();
         int bossCurrentHp = gameState.getBossCurrentHp();
@@ -311,7 +315,7 @@ public class GameMenu {
         System.out.println("|");
     }
 
-    private boolean confirmSelection(List <Card> selectedCards) {
+    private boolean confirmSelection(List<Card> selectedCards) {
         Scanner sc = new Scanner(System.in);
         String value = ComboUtility.getHandValue(selectedCards);
         while (true) {
@@ -330,11 +334,14 @@ public class GameMenu {
             }
         }
     }
-    public void showComboPlayed(String comboPlayed){
+
+    public void showComboPlayed(String comboPlayed) {
         System.out.print("You have made the following move - " + comboPlayed + "\r\n");
     }
-    public void showBossMove(List<Card> combo){
+
+    public void showBossMove(List<Card> combo) {
         String comboValue = ComboUtility.getHandValue(combo);
-        System.out.printf("%s played a %s , and dealt %d damage\r\n" , controller.getBoss().getName() , comboValue , ComboUtility.getDamageValue(comboValue));
+        System.out.printf("%s played a %s , and dealt %d damage\r\n", controller.getBoss().getName(), comboValue,
+                ComboUtility.getDamageValue(comboValue));
     }
 }
