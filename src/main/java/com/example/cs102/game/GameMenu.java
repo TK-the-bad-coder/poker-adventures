@@ -161,8 +161,11 @@ public class GameMenu {
 
     public void startGame() {
         controller.startGame();
-        while (true) {
+        while (!controller.hasFled()) {
             playerTurn();
+            if (controller.hasFled()){
+                return;
+            }
             if (controller.getGameState().isBossDead()) {
                 System.out.printf("Congratulations! You Beat %s! Have a cookie!\r\n",
                         controller.getBoss().getName());
@@ -198,44 +201,43 @@ public class GameMenu {
                     preferredComparator = VC;
                     break;
 
-                case "f":
-                    controller.getGameState().flee();
-                    System.out.println("The boss laughs at you as you flee to the main menu...");
-                    System.out.println();
-                    break;
+            case "f":
+                controller.flee();
+                System.out.println("The boss laughs at you as you flee to the main menu...");
+                System.out.println();
+                return;
 
-                default:
-
-                    String[] splittedCards = input.split(" ");
+            default:
+                String[] splittedCards = input.split(" ");
+                
+                try{
                     int[] intInput = Arrays.stream(splittedCards)
-                            .mapToInt(number -> Integer.parseInt(number)).toArray();
-                    try {
-
-                        controller.checkMove(intInput);
-                        List<Card> selectedCards = controller.playerMove(intInput);
-                        confirmed = confirmSelection(selectedCards);
-
-                        if (confirmed) {
-                            String comboPlayed = ComboUtility.getHandValue(selectedCards);
-                            showComboPlayed(comboPlayed);
-                            controller.playCombo(selectedCards);
-                            int damage = ComboUtility.getDamageValue(comboPlayed);
-                            System.out.printf("You dealt %d damage to %s\r\n", damage, controller.getBoss().getName());
-                        }
-                    } catch (IndexOutOfBoundsException e) {
-                        System.out.println("Um... you dont have that many cards ah");
-                    } catch (DuplicateCardException e) {
-                        System.out.println(e.getMessage());
-                    } catch (InvalidHandException e) {
-                        System.out.println("Hand should only contain either 1, 2 or 5 cards");
-                        System.out.println(e.getMessage());
-                        InvalidHandException.showValidChoices();
-                    } catch (NumberFormatException e) {
-                        System.out.println("|ERROR| Please enter a valid input");
-                        InvalidHandException.showValidChoices();
-                    } catch (IllegalArgumentException e) {
-                        System.out.println("|ERROR| " + e.getMessage());
+                    .mapToInt(number -> Integer.parseInt(number)).toArray();
+                    controller.checkMove(intInput);
+                    List<Card> selectedCards = controller.playerMove(intInput);
+                    confirmed = confirmSelection(selectedCards);
+                    if (confirmed){
+                        String comboPlayed = ComboUtility.getHandValue(selectedCards);
+                        showComboPlayed(comboPlayed);
+                        controller.playCombo(selectedCards);
+                        int damage = ComboUtility.getDamageValue(comboPlayed);
+                        System.out.printf("You dealt %d damage to %s\r\n" , damage , controller.getBoss().getName());
                     }
+                }catch (IndexOutOfBoundsException e) {
+                System.out.println("Um... you dont have that many cards ah");
+                } catch (DuplicateCardException e) {
+                System.out.println(e.getMessage());
+                }
+                catch (InvalidHandException e) {
+                    System.out.println("Hand should only contain either 1, 2 or 5 cards");
+                    System.out.println(e.getMessage());
+                    InvalidHandException.showValidChoices();
+                } catch (NumberFormatException e) {
+                    System.out.println("|ERROR| Please enter a valid input");
+                    InvalidHandException.showValidChoices();
+                } catch (IllegalArgumentException e) {
+                    System.out.println("|ERROR| " + e.getMessage());
+                }
             }
         } while (!confirmed);
     }
