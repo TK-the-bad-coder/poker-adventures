@@ -50,9 +50,14 @@ public class GameController {
         potionDAO = new PotionDAO();
     }
 
-    // public void displayPlayers() {
-    // // playerDAO // may not be used
-    // }
+    public static boolean checkValidName(String name){
+        for (int i = 0 ; i < name.length() ; i++){
+            if (!Character.isAlphabetic(name.charAt(i))){
+                return false;
+            }
+        }   
+        return true;
+    }
 
     public Player login(String name) {
         player = playerDAO.retrieve(name);

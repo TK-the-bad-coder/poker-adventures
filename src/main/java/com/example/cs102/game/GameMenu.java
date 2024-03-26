@@ -79,7 +79,7 @@ public class GameMenu {
 
         Scanner sc = new Scanner(System.in);
         String name = "";
-
+        boolean isValid = false;
         do {
             System.out.println("=======================================");
             System.out.println("Enter your player name!");
@@ -88,8 +88,13 @@ public class GameMenu {
             if (name.isEmpty()) {
                 System.out.println("Please enter something!!");
             }
-        } while (name.isEmpty());
-        // should retrieve whether the player exists or not.... do later
+            if (GameController.checkValidName(name)){
+                isValid = true;
+            } else {
+                System.out.println("Names can only be alphabetical, with no spaces, numbers or special symbols1");
+            }
+        } while (!isValid);
+
         try {
             Player player = controller.login(name);
             clearScreen();
@@ -106,19 +111,26 @@ public class GameMenu {
 
     public void makeNewPlayer(String name) {
         boolean isValid = true;
+        Scanner sc = new Scanner(System.in);
         do {
             System.out.println("Would you like to make a new account? y/n");
-            Scanner sc = new Scanner(System.in);
+
             String input = sc.next().toLowerCase(Locale.ENGLISH);
 
-            if (input.equals("n")) {
+            switch(input){
+                case "n":
                 System.out.println("Ok, exiting to main menu.");
-            } else if (input.equals("y")) {
+                break;
+
+                case "y":
                 Player player = this.controller.makeNewPlayer(name);
                 gamemenu(player);
-            } else {
-                isValid = false;
+                break;
+
+                default:
                 System.out.println("Please enter a valid input");
+                isValid = false;
+                break;
             }
         } while (!isValid);
     }
@@ -134,32 +146,35 @@ public class GameMenu {
         System.out.println("3) To exit - press 3");
         
             System.out.print("Enter Choice of Menu:");
-            choice = sc.next().toLowerCase(Locale.ENGLISH);
-            if ("3".equals(choice)) {
-                break;
-            }
+            choice = sc.next();
+
             try {
                 int menuOption = Integer.parseInt(choice);
-                // play game
-                if(menuOption == 1){
+                switch(menuOption){
+                    case 1:
                     clearScreen();
                     controller.initPlayer(player);
                     selectBoss();
-                    
-                }
-                else if(menuOption == 2){
+                    break;
+
+                    case 2:
                     clearScreen();
                     displayShop();
                     welcomeShop(player);
                     controller.initPlayer(player);
                     selectshop(player);
+                    break;
 
+                    case 3:
+                    return;
+
+                    default:
+                        System.out.println("Please enter a number between 1 and 3");
                 }
             } catch (NumberFormatException e) {
                 System.out.println("Please enter a number");
-            } 
-
-        } while (!("3".equals(choice)));
+            }
+        } while (true);
         
     }
 
@@ -185,7 +200,8 @@ public class GameMenu {
             System.out.print("Enter Choice of Potion:");
             choice = sc.next().toLowerCase(Locale.ENGLISH);
             if ("e".equals(choice)) {
-                gamemenu(player);
+                System.out.println("Returning to main menu");
+                return;
             }
             try {
                 int potionChoice = Integer.parseInt(choice);
@@ -198,9 +214,11 @@ public class GameMenu {
                 System.out.println("Please enter a valid Potion choice");
             } catch (InsufficientGoldException e){
                 System.out.println("Insufficent Gold, please enter another Potion");
+            } catch (IndexOutOfBoundsException e){
+                System.out.println("The shop dont have so many things ah");
             }
-
-        } while (!("e".equals(choice)));
+            
+        } while (true);
 
     }
 
@@ -226,7 +244,7 @@ public class GameMenu {
                 System.out.println("Please enter a valid choice");
             }
 
-        } while (!("e".equals(choice)));
+        } while (true);
 
     }
 
@@ -311,9 +329,10 @@ public class GameMenu {
 
             default:
                 String[] splittedCards = input.split(" ");
-                int[] intInput = Arrays.stream(splittedCards)
-                    .mapToInt(number -> Integer.parseInt(number)).toArray();
+
                 try{
+                    int[] intInput = Arrays.stream(splittedCards)
+                    .mapToInt(number -> Integer.parseInt(number)).toArray();
                     controller.checkMove(intInput);
                     List<Card> selectedCards = controller.playerMove(intInput);
                     confirmed = confirmSelection(selectedCards);

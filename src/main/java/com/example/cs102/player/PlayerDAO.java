@@ -24,17 +24,25 @@ public class PlayerDAO {
         Scanner sc = null;
         try {
             sc = new Scanner(new File("data/players.csv"));
-            sc.useDelimiter(",|\n|\r\n");
-            while (sc.hasNext()) {
-                players.add(new Player(sc.nextInt(), sc.next(), sc.nextInt(), sc.nextInt()));
+
+            // change to reading the line then split with regex ','
+            while (sc.hasNextLine()) {
+                String lineRead = sc.nextLine();
+                Scanner lineReader = new Scanner(lineRead);
+                lineReader.useDelimiter(",|\n|\r\n");
+                if (!lineRead.equals("")){
+                    players.add(new Player(lineReader.nextInt(), lineReader.next(), lineReader.nextInt(), lineReader.nextInt()));
+                }
             }
         } catch (FileNotFoundException e) {
             System.out.println("Shag, file maybe not found ah...");
         } catch (InputMismatchException e) {
-            System.out.println("An error has occured"); // to raise exception and let menu handle
+            System.out.println("An error has occured when loading players"); // to raise exception and let menu handle
         } finally {
-            if (sc != null)
+            if (sc != null){
                 sc.close();
+            }
+
         }
     }
 
