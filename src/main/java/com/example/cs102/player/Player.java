@@ -15,7 +15,7 @@ public class Player {
 
     private int hp = 50; // default value
 
-    private int gold;
+    private int gold = 0;
 
     public Player(int id, String name) {
         this.id = id;

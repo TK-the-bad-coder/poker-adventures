@@ -91,7 +91,7 @@ public class GameMenu {
             if (GameController.checkValidName(name)){
                 isValid = true;
             } else {
-                System.out.println("Names can only be alphabetical, with no spaces, numbers or special symbols1");
+                System.out.println("Names can only be alphabetical, with no numbers or special symbols");
             }
         } while (!isValid);
 

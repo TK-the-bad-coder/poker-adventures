@@ -68,7 +68,7 @@ public class PlayerDAO {
         Player added = new Player(nextId,name);
         players.add(added);
         try (PrintStream out = new PrintStream(new FileOutputStream("data/players.csv", true))){
-            out.printf("%d,%s,%d\r\n", added.getId() , added.getName() , added.getHp(), added.getGold());
+            out.printf("%d,%s,%d,%d\r\n", added.getId() , added.getName() , added.getHp(), added.getGold());
         } catch (FileNotFoundException e){
              System.out.println("Error with adding player name");
         }
