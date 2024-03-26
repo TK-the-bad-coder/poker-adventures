@@ -129,10 +129,10 @@ public class BestHandUtility extends ComboUtility {
         boolean isfourOfAKind = false;
         if(fourOfAKind != null){
             int counter = 0;
-            for(int i=0; i< bossHand.size(); i++){
+            for(Card c : bossHand){
                 if(counter != 1){
-                    if(bossHand.get(i).getValue() != fourOfAKind.get(0).getValue()){
-                        fourOfAKind.add(bossHand.get(i));
+                    if(c.getValue() != fourOfAKind.get(0).getValue()){
+                        fourOfAKind.add(c);
                         isfourOfAKind = true;
                         counter++;
                     }
@@ -339,11 +339,6 @@ public class BestHandUtility extends ComboUtility {
         }
         
         return true;
-    }
-
-    private static int straightSum(int start, int end) {
-        // AP
-        return (end - start + 1) * (start + end) / 2;
     }
 
 }
