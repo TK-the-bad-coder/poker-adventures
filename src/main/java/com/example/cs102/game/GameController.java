@@ -26,7 +26,6 @@ import com.example.cs102.exceptions.InvalidHandException;
 
 public class GameController {
 
-    // private final GameService service;
     private PlayerDAO playerDAO;
     private BossDAO bossDAO;
     private PotionDAO potionDAO;
@@ -128,7 +127,7 @@ public class GameController {
     }
 
     public List<Card> bossMove() {
-        return BestHandUtility.getBestHand(boss.getCards());
+        return BestHandUtility.getBestHand(boss.getHand().getCards());
     }
 
     public int playTurn(String comboMove) {
@@ -188,7 +187,7 @@ public class GameController {
     }
 
     public List<Card> playerMove(int[] input) {
-        List<Card> currentHand = player.getCards();
+        List<Card> currentHand = player.getHand().getCards();
         List<Card> cardSelection = new ArrayList<>();
         // getting the cards selected
         for (int number : input) {

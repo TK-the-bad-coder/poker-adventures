@@ -19,11 +19,9 @@ import com.example.cs102.potion.Potion;
 import com.example.cs102.poker.BossDmgCalculatorUtility;
 import com.example.cs102.poker.Card;
 import com.example.cs102.poker.ComboUtility;
-
+import com.example.cs102.poker.comparators.SuitComparator;
+import com.example.cs102.poker.comparators.ValueComparator;
 import com.example.cs102.boss.Boss;
-
-import com.example.cs102.comparators.SuitComparator;
-import com.example.cs102.comparators.ValueComparator;
 
 public class GameMenu {
     private static final char SQUARE = '\u25a0';
@@ -45,12 +43,13 @@ public class GameMenu {
             displayIntro();
 
             String input = "";
+            System.out.print("Please enter your choice:");
 
             input = sc.nextLine();
             choice = 0;
             if (!input.isBlank()) {
                 try {
-                    System.out.print("Please enter your choice:");
+
                     choice = Integer.parseInt(input);
                     switch (choice) {
                         case 1:
@@ -294,7 +293,7 @@ public class GameMenu {
         do {
             showGameState(controller.getGameState());
 
-            List<Card> playerHand = controller.getPlayer().getCards();
+            List<Card> playerHand = controller.getPlayer().getHand().getCards();
             playerHand.sort(preferredComparator);
             showHand(playerHand);
 
@@ -424,11 +423,6 @@ public class GameMenu {
         System.out.println("Enter 's' to sort by suit");
         System.out.println("Enter 'v' to sort by value");
         System.out.println("Enter 'f' to flee");
-    }
-
-    private void showPlayedHand(List<Card> hand) {
-        System.out.println("You played the following hand:");
-        showDiscards(hand);
     }
 
     // displaying game

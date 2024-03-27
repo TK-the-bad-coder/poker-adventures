@@ -1,10 +1,7 @@
 package com.example.cs102.boss;
 
-import java.util.List;
-
 import com.example.cs102.hand.BossHand;
 import com.example.cs102.hand.Hand;
-import com.example.cs102.poker.Card;
 
 public class Boss {
 
@@ -41,12 +38,11 @@ public class Boss {
         return difficulty;
     }
 
-
     public int getId() {
         return id;
     }
 
-    public int getGold(){
+    public int getGold() {
         return gold;
     }
 
@@ -58,10 +54,6 @@ public class Boss {
         return bossHand;
     }
 
-    public List<Card> getCards() {
-        return this.bossHand.getHand();
-    }
-
     public String toString() {
         String result = "";
         result += id;
@@ -69,7 +61,7 @@ public class Boss {
         result += ", Difficulty = " + difficulty;
         result += ", Reward =" + gold;
         result += " Press " + id;
-        
+
         return result;
     }
 }

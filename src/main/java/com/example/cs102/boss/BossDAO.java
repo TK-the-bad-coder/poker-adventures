@@ -1,6 +1,5 @@
 package com.example.cs102.boss;
 
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -27,14 +26,14 @@ public class BossDAO {
             sc.useDelimiter(",|\n|\r\n");
             while (sc.hasNext()) {
 
-                bosses.add(new Boss(sc.nextInt(),sc.next(), sc.nextInt(),sc.next(), sc.nextInt()));
+                bosses.add(new Boss(sc.nextInt(), sc.next(), sc.nextInt(), sc.next(), sc.nextInt()));
             }
         } catch (FileNotFoundException e) {
             System.out.println("Shag, file maybe not found ah...");
         } catch (InputMismatchException e) {
             System.out.println("Something went wrong");
         } finally {
-            if (sc != null){
+            if (sc != null) {
                 sc.close();
             }
 
@@ -50,8 +49,8 @@ public class BossDAO {
     public Boss retrieve(int id) {
         List<Boss> bosses = retrieveBosses();
         return bosses.stream().filter(boss -> boss.getId() == id)
-                                .findFirst()
-                                .orElseThrow(BossNotFoundException::new);
+                .findFirst()
+                .orElseThrow(BossNotFoundException::new);
     }
 
 }

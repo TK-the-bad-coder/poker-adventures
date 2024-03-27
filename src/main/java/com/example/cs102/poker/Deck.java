@@ -14,7 +14,6 @@ public class Deck {
     }
 
     public List<Card> getCards() {
-        // cards = new ArrayList<>(cards);
         return cards == null ? new ArrayList<Card>() : cards;
     }
 

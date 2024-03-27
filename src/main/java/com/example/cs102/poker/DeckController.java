@@ -3,14 +3,17 @@ package com.example.cs102.poker;
 import java.util.*;
 
 public class DeckController {
-    private final HashMap<Character, String> suits = new HashMap<Character, String>() {{
-        put('h', "Hearts");
-        put('d', "Diamonds");
-        put('s', "Spades");
-        put('c', "Clubs");
+    private final HashMap<Character, String> suits = new HashMap<Character, String>() {
+        {
+            put('h', "Hearts");
+            put('d', "Diamonds");
+            put('s', "Spades");
+            put('c', "Clubs");
 
-    }};
+        }
+    };
     private List<Card> cards;
+
     public DeckController(List<Card> cards) {
         this.cards = cards;
     }

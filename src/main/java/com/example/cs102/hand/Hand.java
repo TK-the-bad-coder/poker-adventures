@@ -10,9 +10,6 @@ public class Hand {
     protected List<Card> currentHand;
     private static final int MAXHAND = 10;
     protected Deck deck;
-    // private static final String ANSI_RESET = "\u001B[0m";
-    // private static final String ANSI_BLACK = "\u001B[30m";
-    // private static final String ANSI_RED = "\u001B[31m";
 
     // create Hand
     public Hand(Deck deck) {
@@ -21,7 +18,7 @@ public class Hand {
         addToHand();
     }
 
-    public List<Card> getHand() {
+    public List<Card> getCards() {
         return currentHand;
     }
 
@@ -34,8 +31,8 @@ public class Hand {
 
     public void discard(List<Card> discards) {
         for (Card discard : discards) {
-                currentHand.removeIf(card -> card.getValue() == discard.getValue() && card.getSuit() == discard.getSuit());
-                deck.addToDiscardPile(discard);
+            currentHand.removeIf(card -> card.getValue() == discard.getValue() && card.getSuit() == discard.getSuit());
+            deck.addToDiscardPile(discard);
         }
         showDiscards(discards);
     }

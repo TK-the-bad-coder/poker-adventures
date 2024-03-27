@@ -1,6 +1,5 @@
 package com.example.cs102.game;
 
-
 import com.example.cs102.boss.Boss;
 import com.example.cs102.player.Player;
 
@@ -11,6 +10,7 @@ public class GameState {
 
     private Player player;
     private Boss boss;
+
     public GameState(Player player, Boss boss) {
         this.player = player;
         this.boss = boss;
@@ -35,7 +35,6 @@ public class GameState {
         return bossCurrentHp;
     }
 
-
     // ---------------------------------------------------------------------------------
     public void doDamageTo(Object target, int damage) {
         if (target instanceof Player) {
@@ -45,30 +44,31 @@ public class GameState {
             bossCurrentHp -= damage;
         }
     }
-    public boolean isPlayerDead(){
+
+    public boolean isPlayerDead() {
         return playerCurrentHp <= 0;
     }
-    public boolean isBossDead(){
+
+    public boolean isBossDead() {
         return bossCurrentHp <= 0;
     }
-    
-    //------------------------------------------------------------------------------------
+
+    // ------------------------------------------------------------------------------------
     public void showPlayerHealth() {
         System.out.println(player.getName() + ":");
         System.out.println("Health: " + playerCurrentHp + "/" + player.getHp());
     }
 
-    public void showBossHealth(){
+    public void showBossHealth() {
         bossSpaces();
         System.out.println(boss.getName() + ":");
         bossSpaces();
         System.out.println("Health: " + bossCurrentHp + "/" + boss.getHp());
     }
 
-    public void bossSpaces(){
-        System.out.print("                                                                                                                     ");
+    public void bossSpaces() {
+        System.out.print(
+                "                                                                                                                     ");
     }
-
-    
 
 }

@@ -29,7 +29,4 @@ public class Potion {
         return hp;
     }
 
-    
-
-    
 }

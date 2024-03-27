@@ -1,12 +1,9 @@
 package com.example.cs102.player;
 
-import java.util.List;
-
 import com.example.cs102.hand.PlayerHand;
-import com.example.cs102.poker.Card;
 
 public class Player {
-    
+
     private PlayerHand playerHand;
 
     private int id;
@@ -30,15 +27,18 @@ public class Player {
         this.gold = gold;
     }
 
-    public int getId(){
+    public int getId() {
         return id;
     }
+
     public int getHp() {
         return hp;
     }
+
     public String getName() {
         return name;
     }
+
     public int getGold() {
         return gold;
     }
@@ -46,22 +46,20 @@ public class Player {
     public void setHp(int hp) {
         this.hp = hp;
     }
+
     public void setHand(PlayerHand playerHand) {
         this.playerHand = playerHand;
     }
-    public void setGold(int gold){
-        this.gold = gold;
-    }
 
-    public List<Card> getCards() {
-        return playerHand.getHand();
+    public void setGold(int gold) {
+        this.gold = gold;
     }
 
     public PlayerHand getHand() {
         return playerHand;
     }
-    
-    public String toString(){
+
+    public String toString() {
         return "Name: " + name + ", Hp: " + hp + " Gold:" + gold;
     }
 

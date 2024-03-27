@@ -1,5 +1,4 @@
-// Eric 
-// Nathan passed away while refactoring this
+
 package com.example.cs102.poker;
 
 import java.util.Collections;
@@ -7,7 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ComboUtility {
+public abstract class ComboUtility {
 
     // Declare the static final map
     protected static final Map<String, Integer> COMBO_MAP;
@@ -198,5 +197,4 @@ public class ComboUtility {
         });
     }
 
-    
 }
