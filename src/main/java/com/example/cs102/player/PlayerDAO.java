@@ -28,7 +28,7 @@ public class PlayerDAO {
                 String lineRead = sc.nextLine();
                 Scanner lineReader = new Scanner(lineRead);
                 lineReader.useDelimiter(",|\n|\r\n");
-                if (!lineRead.equals("")){
+                if (!lineRead.isBlank()){
                     players.add(new Player(lineReader.nextInt(), lineReader.next(), lineReader.nextInt(), lineReader.nextInt()));
                 }
             }
