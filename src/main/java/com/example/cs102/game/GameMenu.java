@@ -17,6 +17,7 @@ import com.example.cs102.exceptions.PlayerNotFoundException;
 import com.example.cs102.exceptions.PotionNotFoundException;
 import com.example.cs102.player.Player;
 import com.example.cs102.potion.Potion;
+import com.example.cs102.poker.BossDmgCalculatorUtility;
 import com.example.cs102.poker.Card;
 import com.example.cs102.poker.ComboUtility;
 
@@ -261,17 +262,17 @@ public class GameMenu {
             }
             
             bossTurn();
-            if (controller.getGameState().isPlayerDead()){
-                System.out.printf("%s laughs over your demise.....\r\n" , controller.getBoss().getName());
+            if (controller.getGameState().isPlayerDead()) {
+                System.out.printf("%s laughs over your demise.....\r\n", controller.getBoss().getName());
                 return;
             }
         }
     }
 
-    public void playerTurn(){
+    public void playerTurn() {
         Scanner sc = new Scanner(System.in);
         boolean confirmed = false;
-        do{
+        do {
             showGameState(controller.getGameState());
 
             List<Card> playerHand = controller.getPlayer().getCards();
@@ -282,17 +283,17 @@ public class GameMenu {
             requestPlayerCombo();
 
             String input = sc.nextLine().toLowerCase(Locale.ENGLISH);
-            switch(input){
-            case "":
-                System.out.println("Please enter something");
-                break;
-            case "s":
-                preferredComparator = SC;
-                break;
+            switch (input) {
+                case "":
+                    System.out.println("Please enter something");
+                    break;
+                case "s":
+                    preferredComparator = SC;
+                    break;
 
-            case "v":
-                preferredComparator = VC;
-                break;
+                case "v":
+                    preferredComparator = VC;
+                    break;
 
             case "f":
                 controller.flee();
@@ -343,7 +344,7 @@ public class GameMenu {
                 }
                 break;
             }
-        }while (!confirmed);
+        } while (!confirmed);
     }
     public void bossTurn(){
         displayBoss();
