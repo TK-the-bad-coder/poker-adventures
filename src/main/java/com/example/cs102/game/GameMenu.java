@@ -455,10 +455,10 @@ public class GameMenu {
             String input = sc.next().toLowerCase(Locale.ENGLISH);
             switch (input) {
                 case "y":
-                    sc.close();
+
                     return true;
                 case "n":
-                sc.close();
+
                     return false;
                 default:
                     System.out.println("Please enter a valid input");
@@ -486,7 +486,7 @@ public class GameMenu {
                 String line = sc.nextLine();
                 System.out.println(line);
             }
-            sc.close();
+
         } catch (FileNotFoundException e) {
             System.out.println("WHO DELETED MY FILEEE!!!");
         }

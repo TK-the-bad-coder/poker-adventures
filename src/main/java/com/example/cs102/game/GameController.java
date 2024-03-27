@@ -148,10 +148,6 @@ public class GameController {
                 baseDamage = 20;
                 comboDamage *= 2;
                 break;
-            case "ASIAN":
-                baseDamage = 50; // literally one hit KO regardless of hand for new players
-                comboDamage *= 3;
-                break;
             default:
                 // unknown case
                 break;
