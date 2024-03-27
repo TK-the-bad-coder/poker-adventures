@@ -31,13 +31,17 @@ Get a OS that is supported by this game (refer above)
 
 ## How to Run
 ```
+MAC OS
 $ ./compile.sh
 $ ./run.sh
 
-OR 
-
-$ bash compile.sh 
+OR if you prefer bash...
+$ bash compile.sh
 $ bash run.sh
+
+WINDOWS
+$ compile.bat
+$ run.bat
 
 ```
 # Game Overview
