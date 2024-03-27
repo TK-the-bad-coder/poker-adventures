@@ -1,10 +1,14 @@
 package com.example.cs102.game;
 
+import java.security.InvalidParameterException;
+
+import com.example.cs102.Exceptions.InsufficientGoldException;
 import com.example.cs102.boss.Boss;
 import com.example.cs102.player.Player;
 
 public class GameState {
     private int playerCurrentHp;
+    private int playerCurrentGold;
     private int bossCurrentHp;
 
     private Player player;
@@ -14,6 +18,7 @@ public class GameState {
         this.boss = boss;
         playerCurrentHp = player.getHp();
         bossCurrentHp = boss.getHp();
+
     }
 
     public Boss getBoss() {
@@ -32,6 +37,7 @@ public class GameState {
         return bossCurrentHp;
     }
 
+
     // ---------------------------------------------------------------------------------
     public void doDamageTo(Object target, int damage) {
         if (target instanceof Player) {
@@ -47,6 +53,7 @@ public class GameState {
     public boolean isBossDead(){
         return bossCurrentHp <= 0;
     }
+    
     //------------------------------------------------------------------------------------
     public void showPlayerHealth() {
         System.out.println("=======================================");
@@ -59,5 +66,7 @@ public class GameState {
         System.out.println("Health: " + bossCurrentHp + "/" + boss.getHp());
         System.out.println("=======================================");
     }
+
+    
 
 }
