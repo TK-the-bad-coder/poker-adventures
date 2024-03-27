@@ -30,16 +30,17 @@ Get a OS that is supported by this game (refer above)
 <b>Adjust Terminal size</b> by using `Ctrl` / `CMD` and `+` or `-`, until your eyes can see what is going on
 
 ## How to Run
+On the file directory of the project, do the following:
 ```
-MAC OS
+## MAC OS ##
 $ ./compile.sh
 $ ./run.sh
 
-OR if you prefer bash...
+# OR if you prefer bash... 
 $ bash compile.sh
 $ bash run.sh
 
-WINDOWS
+## WINDOWS ##
 $ compile.bat
 $ run.bat
 
