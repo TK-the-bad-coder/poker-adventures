@@ -36,8 +36,8 @@ $ ./run.sh
 
 OR 
 
-$ ./compile.bat 
-$ ./run.bat
+$ bash compile.sh 
+$ bash run.sh
 
 ```
 # Game Overview
