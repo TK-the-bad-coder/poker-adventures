@@ -120,7 +120,7 @@ public class GameMenu {
             switch(input){
                 case "n":
                 System.out.println("Ok, exiting to main menu.");
-                break;
+                return;
 
                 case "y":
                 Player player = this.controller.makeNewPlayer(name);
