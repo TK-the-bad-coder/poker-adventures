@@ -42,7 +42,7 @@ public class BestHandUtility extends ComboUtility {
         List<Card> possibleFlush = groupedBySuit(bossHand);
         List<Card> royalFlush = new ArrayList<>();
         if (possibleFlush == null) {
-            return royalFlush;
+            return new ArrayList<Card>();
         }
 
         // sort by value now
@@ -61,10 +61,9 @@ public class BestHandUtility extends ComboUtility {
 
         if (royalFlush.size() == 5) {
             return royalFlush;
-        } else {
-            royalFlush.clear(); // get rid of any cards
-            return royalFlush;
         }
+
+        return new ArrayList<Card>();
 
     }
 
@@ -76,7 +75,7 @@ public class BestHandUtility extends ComboUtility {
         List<Card> straightFlush = new ArrayList<>();
 
         if (possibleFlush == null) {
-            return straightFlush;
+            return new ArrayList<Card>();
         }
 
         // sort by value now
@@ -97,8 +96,8 @@ public class BestHandUtility extends ComboUtility {
         if (straightFlush.size() == 5) {
             return straightFlush;
         }
-        straightFlush.clear();
-        return straightFlush;
+
+        return new ArrayList<Card>();
 
     }
 
@@ -125,7 +124,7 @@ public class BestHandUtility extends ComboUtility {
             }
         }
         if (!isValid) {
-            fourOfAKind.clear();
+            return new ArrayList<Card>();
         }
         return fourOfAKind;
     }
@@ -157,7 +156,7 @@ public class BestHandUtility extends ComboUtility {
             }
         }
         if (!isValid) {
-            fullHouse.clear();
+            return new ArrayList<Card>();
         }
 
         return fullHouse;
@@ -171,7 +170,7 @@ public class BestHandUtility extends ComboUtility {
         List<Card> possibleFlush = groupedBySuit(bossHand);
 
         if (possibleFlush == null) {
-            return possibleFlush;
+            return new ArrayList<Card>();
         }
 
         while (possibleFlush.size() > 5) {
@@ -206,9 +205,8 @@ public class BestHandUtility extends ComboUtility {
         if (straight.size() == 5) {
             return straight;
         }
-        
-        straight.clear();
-        return straight;
+
+        return new ArrayList<Card>();
 
     }
 
@@ -220,17 +218,19 @@ public class BestHandUtility extends ComboUtility {
         // Filter the groups to find any group with size 3
         List<Card> threeOfAKind = groupByNumberSize(bossHand, 3);
 
-        if (threeOfAKind != null) {
-            int i = 0;
-            for (Card c : bossHand) {
-                if (i != 2) {
-                    if (c.getValue() != threeOfAKind.get(0).getValue()) {
-                        threeOfAKind.add(c);
-                        i++;
-                    }
-                }
+        if (threeOfAKind == null) {
+            return new ArrayList<Card>();
+        }
 
+        int i = 0;
+        for (Card c : bossHand) {
+            if (i != 2) {
+                if (c.getValue() != threeOfAKind.get(0).getValue()) {
+                    threeOfAKind.add(c);
+                    i++;
+                }
             }
+
         }
 
         return threeOfAKind;

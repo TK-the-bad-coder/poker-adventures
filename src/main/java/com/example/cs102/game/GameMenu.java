@@ -27,6 +27,8 @@ import com.example.cs102.comparators.ValueComparator;
 
 public class GameMenu {
     private static final char SQUARE = '\u25a0';
+    private static final String SPACE = " ";
+    private static final int INDENTATION = 60;
     private static final SuitComparator SC = new SuitComparator();
     private static final ValueComparator VC = new ValueComparator();
     private Comparator<Card> preferredComparator = VC;
@@ -75,7 +77,6 @@ public class GameMenu {
     }
 
     public void start() {
-
         Scanner sc = new Scanner(System.in);
         String name = "";
         boolean isValid = false;
@@ -83,7 +84,7 @@ public class GameMenu {
         displaylogin();
         do {
             System.out.print(
-                    "                                                                    Enter your player name: ");
+                     SPACE.repeat(INDENTATION) + "Enter your player name (Case sensitive): ");
             name = sc.nextLine();
             if (name.isEmpty()) {
                 System.out.println("Please enter something!!");
@@ -164,7 +165,7 @@ public class GameMenu {
                             displayShop();
                             welcomeShop(player);
                             controller.initPlayer(player);
-                            selectshop(player);
+                            selectShop(player);
                             break;
 
                         case 3:
@@ -183,14 +184,14 @@ public class GameMenu {
 
     }
 
-    public void selectshop(Player player) {
+    public void selectShop(Player player) {
         Scanner sc = new Scanner(System.in);
         Potion potion = null;
         String choice = "";
         do {
             showPotions();
-            System.out.print("Enter Choice of Potion:");
-            choice = sc.next().toLowerCase(Locale.ENGLISH);
+            System.out.print("Enter Choice of Potion: ");
+            choice = sc.nextLine().toLowerCase(Locale.ENGLISH);
             if ("e".equals(choice)) {
                 System.out.println("Returning to main menu");
                 return;
@@ -219,7 +220,7 @@ public class GameMenu {
         displayPlayerVsBoss();
         do {
             showBosses();
-            System.out.println("Choose Your Boss: ");
+            System.out.print("Choose Your Boss: ");
             choice = sc.nextLine().toLowerCase(Locale.ENGLISH);
             if (choice.isBlank()) {
                 System.out.println("Please enter something:");
@@ -257,7 +258,7 @@ public class GameMenu {
             System.out.println("" + p.getId() + ")" + " " + p.getItemName() + " (gold " + p.getGold() + ") : Increase "
                     + p.getHp() + "HP - PRESS " + p.getId());
         }
-        System.out.println("e) EXIT");
+        System.out.println("e) Exit");
     }
 
     public void startGame() {
@@ -312,7 +313,9 @@ public class GameMenu {
 
                 case "f":
                     controller.flee();
-                    System.out.println("The boss laughs at you as you flee to the main menu...");
+                    clearScreen();
+                    System.out.printf("%s laughs at you as you flee to the main menu...",
+                            controller.getBoss().getName());
                     System.out.println();
                     return;
 
@@ -338,9 +341,6 @@ public class GameMenu {
                             int damage = ComboUtility.getDamageValue(comboPlayed);
                             System.out.printf("You dealt %d damage to %s\r\n", damage, controller.getBoss().getName());
                         }
-
-                    } catch (IndexOutOfBoundsException e) {
-                        System.out.println("Um... you dont have that many cards ah");
 
                     } catch (DuplicateCardException e) {
                         System.out.println(e.getMessage());
@@ -375,7 +375,7 @@ public class GameMenu {
             System.out.println("Interrupted");
         }
         clearScreen();
-        displayBoss();
+        // displayBoss();
         List<Card> combo = controller.bossMove();
         showBossMove(combo);
         controller.bossMove(combo);
@@ -578,7 +578,7 @@ public class GameMenu {
 
     public void displayMenuOptions() {
         System.out.println(
-                "                            To go on an Adventure[1]                        Shop[2]                        Exit[3]");
+                "                            To go on an Adventure[1]                        Shop[2]                        Log Out[3]");
     }
 
     public void displayPlayerVsBoss() {

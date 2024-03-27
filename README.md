@@ -3,7 +3,7 @@
 ## Project Setup
 Please follow the instructions before running the files
 
-- to continue
+- 
 
 For Mac Users - Enable permissions to run compile and run the project
 ```
