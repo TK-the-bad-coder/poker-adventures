@@ -48,11 +48,8 @@ public class BossDAO {
     }
 
     // returns a single boss object based on difficulty selected,
-    public Boss retrieve(int id) {
+    public Boss retrieve(int id) throws IndexOutOfBoundsException{
        List<Boss> bosses = retrieveBosses(); 
-        if (id > bosses.size()){
-            throw new BossNotFoundException();
-        }
         return bosses.get(id - 1);
     }
 

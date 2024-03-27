@@ -1,6 +1,5 @@
 package com.example.cs102.game;
 
-import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -38,10 +37,6 @@ public class GameController {
     private Player player;
     private Boss boss;
 
-    private List<Card> cards;
-    private DeckController deckController;
-    private Deck playerDeck;
-    private Deck bossDeck;
     private GameState gameState;
     private boolean hasFlee = false;
     public GameController() {
@@ -69,14 +64,9 @@ public class GameController {
     }
 
     // select boss, loops until user selects a valid difficulty
-    public Boss selectBoss(int n) {
-
-        Boss boss = bossDAO.retrieve(n);
-        if (boss == null) {
-            throw new BossNotFoundException();
+    public Boss selectBoss(int n) throws IndexOutOfBoundsException{
+        return bossDAO.retrieve(n);
         }
-        return boss;
-    }
 
     public List<Boss> loadBosses() {
         return bossDAO.retrieveBosses();
@@ -86,13 +76,9 @@ public class GameController {
         return potionDAO.retrievePotion();
     }
 
-    public Potion selectPotion(int n) {
+    public Potion selectPotion(int n) throws IndexOutOfBoundsException{
 
-        Potion potion = potionDAO.retrieve(n);
-        if (potion == null) {
-            throw new PotionNotFoundException();
-        }
-        return potion;
+        return potionDAO.retrieve(n);
     }
     // shop
     public void purchasePotion(int hp, int gold) throws InsufficientGoldException{
@@ -142,10 +128,7 @@ public class GameController {
     }
 
     public List<Card> bossMove() {
-        // to translate to retrieve from Boss
-    return BestHandUtility.getBestHand(boss.getCards());
-        // return handValue;
-
+        return BestHandUtility.getBestHand(boss.getCards());
     }
 
     public int playTurn(String comboMove) {
@@ -153,7 +136,6 @@ public class GameController {
     }
 
     public int bossTurn(String comboMove) {
-        Hand bossHand = boss.getHand();
 
         int baseDamage = 0;
 

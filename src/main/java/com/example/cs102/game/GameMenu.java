@@ -240,7 +240,7 @@ public class GameMenu {
                 startGame();
             } catch (NumberFormatException e) {
                 System.out.println("Please enter a number");
-            } catch (BossNotFoundException e) {
+            } catch (IndexOutOfBoundsException e) {
                 System.out.println("Please enter a valid choice");
             }
 

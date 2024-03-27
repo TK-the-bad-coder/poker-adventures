@@ -1,14 +1,12 @@
 package com.example.cs102.game;
 
-import java.security.InvalidParameterException;
 
-import com.example.cs102.Exceptions.InsufficientGoldException;
 import com.example.cs102.boss.Boss;
 import com.example.cs102.player.Player;
 
 public class GameState {
     private int playerCurrentHp;
-    private int playerCurrentGold;
+
     private int bossCurrentHp;
 
     private Player player;

@@ -41,11 +41,9 @@ public class PotionDAO {
     }
 
     // returns a single potion object based on potion selected,
-    public Potion retrieve(int id) {
+    public Potion retrieve(int id) throws IndexOutOfBoundsException{
        List<Potion> potions = retrievePotion(); 
-        if (id > potions.size()){
-            throw new IndexOutOfBoundsException();
-        }
+
         return potions.get(id - 1);
     }
 
