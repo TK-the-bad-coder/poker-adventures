@@ -18,6 +18,7 @@ import com.example.cs102.Exceptions.PlayerNotFoundException;
 import com.example.cs102.Exceptions.PotionNotFoundException;
 import com.example.cs102.player.Player;
 import com.example.cs102.potion.Potion;
+import com.example.cs102.poker.BossDmgCalculatorUtility;
 import com.example.cs102.poker.Card;
 import com.example.cs102.poker.ComboUtility;
 import com.example.cs102.poker.Deck;
@@ -53,7 +54,7 @@ public class GameMenu {
                         break;
 
                     case 2:
-                        System.out.ntln("Bye Bye");
+                        System.out.println("Bye Bye");
                         break;
 
                     default:
@@ -463,7 +464,7 @@ public class GameMenu {
 
     public void showBossMove(List<Card> combo) {
         String comboValue = ComboUtility.getHandValue(combo);
-        System.out.printf("%s played a %s , and dealt %d damage\r\n" , controller.getBoss().getName() , comboValue , f);
+        System.out.printf("%s played a %s , and dealt %d damage\r\n" , controller.getBoss().getName() , comboValue , BossDmgCalculatorUtility.bossDamageCalculation(comboValue, controller.getGameState().getBoss()));
     }
 
     public static void clearScreen() {  
