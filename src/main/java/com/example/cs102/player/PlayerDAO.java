@@ -28,9 +28,10 @@ public class PlayerDAO {
                 if (!lineRead.isBlank()){
                     players.add(new Player(lineReader.nextInt(), lineReader.next(), lineReader.nextInt(), lineReader.nextInt()));
                 }
+                lineReader.close();
             }
         } catch (FileNotFoundException e) {
-            System.out.println("Shag, file maybe not found ah...");
+            System.out.println("WHO DELETED MY CSV");
         } catch (InputMismatchException e) {
             System.out.println("An error has occured when loading players"); // to raise exception and let menu handle
         } finally {
@@ -65,7 +66,7 @@ public class PlayerDAO {
         try (PrintStream out = new PrintStream(new FileOutputStream("data/players.csv", true))){
             out.printf("%d,%s,%d,%d\r\n", added.getId() , added.getName() , added.getHp(), added.getGold());
         } catch (FileNotFoundException e){
-             System.out.println("Error with adding player name");
+             System.out.println("WHO DELETED MY CSV");
         }
     }
 
@@ -89,7 +90,7 @@ public class PlayerDAO {
                 }
             }
         } catch (FileNotFoundException e){
-            System.out.println("File not found");
+            System.out.println("WHO DELETED MY CSV");
         } catch (IOException e){
             System.out.println("Error saving player");
         }
@@ -120,7 +121,5 @@ public class PlayerDAO {
         } catch (IOException e){
             System.out.println("Error saving player");
         }
-        
-        
     }
 }
