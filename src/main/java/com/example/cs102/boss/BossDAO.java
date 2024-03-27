@@ -49,7 +49,7 @@ public class BossDAO {
 
     // returns a single boss object based on difficulty selected,
     public Boss retrieve(int id) {
-       List<Boss> bosses = retrieveBosses(); 
+        List<Boss> bosses = retrieveBosses();
         if (id > bosses.size()){
             throw new BossNotFoundException();
         }

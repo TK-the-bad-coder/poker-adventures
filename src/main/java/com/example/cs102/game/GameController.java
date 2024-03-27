@@ -18,6 +18,7 @@ import com.example.cs102.potion.PotionDAO;
 import com.example.cs102.poker.BestHandUtility;
 import com.example.cs102.poker.Card;
 import com.example.cs102.poker.ComboUtility;
+import com.example.cs102.poker.BossDmgCalculatorUtility;
 import com.example.cs102.poker.Deck;
 import com.example.cs102.poker.DeckController;
 import com.example.cs102.Exceptions.PlayerNotFoundException;
@@ -26,7 +27,6 @@ import com.example.cs102.Exceptions.BossNotFoundException;
 import com.example.cs102.Exceptions.DuplicateCardException;
 import com.example.cs102.Exceptions.InsufficientGoldException;
 import com.example.cs102.Exceptions.InvalidHandException;
-
 
 public class GameController {
 
@@ -44,18 +44,19 @@ public class GameController {
     private Deck bossDeck;
     private GameState gameState;
     private boolean hasFlee = false;
+
     public GameController() {
         playerDAO = new PlayerDAO();
         bossDAO = new BossDAO();
         potionDAO = new PotionDAO();
     }
 
-    public static boolean checkValidName(String name){
-        for (int i = 0 ; i < name.length() ; i++){
-            if (!(Character.isAlphabetic(name.charAt(i)) || Character.isWhitespace(name.charAt(i)))){
+    public static boolean checkValidName(String name) {
+        for (int i = 0; i < name.length(); i++) {
+            if (!(Character.isAlphabetic(name.charAt(i)) || Character.isWhitespace(name.charAt(i)))) {
                 return false;
             }
-        }   
+        }
         return true;
     }
 
@@ -94,10 +95,11 @@ public class GameController {
         }
         return potion;
     }
+
     // shop
-    public void purchasePotion(int hp, int gold) throws InsufficientGoldException{
-        
-        if(player.getGold() < gold){
+    public void purchasePotion(int hp, int gold) throws InsufficientGoldException {
+
+        if (player.getGold() < gold) {
             throw new InsufficientGoldException("Not enough credit");
 
         }
@@ -110,14 +112,13 @@ public class GameController {
         playerDAO.save(player.getName(), player.getHp(), player.getGold());
     }
 
-    public void increaseGold(){
+    public void increaseGold() {
         // reward for player
         player.setGold(player.getGold() + boss.getGold());
-        
+
         System.out.println("Your new stats are " + player.toString());
         playerDAO.saveAfterBattle(player.getName(), player.getGold());
     }
-
 
     // loading the player and boss into the controller
     public void initPlayer(Player player) {
@@ -143,7 +144,7 @@ public class GameController {
 
     public List<Card> bossMove() {
         // to translate to retrieve from Boss
-    return BestHandUtility.getBestHand(boss.getCards());
+        return BestHandUtility.getBestHand(boss.getCards());
         // return handValue;
 
     }
@@ -152,18 +153,17 @@ public class GameController {
         return ComboUtility.getDamageValue(comboMove);
     }
 
-    public int bossTurn(String comboMove) {
-        Hand bossHand = boss.getHand();
-
+    public int bossDamageCalculation(String comboMove) {
         int baseDamage = 0;
 
         int comboDamage = ComboUtility.getDamageValue(comboMove);
+
         switch (boss.getDifficulty()) {
             case "EASY":
                 baseDamage = 1;
+                comboDamage *= 0.2;
                 break;
             case "NORMAL":
-                // aim for up to
                 baseDamage = 5;
                 break;
             case "HARD":
@@ -172,7 +172,7 @@ public class GameController {
                 break;
             case "ASIAN":
                 baseDamage = 50; // literally one hit KO regardless of hand for new players
-                comboDamage *= 3;
+                comboDamage *= 4;
                 break;
             default:
                 // unknown case
@@ -193,16 +193,6 @@ public class GameController {
             throw new IllegalArgumentException(
                     "Your input contains an invalid number! Please key in numbers only from 0 to 9");
         }
-    }
-
-    public List<Card> playerMove(int[] input) {
-        List<Card> currentHand = player.getCards();
-        List<Card> cardSelection = new ArrayList<>();
-        // getting the cards selected
-        for (int number : input) {
-            cardSelection.add(currentHand.get(number));
-        }
-        return cardSelection;
     }
 
     public void startGame() {
@@ -232,34 +222,47 @@ public class GameController {
         playerHand.discard(selectedCards);
         playerHand.addToHand();
     }
-    public void bossMove(List<Card> selectedCards){
-        String combo = ComboUtility.getHandValue(selectedCards);
-        int damage = ComboUtility.getDamageValue(combo);
+
+    public void bossMove(List<Card> selectedCards) {
+        String combo = BossDmgCalculatorUtility.getHandValue(selectedCards);
+        int damage = BossDmgCalculatorUtility.bossDamageCalculation(combo, boss);
         gameState.doDamageTo(player, damage);
 
         Hand bossHand = boss.getHand();
         bossHand.discard(selectedCards);
         bossHand.addToHand();
     }
-    public void flee(){
+
+    public List<Card> playerMove(int[] input) {
+        List<Card> currentHand = player.getCards();
+        List<Card> cardSelection = new ArrayList<>();
+        // getting the cards selected
+        for (int number : input) {
+            cardSelection.add(currentHand.get(number));
+        }
+        return cardSelection;
+    }
+
+    public void flee() {
         hasFlee = true;
     }
-    public boolean hasFled(){
+
+    public boolean hasFled() {
         return hasFlee;
     }
-    public void displayBoss(){
-        if(boss.getId() == 1){
+
+    public void displayBoss() {
+        if (boss.getId() == 1) {
             BossImg.DisplayBullDemonKing();
-        }
-        else if(boss.getId() == 2){
+        } else if (boss.getId() == 2) {
             BossImg.DisplayGrimReaper();
         }
     }
-    public void displayBossDead(){
-        if(boss.getId() == 1){
+
+    public void displayBossDead() {
+        if (boss.getId() == 1) {
             BossImg.DisplayBullDemonKingDead();
-        }
-        else if(boss.getId() == 2){
+        } else if (boss.getId() == 2) {
             BossImg.DisplayGrimReaper();
         }
     }

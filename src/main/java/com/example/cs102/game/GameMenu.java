@@ -463,7 +463,7 @@ public class GameMenu {
 
     public void showBossMove(List<Card> combo) {
         String comboValue = ComboUtility.getHandValue(combo);
-        System.out.printf("%s played a %s , and dealt %d damage\r\n" , controller.getBoss().getName() , comboValue , ComboUtility.getDamageValue(comboValue));
+        System.out.printf("%s played a %s , and dealt %d damage\r\n" , controller.getBoss().getName() , comboValue , f);
     }
 
     public static void clearScreen() {  
