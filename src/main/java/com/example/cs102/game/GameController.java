@@ -233,19 +233,19 @@ public class GameController {
         return hasFlee;
     }
 
-    public void displayBoss() {
-        if (boss.getId() == 1) {
-            BossImg.DisplayBullDemonKing();
-        } else if (boss.getId() == 2) {
-            BossImg.DisplayGrimReaper();
-        }
-    }
+    // public void displayBoss() {
+    //     if (boss.getId() == 1) {
+    //         BossImg.DisplayBullDemonKing();
+    //     } else if (boss.getId() == 2) {
+    //         BossImg.DisplayGrimReaper();
+    //     }
+    // }
 
-    public void displayBossDead() {
-        if (boss.getId() == 1) {
-            BossImg.DisplayBullDemonKingDead();
-        } else if (boss.getId() == 2) {
-            BossImg.DisplayGrimReaper();
-        }
-    }
+    // public void displayBossDead() {
+    //     if (boss.getId() == 1) {
+    //         BossImg.DisplayBullDemonKingDead();
+    //     } else if (boss.getId() == 2) {
+    //         BossImg.DisplayGrimReaper();
+    //     }
+    // }
 }
