@@ -7,7 +7,6 @@ import java.util.List;
 public class Deck {
     private List<Card> cards;
     private List<Card> usedCards = new ArrayList<>();
-    private int refreshCount = 0;
 
     public Deck(List<Card> cards) {
         this.cards = cards;
@@ -20,13 +19,10 @@ public class Deck {
     }
 
     public Card drawCard() {
-        // players can refresh their deck up to twice
-
         Card toReturn = null;
 
-        if (getDeckLength() == 0 && refreshCount != 2) {
+        if (getDeckLength() == 0) {
             refreshDeck();
-            refreshCount++;
         }
         toReturn = cards.remove(0);
 

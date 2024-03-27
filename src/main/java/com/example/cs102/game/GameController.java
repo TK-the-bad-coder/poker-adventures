@@ -1,11 +1,8 @@
 package com.example.cs102.game;
 
 import java.util.ArrayList;
-
-import java.util.InputMismatchException;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Scanner;
-
 
 import com.example.cs102.boss.Boss;
 import com.example.cs102.boss.BossDAO;
@@ -14,34 +11,51 @@ import com.example.cs102.hand.Hand;
 import com.example.cs102.hand.PlayerHand;
 import com.example.cs102.player.Player;
 import com.example.cs102.player.PlayerDAO;
+import com.example.cs102.potion.Potion;
+import com.example.cs102.potion.PotionDAO;
+import com.example.cs102.poker.BestHandUtility;
 import com.example.cs102.poker.Card;
-import com.example.cs102.poker.Combo;
+import com.example.cs102.poker.ComboUtility;
+import com.example.cs102.poker.BossDmgCalculatorUtility;
 import com.example.cs102.poker.Deck;
 import com.example.cs102.poker.DeckController;
-import com.example.cs102.Exceptions.PlayerNotFoundException;
-import com.example.cs102.Exceptions.BossNotFoundException;
+import com.example.cs102.exceptions.PlayerNotFoundException;
+import com.example.cs102.exceptions.DuplicateCardException;
+import com.example.cs102.exceptions.InsufficientGoldException;
+import com.example.cs102.exceptions.InvalidHandException;
+
 public class GameController {
 
     // private final GameService service;
     private PlayerDAO playerDAO;
     private BossDAO bossDAO;
+    private PotionDAO potionDAO;
 
     private Player player;
     private Boss boss;
 
+    private GameState gameState;
+    private boolean hasFlee = false;
+
     public GameController() {
-        // this.service = service;
         playerDAO = new PlayerDAO();
         bossDAO = new BossDAO();
+        potionDAO = new PotionDAO();
     }
 
-    public void displayPlayers() {
-        // playerDAO // may not be used
+    public static boolean checkValidName(String name) {
+        if (name.isBlank()) {
+            return false;
+        }
+        for (int i = 0; i < name.length(); i++) {
+            if (!(Character.isAlphabetic(name.charAt(i)) || Character.isWhitespace(name.charAt(i)))) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public Player login(String name) {
-
-        // List<Player> players = playerDAO.retrievePlayers();
         player = playerDAO.retrieve(name);
         // if the player is not in the database
         if (player == null) {
@@ -52,135 +66,142 @@ public class GameController {
 
     // select boss, loops until user selects a valid difficulty
     public Boss selectBoss(int n) {
+        return bossDAO.retrieve(n);
+    }
 
-        Boss boss = bossDAO.retrieve(n);
-        if (boss == null){
-            throw new BossNotFoundException();
-        }
-        return boss;
-        }
-
-
-    public List<Boss> loadBosses(){
+    public List<Boss> loadBosses() {
         return bossDAO.retrieveBosses();
     }
 
-    //loading the player and boss into the controller
-    public void initPlayer(Player player){
+    public List<Potion> loadPotions() {
+        return potionDAO.retrievePotion();
+    }
+
+    public Potion selectPotion(int n) {
+        return potionDAO.retrieve(n);
+    }
+
+    // shop
+    public void purchasePotion(int hp, int gold) {
+
+        if (player.getGold() < gold) {
+            throw new InsufficientGoldException("Not enough credit");
+
+        }
+        player.setHp(player.getHp() + hp);
+        player.setGold(player.getGold() - gold);
+        System.out.println("");
+        System.out.println("Thank you for purchasing with us");
+        System.out.println("Your new stats are " + player.toString());
+        System.out.println("");
+        playerDAO.savePlayer(player.getName(), player.getHp(), player.getGold());
+    }
+
+    public void increaseGold() {
+        // reward for player
+        player.setGold(player.getGold() + boss.getGold());
+
+        System.out.println("Your new stats are " + player.toString());
+        playerDAO.saveAfterBattle(player.getName(), player.getGold());
+    }
+
+    // loading the player and boss into the controller
+    public void initPlayer(Player player) {
         this.player = player;
     }
-    public void initBoss(Boss boss){
+
+    public void initBoss(Boss boss) {
         this.boss = boss;
     }
 
-    public Boss getBoss(){
+    public Boss getBoss() {
         return boss;
     }
-    public Player getPlayer(){
+
+    public Player getPlayer() {
         return player;
     }
-    // gameDisplay method -- to move all the prints into menu
-    // logic stays here
-    // public void startGame() {
-
-    //     List<Card> cards = new ArrayList<>();
-    //     DeckController deckControl = new DeckController(cards); 
-    //     cards = deckControl.initCards();
-
-    //     Deck playerDeck = new Deck(new ArrayList<>(cards));
-    //     Deck bossDeck = new Deck(new ArrayList<>(cards));
-
-    //     PlayerHand playerHand = new PlayerHand(playerDeck);
-    //     BossHand bossHand = new BossHand(bossDeck);
-    //     List<Card> currentHand = playerHand.getHand();
-    //     Scanner sc = new Scanner(System.in);
-
-    //     int bossHP = boss.getHp();
-    //     int playerHP = boss.getHp();
-    //     // line 124 to line 131 should be in menu
-    //     while (bossHP > 0 && playerHP > 0) {
-    //         playerHand.showHand();
-    //         String cardsChoice = "";
-    //         do {
-    //             // print logic goes to Menu
-    //             // pass in cardChoice to another method
-    //             // System.out.println("Type 'q' to flee!");
-
-    //             if (cardsChoice.isEmpty()) {
-    //                 System.out.println("Please enter something!!");
-    //             } else if (cardsChoice.equals("q")) {
-    //                 System.out.println("The boss laughs at you as you flee back to the main menu...");
-    //                 return;
-    //             }
-    //             // this should be a method to call the cards
-    //             List<Card> out = new ArrayList<>();
-    //             String[] splitted_cards = cardsChoice.split(" ");
-    //             for (int i = 0; i < splitted_cards.length; i++) {
-    //                 out.add(currentHand.get(Integer.parseInt(splitted_cards[i])));
-    //             }
-    //             // check if hand selection is correct anot
-    //             if (Combo.damage(out) != 0) {
-    //                 // if hand selection is correct, deal damage
-    //                 int damage = Combo.damage(out);
-    //                 System.out.println("You played the following hand:");
-    //                 playerHand.discard(out);
-                    
-    //                 playerHand.addToHand();
-    //                 // update the current hand
-                    
-    //                 currentHand = playerHand.getHand();
-    //                 System.out.println("Your damage is " + damage);
-    //                 System.out.println("========================================");
-
-    //                 bossHP -= damage;
-    //                 bossMove(bossHand, damage);
-    //             }
-    //             // return the outcome to menu
-
-    //         } while (cardsChoice.isEmpty());
-    //     }
-
-    // }
 
     public Player makeNewPlayer(String name) {
         this.playerDAO.addPlayer(name);
         return login(name);
     }
 
-    public int bossMove(Hand bossHand, int playerDamage) {
-        int discardSize = 1;
-        int baseDamage = 0;
-        List<Card> bossChoice = new ArrayList<>();
-        if (playerDamage >= 15) {
-            // boss will discard five card if possible!
-            discardSize = 5;
-        }
-
-        int comboDamage = Combo.damage(bossChoice);
-
-        switch (boss.getDifficulty()) {
-            case "EASY":
-                baseDamage = 1;
-                break;
-            case "NORMAL":
-                // aim for up to
-                baseDamage = 5;
-                break;
-            case "HARD":
-                baseDamage = 20;
-                comboDamage *=2;
-                break;
-            case "ASIAN":
-                baseDamage = 50; // literally one hit KO regardless of hand for new players
-                comboDamage *=3;
-                break;
-            default:
-                // unknown case
-                break;
-        }
-        return baseDamage + comboDamage;
+    public List<Card> bossMove() {
+        return BestHandUtility.getBestHand(boss.getCards());
     }
-    public int playTurn(List <Card> played){
-        return Combo.damage(played);
+
+    public int playTurn(String comboMove) {
+        return ComboUtility.getDamageValue(comboMove);
+    }
+
+    public void checkMove(int[] input) {
+        int handSize = input.length;
+        if (handSize != 1 && handSize != 2 && handSize != 5) {
+            throw new InvalidHandException("Please enter a valid hand length!");
+        }
+        if (Arrays.stream(input).distinct().toArray().length != handSize) {
+            throw new DuplicateCardException("Hand contains duplicate choices! Please ensure all numbers are unique.");
+        }
+        if (Arrays.stream(input).filter(num -> num < 0 || num > 9).toArray().length > 0) {
+            throw new IllegalArgumentException(
+                    "Your input contains an invalid number! Please key in numbers only from 0 to 9");
+        }
+    }
+
+    public void startGame() {
+        List<Card> cards = new ArrayList<>();
+        DeckController deckControl = new DeckController(cards);
+        cards = deckControl.initCards();
+
+        Deck playerDeck = new Deck(new ArrayList<>(cards));
+        Deck bossDeck = new Deck(new ArrayList<>(cards));
+
+        player.setHand(new PlayerHand(playerDeck));
+        boss.setHand(new BossHand(bossDeck));
+        gameState = new GameState(player, boss);
+        hasFlee = false;
+    }
+
+    public GameState getGameState() {
+        return gameState;
+    }
+
+    public void playCombo(List<Card> selectedCards) {
+        String combo = ComboUtility.getHandValue(selectedCards);
+        int damage = ComboUtility.getDamageValue(combo);
+        gameState.doDamageTo(boss, damage);
+
+        PlayerHand playerHand = player.getHand();
+        playerHand.discard(selectedCards);
+        playerHand.addToHand();
+    }
+
+    public void bossAttack(List<Card> selectedCards) {
+        String combo = BossDmgCalculatorUtility.getHandValue(selectedCards);
+        int damage = BossDmgCalculatorUtility.bossDamageCalculation(combo, boss);
+        gameState.doDamageTo(player, damage);
+
+        Hand bossHand = boss.getHand();
+        bossHand.discard(selectedCards);
+        bossHand.addToHand();
+    }
+
+    public List<Card> playerMove(int[] input) {
+        List<Card> currentHand = player.getCards();
+        List<Card> cardSelection = new ArrayList<>();
+        // getting the cards selected
+        for (int number : input) {
+            cardSelection.add(currentHand.get(number));
+        }
+        return cardSelection;
+    }
+
+    public void flee() {
+        hasFlee = true;
+    }
+
+    public boolean hasFled() {
+        return hasFlee;
     }
 }

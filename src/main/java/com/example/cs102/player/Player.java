@@ -1,21 +1,21 @@
 package com.example.cs102.player;
 
-// import jakarta.persistence.Entity;
-// import jakarta.persistence.GeneratedValue;
-// import jakarta.persistence.GenerationType;
-// import jakarta.persistence.Id;
-// import lombok.Data;
+import java.util.List;
 
-// @Data
-//@Entity
+import com.example.cs102.hand.PlayerHand;
+import com.example.cs102.poker.Card;
+
 public class Player {
-    // @Id
-    // @GeneratedValue(strategy = GenerationType.IDENTITY)
+    
+    private PlayerHand playerHand;
+
     private int id;
 
     private String name;
 
     private int hp = 50; // default value
+
+    private int gold = 0;
 
     public Player(int id, String name) {
         this.id = id;
@@ -23,10 +23,11 @@ public class Player {
     }
 
     // overload for existing players
-    public Player(int id, String name, int hp) {
+    public Player(int id, String name, int hp, int gold) {
         this.id = id;
         this.name = name;
         this.hp = hp;
+        this.gold = gold;
     }
 
     public int getId(){
@@ -35,21 +36,33 @@ public class Player {
     public int getHp() {
         return hp;
     }
+    public String getName() {
+        return name;
+    }
+    public int getGold() {
+        return gold;
+    }
 
     public void setHp(int hp) {
         this.hp = hp;
     }
+    public void setHand(PlayerHand playerHand) {
+        this.playerHand = playerHand;
+    }
+    public void setGold(int gold){
+        this.gold = gold;
+    }
 
-    public String getName() {
-        return name;
+    public List<Card> getCards() {
+        return playerHand.getHand();
+    }
+
+    public PlayerHand getHand() {
+        return playerHand;
     }
     
-    public boolean isDead(){
-        if(hp < 0){
-            return true;
-        }
-        return false;
+    public String toString(){
+        return "Name: " + name + ", Hp: " + hp + " Gold:" + gold;
     }
 
-    // private final static MAX_CARDS = 10;
 }

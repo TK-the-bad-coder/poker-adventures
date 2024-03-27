@@ -2,8 +2,9 @@ package com.example.cs102.hand;
 
 import com.example.cs102.poker.Card;
 import com.example.cs102.poker.Deck;
-import java.util.*;
-import java.util.stream.Collectors;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Hand {
     protected List<Card> currentHand;
