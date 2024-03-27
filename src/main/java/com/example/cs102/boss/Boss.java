@@ -11,16 +11,15 @@ public class Boss {
     private Hand bossHand;
     private int id;
     private String name;
-    private double atkMultiplier;
     private int hp;
     private String difficulty;
     private int gold;
 
     // create boss
-    public Boss(int id, String name, double atkMultiplier, int hp, String difficulty, int gold) {
+    public Boss(int id, String name, int hp, String difficulty, int gold) {
         this.id = id;
         this.name = name;
-        this.atkMultiplier = atkMultiplier;
+
         this.hp = hp;
         this.difficulty = difficulty;
         this.gold = gold;
@@ -42,9 +41,6 @@ public class Boss {
         return difficulty;
     }
 
-    public double getAtkMultiplier() {
-        return atkMultiplier;
-    }
 
     public int getId() {
         return id;

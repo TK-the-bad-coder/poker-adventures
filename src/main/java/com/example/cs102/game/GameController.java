@@ -64,7 +64,7 @@ public class GameController {
     }
 
     // select boss, loops until user selects a valid difficulty
-    public Boss selectBoss(int n) throws IndexOutOfBoundsException{
+    public Boss selectBoss(int n){
         return bossDAO.retrieve(n);
         }
 
@@ -76,12 +76,11 @@ public class GameController {
         return potionDAO.retrievePotion();
     }
 
-    public Potion selectPotion(int n) throws IndexOutOfBoundsException{
-
+    public Potion selectPotion(int n){
         return potionDAO.retrieve(n);
     }
     // shop
-    public void purchasePotion(int hp, int gold) throws InsufficientGoldException{
+    public void purchasePotion(int hp, int gold){
         
         if(player.getGold() < gold){
             throw new InsufficientGoldException("Not enough credit");

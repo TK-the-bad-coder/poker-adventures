@@ -30,7 +30,7 @@ public class BossDAO {
             sc.useDelimiter(",|\n|\r\n");
             while (sc.hasNext()) {
                 // System.out.println(sc.next());
-                bosses.add(new Boss(sc.nextInt(),sc.next(),sc.nextDouble(), sc.nextInt(),sc.next(), sc.nextInt()));
+                bosses.add(new Boss(sc.nextInt(),sc.next(), sc.nextInt(),sc.next(), sc.nextInt()));
             }
         } catch (FileNotFoundException e) {
             System.out.println("Shag, file maybe not found ah...");
@@ -48,9 +48,11 @@ public class BossDAO {
     }
 
     // returns a single boss object based on difficulty selected,
-    public Boss retrieve(int id) throws IndexOutOfBoundsException{
-       List<Boss> bosses = retrieveBosses(); 
-        return bosses.get(id - 1);
+    public Boss retrieve(int id) {
+        List<Boss> bosses = retrieveBosses();
+        return bosses.stream().filter(boss -> boss.getId() == id)
+                                .findFirst()
+                                .orElseThrow(BossNotFoundException::new);
     }
 
 }

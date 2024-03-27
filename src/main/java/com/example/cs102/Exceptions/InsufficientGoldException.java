@@ -1,6 +1,6 @@
-package com.example.cs102.Exceptions;
+package com.example.cs102.exceptions;
 
-public class InsufficientGoldException extends Exception{
+public class InsufficientGoldException extends RuntimeException{
     public InsufficientGoldException(String msg){
         super(msg);
     }

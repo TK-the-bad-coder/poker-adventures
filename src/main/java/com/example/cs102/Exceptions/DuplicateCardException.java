@@ -1,4 +1,4 @@
-package com.example.cs102.Exceptions;
+package com.example.cs102.exceptions;
 
 public class DuplicateCardException extends InvalidHandException{
     public DuplicateCardException(String message){

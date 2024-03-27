@@ -1,4 +1,4 @@
-package com.example.cs102.Exceptions;
+package com.example.cs102.exceptions;
 
 public class PotionNotFoundException extends RuntimeException {
     

@@ -8,6 +8,8 @@ import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
+import com.example.cs102.Exceptions.PotionNotFoundException;
+
 
 public class PotionDAO {
 
@@ -41,10 +43,11 @@ public class PotionDAO {
     }
 
     // returns a single potion object based on potion selected,
-    public Potion retrieve(int id) throws IndexOutOfBoundsException{
-       List<Potion> potions = retrievePotion(); 
-
-        return potions.get(id - 1);
+    public Potion retrieve(int id){
+        List<Potion> potions = retrievePotion();
+        return potions.stream().filter(potion -> potion.getId() == id)
+                                .findFirst()
+                                .orElseThrow(PotionNotFoundException::new);
     }
 
 }
