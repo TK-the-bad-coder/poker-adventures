@@ -193,7 +193,7 @@ public class GameMenu {
             } catch (InsufficientGoldException e){
                 System.out.println("Insufficent Gold, please enter another Potion");
             } catch (IndexOutOfBoundsException e){
-                System.out.println("The shop dont have so many things ah");
+                System.out.println("Please enter a number between 1 and 5");
             }
             
         } while (true);
