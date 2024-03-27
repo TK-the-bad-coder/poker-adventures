@@ -496,15 +496,15 @@ public class GameMenu {
         int id = controller.getBoss().getId();
         switch (id) {
             case 1:
-                printTxt("displayImg/playervsDemon.txt");
+                printTxt("Images/playervsDemon.txt");
                 break;
                 
             case 2:
-                printTxt("displayImg/playervsGrim.txt");
+                printTxt("Images/playervsGrim.txt");
                 break;
             
             case 3:
-                printTxt("displayImg/playervsX.txt");
+                printTxt("Images/playervsX.txt");
                 break;
 
             default:
