@@ -3,15 +3,14 @@ package com.example.cs102.player;
 import java.io.*;
 import java.util.ArrayList;
 
-// import org.springframework.stereotype.Service;
+
 
 import java.util.Collections;
 import java.util.InputMismatchException;
 import java.util.List;
-import java.util.Optional;
+
 import java.util.Scanner;
 
-// @Service
 public class PlayerDAO {
 
     private List<Player> players = new ArrayList<>();
@@ -25,7 +24,6 @@ public class PlayerDAO {
         try {
             sc = new Scanner(new File("data/players.csv"));
 
-            // change to reading the line then split with regex ','
             while (sc.hasNextLine()) {
                 String lineRead = sc.nextLine();
                 Scanner lineReader = new Scanner(lineRead);

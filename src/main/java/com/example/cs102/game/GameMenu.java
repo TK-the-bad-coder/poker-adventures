@@ -2,7 +2,6 @@ package com.example.cs102.game;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.InputMismatchException;
@@ -10,8 +9,6 @@ import java.util.Scanner;
 import java.util.List;
 import java.util.Locale;
 
-import com.example.cs102.Comparators.SuitComparator;
-import com.example.cs102.Comparators.ValueComparator;
 import com.example.cs102.exceptions.BossNotFoundException;
 import com.example.cs102.exceptions.DuplicateCardException;
 import com.example.cs102.exceptions.InsufficientGoldException;
@@ -22,12 +19,12 @@ import com.example.cs102.player.Player;
 import com.example.cs102.potion.Potion;
 import com.example.cs102.poker.Card;
 import com.example.cs102.poker.ComboUtility;
-import com.example.cs102.poker.Deck;
-import com.example.cs102.poker.DeckController;
+
 import com.example.cs102.boss.Boss;
-import com.example.cs102.boss.BossImg;
-import com.example.cs102.hand.BossHand;
-import com.example.cs102.hand.PlayerHand;
+
+import com.example.cs102.comparators.SuitComparator;
+import com.example.cs102.comparators.ValueComparator;
+
 
 public class GameMenu {
     private static final char SQUARE = '\u25a0';
@@ -351,7 +348,7 @@ public class GameMenu {
         System.out.println("");
         System.out.println("Boss is picking his cards");
         try{
-            Thread.sleep(2000);
+            Thread.sleep(1500);
         }catch (InterruptedException e){
             System.out.println("Interrupted");
         }
@@ -361,7 +358,7 @@ public class GameMenu {
         showBossMove(combo);
         controller.bossMove(combo);
         try{
-            Thread.sleep(3000);
+            Thread.sleep(1500);
         }catch (InterruptedException e){
             System.out.println("Interrupted");
         }

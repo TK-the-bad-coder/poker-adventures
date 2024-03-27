@@ -32,8 +32,10 @@ public class PotionDAO {
         } catch (InputMismatchException e) {
             System.out.println("Something went wrong");
         } finally {
-            if (sc != null)
+            if (sc != null){
                 sc.close();
+            }
+
         }
     }
 

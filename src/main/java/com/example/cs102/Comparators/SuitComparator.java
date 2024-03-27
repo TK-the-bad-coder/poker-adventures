@@ -1,4 +1,4 @@
-package com.example.cs102.Comparators;
+package com.example.cs102.comparators;
 import java.util.Comparator;
 
 import com.example.cs102.poker.Card;
