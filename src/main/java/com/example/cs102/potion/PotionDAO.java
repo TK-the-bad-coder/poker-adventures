@@ -8,7 +8,7 @@ import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
-import com.example.cs102.Exceptions.PotionNotFoundException;
+import com.example.cs102.exceptions.PotionNotFoundException;
 
 
 public class PotionDAO {

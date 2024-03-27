@@ -12,12 +12,12 @@ import java.util.Locale;
 
 import com.example.cs102.Comparators.SuitComparator;
 import com.example.cs102.Comparators.ValueComparator;
-import com.example.cs102.Exceptions.BossNotFoundException;
-import com.example.cs102.Exceptions.DuplicateCardException;
-import com.example.cs102.Exceptions.InsufficientGoldException;
-import com.example.cs102.Exceptions.InvalidHandException;
-import com.example.cs102.Exceptions.PlayerNotFoundException;
-import com.example.cs102.Exceptions.PotionNotFoundException;
+import com.example.cs102.exceptions.BossNotFoundException;
+import com.example.cs102.exceptions.DuplicateCardException;
+import com.example.cs102.exceptions.InsufficientGoldException;
+import com.example.cs102.exceptions.InvalidHandException;
+import com.example.cs102.exceptions.PlayerNotFoundException;
+import com.example.cs102.exceptions.PotionNotFoundException;
 import com.example.cs102.player.Player;
 import com.example.cs102.potion.Potion;
 import com.example.cs102.poker.Card;
@@ -220,8 +220,8 @@ public class GameMenu {
                 startGame();
             } catch (NumberFormatException e) {
                 System.out.println("Please enter a number");
-            } catch (IndexOutOfBoundsException e) {
-                System.out.println("Please enter a valid choice");
+            } catch (BossNotFoundException e) {
+                System.out.println("Please enter a number bewteen 1 and 3");
             }
 
         } while (true);

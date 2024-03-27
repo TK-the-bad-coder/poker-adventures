@@ -1,5 +1,5 @@
 package com.example.cs102.Comparators;
-import java.util.*;
+import java.util.Comparator;
 
 import com.example.cs102.poker.Card;
 public class ValueComparator implements Comparator <Card>{

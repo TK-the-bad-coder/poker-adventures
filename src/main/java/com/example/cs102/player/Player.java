@@ -53,16 +53,16 @@ public class Player {
         this.gold = gold;
     }
 
-    public void clearHand() {
-        this.playerHand = null;
-    }
+    // public void clearHand() {
+    //     playerHand = null;
+    // }
 
     public List<Card> getCards() {
-        return this.playerHand.getHand();
+        return playerHand.getHand();
     }
 
     public PlayerHand getHand() {
-        return this.playerHand;
+        return playerHand;
     }
     
     public String toString(){

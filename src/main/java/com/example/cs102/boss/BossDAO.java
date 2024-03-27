@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
 
-import com.example.cs102.Exceptions.BossNotFoundException;
+import com.example.cs102.exceptions.BossNotFoundException;
 
 // @Service
 public class BossDAO {
