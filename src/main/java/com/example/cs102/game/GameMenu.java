@@ -189,11 +189,9 @@ public class GameMenu {
             } catch (NumberFormatException e) {
                 System.out.println("Please enter a number");
             } catch (PotionNotFoundException e){
-                System.out.println("Please enter a valid Potion choice");
+                System.out.println("Please enter a number between 1 and 5");
             } catch (InsufficientGoldException e){
                 System.out.println("Insufficent Gold, please enter another Potion");
-            } catch (IndexOutOfBoundsException e){
-                System.out.println("Please enter a number between 1 and 5");
             }
             
         } while (true);
