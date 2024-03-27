@@ -11,6 +11,7 @@ Features:
 
 How to run:
   Simply extract this folder into a folder of your choosing and run compile.sh. Afterwards, run run.sh.
+  Adjust Terminal size by using ctrl + or ctrl -, until you are able to view Poker Adventures image clearly. 
 
 
 Note:
