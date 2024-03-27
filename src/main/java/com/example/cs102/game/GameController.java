@@ -20,8 +20,6 @@ import com.example.cs102.poker.BossDmgCalculatorUtility;
 import com.example.cs102.poker.Deck;
 import com.example.cs102.poker.DeckController;
 import com.example.cs102.exceptions.PlayerNotFoundException;
-import com.example.cs102.exceptions.PotionNotFoundException;
-import com.example.cs102.exceptions.BossNotFoundException;
 import com.example.cs102.exceptions.DuplicateCardException;
 import com.example.cs102.exceptions.InsufficientGoldException;
 import com.example.cs102.exceptions.InvalidHandException;
@@ -96,7 +94,7 @@ public class GameController {
         System.out.println("Thank you for purchasing with us");
         System.out.println("Your new stats are " + player.toString());
         System.out.println("");
-        playerDAO.save(player.getName(), player.getHp(), player.getGold());
+        playerDAO.savePlayer(player.getName(), player.getHp(), player.getGold());
     }
 
     public void increaseGold() {
@@ -137,30 +135,7 @@ public class GameController {
         return ComboUtility.getDamageValue(comboMove);
     }
 
-    public int bossTurn(String comboMove) {
-
-        int baseDamage = 0;
-        
-        int comboDamage = ComboUtility.getDamageValue(comboMove);
-
-        switch (boss.getDifficulty()) {
-            case "EASY":
-                baseDamage = 1;
-                comboDamage *= 0.2;
-                break;
-            case "NORMAL":
-                baseDamage = 5;
-                break;
-            case "HARD":
-                baseDamage = 20;
-                comboDamage *= 2;
-                break;
-            default:
-                // unknown case
-                break;
-        }
-        return baseDamage + comboDamage;
-    }
+    
 
     public void checkMove(int[] input) {
         int handSize = input.length;

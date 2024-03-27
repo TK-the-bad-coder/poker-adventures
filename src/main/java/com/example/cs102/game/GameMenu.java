@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Arrays;
 import java.util.Comparator;
-import java.util.InputMismatchException;
 import java.util.Scanner;
 import java.util.List;
 import java.util.Locale;
@@ -40,13 +39,14 @@ public class GameMenu {
     public void readOption() {
         Scanner sc = new Scanner(System.in);
         int choice;
-        displayIntro();
         do {
+            displayIntro();
+
             String input = "";
 
             input = sc.nextLine();
             choice = 0;
-            if (!input.isBlank()){
+            if (!input.isBlank()) {
                 try {
                     System.out.print("Please enter your choice:");
                     choice = Integer.parseInt(input);
@@ -54,13 +54,13 @@ public class GameMenu {
                         case 1:
                             start();
                             break;
-    
+
                         case 2:
                             System.out.println("Bye Bye");
                             break;
-    
+
                         default:
-                            System.out.println("Enter a number 1 or 2");
+                            System.out.println("Enter a number 1 to 2");
                             break;
                     }
                 } catch (NumberFormatException e) {
@@ -70,7 +70,6 @@ public class GameMenu {
             } else {
                 System.out.println("Please enter something");
             }
-
 
         } while (choice != 2);
     }
@@ -471,7 +470,7 @@ public class GameMenu {
             showDiscards(selectedCards);
             System.out.printf("You selected a %s\r\n", value);
             System.out.println("Confirm? y/n");
-            String input = sc.next().toLowerCase(Locale.ENGLISH);
+            String input = sc.nextLine().toLowerCase(Locale.ENGLISH);
             switch (input) {
                 case "y":
 
@@ -492,7 +491,7 @@ public class GameMenu {
 
     public void showBossMove(List<Card> combo) {
         String comboValue = ComboUtility.getHandValue(combo);
-        int damage = controller.bossTurn(comboValue);
+        int damage = BossDmgCalculatorUtility.bossDamageCalculation(comboValue, controller.getBoss());
         System.out.printf("%s played a %s , and dealt %d damage\r\n", controller.getBoss().getName(), comboValue,
                 damage);
     }

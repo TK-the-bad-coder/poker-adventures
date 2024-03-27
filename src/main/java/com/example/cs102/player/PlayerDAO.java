@@ -70,7 +70,7 @@ public class PlayerDAO {
         }
     }
 
-    public void save(String name, int newHp, int newGold) {
+    public void savePlayer(String name, int newHp, int newGold) {
         Player p = retrieve(name);
     
         try (RandomAccessFile file = new RandomAccessFile("data/players.csv", "rw")){

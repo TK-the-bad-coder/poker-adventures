@@ -20,10 +20,6 @@ public class BossDmgCalculatorUtility extends ComboUtility {
                 baseDamage = 20;
                 comboDamage *= 2;
                 break;
-            case "ASIAN":
-                baseDamage = 50; // literally one hit KO regardless of hand for new players
-                comboDamage *= 4;
-                break;
             default:
                 // unknown case
                 break;

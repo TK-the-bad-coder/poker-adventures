@@ -1,6 +1,10 @@
 package com.example.cs102.poker;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -15,82 +19,64 @@ public class BestHandUtility extends ComboUtility {
         cardSort();
 
         return Stream.<Supplier<List<Card>>>of(
-            () -> getRoyalFlush(),
-            () -> getStraightFlush(),
-            () -> getFourOfAKind(),
-            () -> getFullHouse(),
-            () -> getFlush(),
-            () -> getStraight(),
-            () -> getThreeOfAKind(),
-            () -> getTwoPair(),
-            () -> getPair(),
-            () -> getSingleHand())
-            .map(Supplier::get)
-            .filter(Objects::nonNull)
-            .findFirst()
-            .orElse(Collections.emptyList());
-        
-        // if (getRoyalFlush() != null) {
-        //     return getRoyalFlush();
-        // } else if (getStraightFlush() != null) {
-        //     return getStraightFlush();
-        // } else if (getFourOfAKind() != null) {
-        //     return getFourOfAKind();
-        // } else if (getFullHouse() != null) {
-        //     return getFullHouse();
-        // } else if (getFlush() != null) {
-        //     return getFlush();
-        // } else if (getStraight() != null) {
-        //     return getStraight();
-        // } else if (getThreeOfAKind() != null) {
-        //     return getThreeOfAKind();
-        // } else if (getTwoPair() != null) {
-        //     return getTwoPair();
-        // }
-
-        // else if (getPair() != null) {
-        //     return getPair();
-        // }
-        // return getSingleHand();
+                () -> getRoyalFlush(),
+                () -> getStraightFlush(),
+                () -> getFourOfAKind(),
+                () -> getFullHouse(),
+                () -> getFlush(),
+                () -> getStraight(),
+                () -> getThreeOfAKind(),
+                () -> getTwoPair(),
+                () -> getPair(),
+                () -> getSingleHand())
+                .map(Supplier::get)
+                .filter(combo -> combo.size() != 0)
+                .findFirst()
+                .orElse(Collections.emptyList());
     }
 
-    private static List<Card> getRoyalFlush(){
+    private static List<Card> getRoyalFlush() {
         // out of 10 cards, if there is a royalFlush return it
-        // first sort based on suit, then check if there contain a royal flush 10-j-q-k-a 
+        // first sort based on suit, then check if there contain a royal flush
+        // 10-j-q-k-a
         List<Card> possibleFlush = groupedBySuit(bossHand);
-        
-        if(possibleFlush == null){
-            return null;
+        List<Card> royalFlush = new ArrayList<>();
+        if (possibleFlush == null) {
+            return royalFlush;
         }
 
         // sort by value now
         List<Card> possibleRoyalFlush = possibleFlush.stream()
                 .sorted(Comparator.comparing(Card::getValue))
                 .collect(Collectors.toList());
-        List<Card> royalFlush = new ArrayList<>();
-        
-        
+
         possibleRoyalFlush.stream()
-                    .filter(card -> card.getValue() == 10)
-                    .filter(card -> possibleRoyalFlush.stream().anyMatch(innerCard -> innerCard.getValue() == 11 ))
-                    .filter(card -> possibleRoyalFlush.stream().anyMatch(innerCard -> innerCard.getValue() == 12 ))
-                    .filter(card -> possibleRoyalFlush.stream().anyMatch(innerCard -> innerCard.getValue() == 13 ))
-                    .filter(card -> possibleRoyalFlush.stream().anyMatch(innerCard -> innerCard.getValue() == 14 ))
-                    .forEach(card -> royalFlush.addAll(possibleRoyalFlush.subList(possibleRoyalFlush.indexOf(card), possibleRoyalFlush.indexOf(card) + 5)));
-        if(royalFlush.size() == 5){
+                .filter(card -> card.getValue() == 10)
+                .filter(card -> possibleRoyalFlush.stream().anyMatch(innerCard -> innerCard.getValue() == 11))
+                .filter(card -> possibleRoyalFlush.stream().anyMatch(innerCard -> innerCard.getValue() == 12))
+                .filter(card -> possibleRoyalFlush.stream().anyMatch(innerCard -> innerCard.getValue() == 13))
+                .filter(card -> possibleRoyalFlush.stream().anyMatch(innerCard -> innerCard.getValue() == 14))
+                .forEach(card -> royalFlush.addAll(possibleRoyalFlush.subList(possibleRoyalFlush.indexOf(card),
+                        possibleRoyalFlush.indexOf(card) + 5)));
+
+        if (royalFlush.size() == 5) {
+            return royalFlush;
+        } else {
+            royalFlush.clear(); // get rid of any cards
             return royalFlush;
         }
-        return null;
 
     }
 
-    private static List<Card> getStraightFlush(){
+    private static List<Card> getStraightFlush() {
         // out of 10 cards, if there is a straightFlush return it
-        // first sort based on suit, followed by number, then check if there 5 card that contain a straight and flush
+        // first sort based on suit, followed by number, then check if there 5 card that
+        // contain a straight and flush
         List<Card> possibleFlush = groupedBySuit(bossHand);
+        List<Card> straightFlush = new ArrayList<>();
 
-        if(possibleFlush == null){
-            return null;
+        if (possibleFlush == null) {
+            return straightFlush;
         }
 
         // sort by value now
@@ -98,156 +84,160 @@ public class BestHandUtility extends ComboUtility {
                 .sorted(Comparator.comparing(Card::getValue))
                 .collect(Collectors.toList());
 
-        List<Card> straightFlush = new ArrayList<>();
-        
-        
-        for(int i=0; i<= possibleStraightFlush.size() - 5; i++){
-            
-            if(isStraight(possibleStraightFlush.subList(i, i+5))){
-                List<Card> output = possibleStraightFlush.subList(i, i+5);
-                for(Card card: output){
+        for (int i = 0; i <= possibleStraightFlush.size() - 5; i++) {
+
+            if (isStraight(possibleStraightFlush.subList(i, i + 5))) {
+                List<Card> output = possibleStraightFlush.subList(i, i + 5);
+                for (Card card : output) {
                     straightFlush.add(card);
                 }
             }
         }
-        
-        if(straightFlush.size() == 5){
+
+        if (straightFlush.size() == 5) {
             return straightFlush;
         }
-        return null;
+        straightFlush.clear();
+        return straightFlush;
+
     }
 
-    
-    
-    private static List<Card> getFourOfAKind(){
+    private static List<Card> getFourOfAKind() {
         // out of 10 cards, if there is a four of a kind return it
-        // first sort based on number, then check if there a same number 4 times then attached any lowest card
-        
+        // first sort based on number, then check if there a same number 4 times then
+        // attached any lowest card
+
         // Filter the groups to find any group with size 4
-        List<Card> fourOfAKind = groupByNumberSize(bossHand,4);
-        
-        boolean isfourOfAKind = false;
-        if(fourOfAKind != null){
-            int counter = 0;
-            for(Card c : bossHand){
-                if(counter != 1){
-                    if(c.getValue() != fourOfAKind.get(0).getValue()){
+        List<Card> fourOfAKind = groupByNumberSize(bossHand, 4);
+
+        boolean isValid = false;
+        if (fourOfAKind != null) {
+            int i = 0;
+            for (Card c : bossHand) {
+                if (i != 1) {
+                    if (c.getValue() != fourOfAKind.get(0).getValue()) {
                         fourOfAKind.add(c);
-                        isfourOfAKind = true;
-                        counter++;
+                        isValid = true;
+                        i++;
                     }
                 }
-               
+
             }
         }
-        if(isfourOfAKind){
-            return fourOfAKind;
+        if (!isValid) {
+            fourOfAKind.clear();
         }
-        return null;
+        return fourOfAKind;
     }
-    
-    private static List<Card> getFullHouse(){
+
+    private static List<Card> getFullHouse() {
         // out of 10 cards, if there is a FullHouse return it;
-        // first sort based on number, then check if there are three number being the same, followed by another two number being same
-       
+        // first sort based on number, then check if there are three number being the
+        // same, followed by another two number being same
+
         // Filter the groups to find any group with size 3
         List<Card> fullHouse = groupByNumberSize(bossHand, 3);
-        
-        boolean fullHouseChecker = false;
-        if(fullHouse != null){
-            int counter =0;
-            for(int i=1; i< bossHand.size(); i++){
-                if(counter == 1){
+
+        boolean isValid = false;
+        if (fullHouse != null) {
+            int counter = 0;
+            for (int i = 1; i < bossHand.size(); i++) {
+                if (counter == 1) {
                     break;
                 }
-                if(bossHand.get(i-1).getValue() != fullHouse.get(0).getValue()){
-                    if(bossHand.get(i-1).getValue() == bossHand.get(i).getValue()){
-                        fullHouse.add(bossHand.get(i-1));
+                if (bossHand.get(i - 1).getValue() != fullHouse.get(0).getValue()) {
+                    if (bossHand.get(i - 1).getValue() == bossHand.get(i).getValue()) {
+                        fullHouse.add(bossHand.get(i - 1));
                         fullHouse.add(bossHand.get(i));
                         counter++;
-                        fullHouseChecker = true;
+                        isValid = true;
                     }
                 }
-                
+
             }
         }
-        if(fullHouseChecker){
-            return fullHouse;
+        if (!isValid) {
+            fullHouse.clear();
         }
-        return null;
+
+        return fullHouse;
     }
-    
-    private static List<Card> getFlush(){
+
+    private static List<Card> getFlush() {
         // out of 10 cards, if there is a Flush return it;
-        // first sort based on suit, then number, check if there is 5 cards being the same suit, if have give the lowest 5 cards
-        
+        // first sort based on suit, then number, check if there is 5 cards being the
+        // same suit, if have give the lowest 5 cards
 
         List<Card> possibleFlush = groupedBySuit(bossHand);
 
-        if(possibleFlush == null){
+        if (possibleFlush == null) {
             return possibleFlush;
         }
-        
-        while(possibleFlush.size() > 5){
-            possibleFlush.remove(possibleFlush.size()-1);
+
+        while (possibleFlush.size() > 5) {
+            possibleFlush.remove(possibleFlush.size() - 1);
         }
         return possibleFlush;
     }
-    private static List<Card> getStraight(){
+
+    private static List<Card> getStraight() {
         // out of 10 cards, if there is a straight return it;
-        // first sort based on number must be distinct, then check if there are 5 cards number in sequence,
+        // first sort based on number must be distinct, then check if there are 5 cards
+        // number in sequence,
 
         List<Card> straight = new ArrayList<>();
         List<Card> sortedByValue = bossHand.stream()
                 .sorted(Comparator.comparing(Card::getValue))
                 .collect(Collectors.toList());
 
-        for(int i=0; i<= sortedByValue.size() - 5; i++){
+        for (int i = 0; i <= sortedByValue.size() - 5; i++) {
 
-            if(isStraight(sortedByValue.subList(i, i+5))){
-                
-                List<Card> output = sortedByValue.subList(i, i+5);
+            if (isStraight(sortedByValue.subList(i, i + 5))) {
 
-                for(Card card: output){
+                List<Card> output = sortedByValue.subList(i, i + 5);
+
+                for (Card card : output) {
                     straight.add(card);
                 }
                 break;
             }
         }
-        
-        if(straight.size() == 5){
+
+        if (straight.size() == 5) {
             return straight;
         }
-        return null;
         
+        straight.clear();
+        return straight;
+
     }
-    
-    
-    private static List<Card> getThreeOfAKind(){
+
+    private static List<Card> getThreeOfAKind() {
         // out of 10 cards, if there is a three of a kind return it;
-        // first sort based on number, then check if there are three cards being the same number, it have then match it with any two random number;
-        
+        // first sort based on number, then check if there are three cards being the
+        // same number, it have then match it with any two random number;
+
         // Filter the groups to find any group with size 3
         List<Card> threeOfAKind = groupByNumberSize(bossHand, 3);
-        
-        if(threeOfAKind != null){
-            int counter =0;
-            for(Card c: bossHand){
-                if(counter != 2){
-                    if(c.getValue() != threeOfAKind.get(0).getValue()){
+
+        if (threeOfAKind != null) {
+            int i = 0;
+            for (Card c : bossHand) {
+                if (i != 2) {
+                    if (c.getValue() != threeOfAKind.get(0).getValue()) {
                         threeOfAKind.add(c);
-                        counter++;
+                        i++;
                     }
                 }
-                
+
             }
         }
 
         return threeOfAKind;
-        
+
     }
 
-    private static List<Card> getTwoPair(){
+    private static List<Card> getTwoPair() {
         // out of 10 cards, if there is a pair return it;
 
         Map<Integer, List<Card>> groupedByValue = bossHand.stream()
@@ -255,41 +245,43 @@ public class BestHandUtility extends ComboUtility {
 
         // Filter the groups to find all two pairs
         List<Card> pairs = groupedByValue.values().stream()
-                                .filter(cards -> cards.size() > 1) 
-                                .flatMap(List::stream) 
-                                .collect(Collectors.toList());
-        
+                .filter(cards -> cards.size() > 1)
+                .flatMap(List::stream)
+                .collect(Collectors.toList());
+
         List<Card> twoPairs = new ArrayList<>();
-        if(pairs.size() >= 4){
-            for(int i=0; i<pairs.size(); i++){
-                if(i == 4){
+        if (pairs.size() >= 4) {
+            for (int i = 0; i < pairs.size(); i++) {
+                if (i == 4) {
                     break;
                 }
                 twoPairs.add(pairs.get(i));
             }
         }
-        if(twoPairs.size() >= 4){
-            int counter =0;
-            for(Card c: bossHand){
-                if(counter != 1){
-                    if(c.getValue() != twoPairs.get(0).getValue() && c.getValue() != twoPairs.get(2).getValue() ){
+        if (twoPairs.size() >= 4) {
+            int i = 0;
+            for (Card c : bossHand) {
+                if (i != 1) {
+                    if (c.getValue() != twoPairs.get(0).getValue() && c.getValue() != twoPairs.get(2).getValue()) {
                         twoPairs.add(c);
-                        counter++;
+                        i++;
                     }
                 }
             }
-            return twoPairs;
+        } else {
+            twoPairs.clear();
         }
-        return null;
+        return twoPairs;
     }
-    
-    private static List<Card> getPair(){
+
+    private static List<Card> getPair() {
         // out of 10 cards, if there is a pair return it;
 
         return groupByNumberSize(bossHand, 2);
-        
+
     }
-    private static List<Card> getSingleHand(){
+
+    private static List<Card> getSingleHand() {
         // out of 10 cards, return the last hand
         List<Card> sortedByValue = bossHand.stream()
                 .sorted(Comparator.comparing(Card::getValue))
@@ -299,10 +291,10 @@ public class BestHandUtility extends ComboUtility {
         result.add(sortedByValue.get(0));
 
         return result;
-        
+
     }
 
-    private static List<Card> groupByNumberSize(List<Card> bossHand, int number){
+    private static List<Card> groupByNumberSize(List<Card> bossHand, int number) {
         Map<Integer, List<Card>> groupedByValue = bossHand.stream()
                 .collect(Collectors.groupingBy(Card::getValue));
 
@@ -311,7 +303,8 @@ public class BestHandUtility extends ComboUtility {
                 .filter(cards -> cards.size() == number)
                 .findFirst().orElse(null);
     }
-    private static List<Card> groupedBySuit(List<Card> bossHand){
+
+    private static List<Card> groupedBySuit(List<Card> bossHand) {
         Map<Character, List<Card>> groupedBySuit = bossHand.stream()
                 .collect(Collectors.groupingBy(Card::getSuit));
 
@@ -319,9 +312,9 @@ public class BestHandUtility extends ComboUtility {
                 .filter(cards -> cards.size() >= 5)
                 .findFirst()
                 .orElse(null);
-        
+
     }
-    
+
     protected static boolean isStraight(List<Card> bossHand) {
         // special case - A, 2, 3, 4, 5
         // i = 2, compare 3 - 4
@@ -337,7 +330,7 @@ public class BestHandUtility extends ComboUtility {
                 return false;
             }
         }
-        
+
         return true;
     }
 
