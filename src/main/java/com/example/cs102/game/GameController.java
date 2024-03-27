@@ -43,6 +43,9 @@ public class GameController {
     }
 
     public static boolean checkValidName(String name){
+        if (name.isBlank()){
+            return false;
+        }
         for (int i = 0 ; i < name.length() ; i++){
             if (!(Character.isAlphabetic(name.charAt(i)) || Character.isWhitespace(name.charAt(i)))){
                 return false;
