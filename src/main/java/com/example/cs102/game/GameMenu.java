@@ -512,16 +512,12 @@ public class GameMenu {
 
     // FOR DISPLAYING
     public void displayIntro() {
-        displayPokerStart();
+        printTxt("Images/pokerStart.txt");
 
         System.out.println("");
         displayMenuMessage();
         System.out.println("                                                      Start Game[1]                        Quit App[2]");
         
-    }
-
-    public void displayPokerStart(){
-        printTxt("displayImg/pokerStart.txt");
     }
 
     public void displaylogin(){
