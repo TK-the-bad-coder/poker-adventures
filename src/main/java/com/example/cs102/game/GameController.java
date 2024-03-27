@@ -19,12 +19,12 @@ import com.example.cs102.poker.ComboUtility;
 import com.example.cs102.poker.BossDmgCalculatorUtility;
 import com.example.cs102.poker.Deck;
 import com.example.cs102.poker.DeckController;
-import com.example.cs102.Exceptions.PlayerNotFoundException;
-import com.example.cs102.Exceptions.PotionNotFoundException;
-import com.example.cs102.Exceptions.BossNotFoundException;
-import com.example.cs102.Exceptions.DuplicateCardException;
-import com.example.cs102.Exceptions.InsufficientGoldException;
-import com.example.cs102.Exceptions.InvalidHandException;
+import com.example.cs102.exceptions.PlayerNotFoundException;
+import com.example.cs102.exceptions.PotionNotFoundException;
+import com.example.cs102.exceptions.BossNotFoundException;
+import com.example.cs102.exceptions.DuplicateCardException;
+import com.example.cs102.exceptions.InsufficientGoldException;
+import com.example.cs102.exceptions.InvalidHandException;
 
 
 public class GameController {
