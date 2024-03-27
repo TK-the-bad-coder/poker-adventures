@@ -138,7 +138,7 @@ public class GameController {
     public int bossTurn(String comboMove) {
 
         int baseDamage = 0;
-
+        
         int comboDamage = ComboUtility.getDamageValue(comboMove);
         switch (boss.getDifficulty()) {
             case "EASY":
@@ -216,7 +216,7 @@ public class GameController {
     }
     public void bossMove(List<Card> selectedCards){
         String combo = ComboUtility.getHandValue(selectedCards);
-        int damage = ComboUtility.getDamageValue(combo);
+        int damage = bossTurn(combo);
         gameState.doDamageTo(player, damage);
 
         Hand bossHand = boss.getHand();

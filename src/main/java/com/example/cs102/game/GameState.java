@@ -54,15 +54,19 @@ public class GameState {
     
     //------------------------------------------------------------------------------------
     public void showPlayerHealth() {
-        System.out.println("=======================================");
         System.out.println(player.getName() + ":");
         System.out.println("Health: " + playerCurrentHp + "/" + player.getHp());
     }
 
     public void showBossHealth(){
+        bossSpaces();
         System.out.println(boss.getName() + ":");
+        bossSpaces();
         System.out.println("Health: " + bossCurrentHp + "/" + boss.getHp());
-        System.out.println("=======================================");
+    }
+
+    public void bossSpaces(){
+        System.out.print("                                                                                                                     ");
     }
 
     
