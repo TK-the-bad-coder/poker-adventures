@@ -3,9 +3,6 @@ package com.example.cs102.player;
 import java.io.*;
 import java.util.ArrayList;
 
-
-
-import java.util.Collections;
 import java.util.InputMismatchException;
 import java.util.List;
 
@@ -27,7 +24,7 @@ public class PlayerDAO {
             while (sc.hasNextLine()) {
                 String lineRead = sc.nextLine();
                 Scanner lineReader = new Scanner(lineRead);
-                lineReader.useDelimiter(",|\n|\r\n");
+                lineReader.useDelimiter(",");
                 if (!lineRead.isBlank()){
                     players.add(new Player(lineReader.nextInt(), lineReader.next(), lineReader.nextInt(), lineReader.nextInt()));
                 }

@@ -3,13 +3,10 @@ package com.example.cs102.boss;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.ArrayList;
 
-import java.util.Collections;
 import java.util.InputMismatchException;
 import java.util.List;
-import java.util.Optional;
 import java.util.Scanner;
 
 import com.example.cs102.exceptions.BossNotFoundException;
@@ -29,7 +26,7 @@ public class BossDAO {
             sc = new Scanner(new File("data/bosses.csv"));
             sc.useDelimiter(",|\n|\r\n");
             while (sc.hasNext()) {
-                // System.out.println(sc.next());
+
                 bosses.add(new Boss(sc.nextInt(),sc.next(), sc.nextInt(),sc.next(), sc.nextInt()));
             }
         } catch (FileNotFoundException e) {

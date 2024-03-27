@@ -58,6 +58,7 @@ public class GameMenu {
 
                     default:
                         System.out.println("Enter a number 1 or 2");
+                    break;
                 }
             } catch (InputMismatchException e) {
                 System.out.println("Please enter a number");
@@ -159,6 +160,7 @@ public class GameMenu {
 
                     default:
                         System.out.println("Please enter a number between 1 and 3");
+                    break;
                 }
             } catch (NumberFormatException e) {
                 System.out.println("Please enter a number");
@@ -320,6 +322,7 @@ public class GameMenu {
                         int damage = ComboUtility.getDamageValue(comboPlayed);
                         System.out.printf("You dealt %d damage to %s\r\n" , damage , controller.getBoss().getName());
                     }
+
                 } catch (IndexOutOfBoundsException e) {
                     System.out.println("Um... you dont have that many cards ah");
 
@@ -338,6 +341,7 @@ public class GameMenu {
                 } catch (IllegalArgumentException e) {
                     System.out.println("|ERROR| " + e.getMessage());
                 }
+                break;
             }
         }while (!confirmed);
     }

@@ -6,7 +6,6 @@ import java.util.List;
 
 import com.example.cs102.boss.Boss;
 import com.example.cs102.boss.BossDAO;
-import com.example.cs102.boss.BossImg;
 import com.example.cs102.hand.BossHand;
 import com.example.cs102.hand.Hand;
 import com.example.cs102.hand.PlayerHand;
@@ -20,8 +19,6 @@ import com.example.cs102.poker.ComboUtility;
 import com.example.cs102.poker.Deck;
 import com.example.cs102.poker.DeckController;
 import com.example.cs102.exceptions.PlayerNotFoundException;
-import com.example.cs102.exceptions.PotionNotFoundException;
-import com.example.cs102.exceptions.BossNotFoundException;
 import com.example.cs102.exceptions.DuplicateCardException;
 import com.example.cs102.exceptions.InsufficientGoldException;
 import com.example.cs102.exceptions.InvalidHandException;
@@ -227,21 +224,5 @@ public class GameController {
     }
     public boolean hasFled(){
         return hasFlee;
-    }
-    public void displayBoss(){
-        if(boss.getId() == 1){
-            BossImg.DisplayBullDemonKing();
-        }
-        else if(boss.getId() == 2){
-            BossImg.DisplayGrimReaper();
-        }
-    }
-    public void displayBossDead(){
-        if(boss.getId() == 1){
-            BossImg.DisplayBullDemonKingDead();
-        }
-        else if(boss.getId() == 2){
-            BossImg.DisplayGrimReaper();
-        }
     }
 }
