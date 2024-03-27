@@ -43,7 +43,6 @@ $ bash run.sh
 ## WINDOWS ##
 $ compile.bat
 $ run.bat
-
 ```
 # Game Overview
 
