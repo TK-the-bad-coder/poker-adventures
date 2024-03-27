@@ -53,10 +53,6 @@ public class Player {
         this.gold = gold;
     }
 
-    // public void clearHand() {
-    //     playerHand = null;
-    // }
-
     public List<Card> getCards() {
         return playerHand.getHand();
     }
@@ -69,5 +65,4 @@ public class Player {
         return "Name: " + name + ", Hp: " + hp + " Gold:" + gold;
     }
 
-    // private final static MAX_CARDS = 10;
 }

@@ -46,9 +46,12 @@ public class GameController {
         potionDAO = new PotionDAO();
     }
 
-    public static boolean checkValidName(String name) {
-        for (int i = 0; i < name.length(); i++) {
-            if (!(Character.isAlphabetic(name.charAt(i)) || Character.isWhitespace(name.charAt(i)))) {
+    public static boolean checkValidName(String name){
+        if (name.isBlank()){
+            return false;
+        }
+        for (int i = 0 ; i < name.length() ; i++){
+            if (!(Character.isAlphabetic(name.charAt(i)) || Character.isWhitespace(name.charAt(i)))){
                 return false;
             }
         }
@@ -152,10 +155,6 @@ public class GameController {
                 baseDamage = 20;
                 comboDamage *= 2;
                 break;
-            case "ASIAN":
-                baseDamage = 50; // literally one hit KO regardless of hand for new players
-                comboDamage *= 4;
-                break;
             default:
                 // unknown case
                 break;
@@ -232,20 +231,4 @@ public class GameController {
     public boolean hasFled() {
         return hasFlee;
     }
-
-    // public void displayBoss() {
-    //     if (boss.getId() == 1) {
-    //         BossImg.DisplayBullDemonKing();
-    //     } else if (boss.getId() == 2) {
-    //         BossImg.DisplayGrimReaper();
-    //     }
-    // }
-
-    // public void displayBossDead() {
-    //     if (boss.getId() == 1) {
-    //         BossImg.DisplayBullDemonKingDead();
-    //     } else if (boss.getId() == 2) {
-    //         BossImg.DisplayGrimReaper();
-    //     }
-    // }
 }
