@@ -24,7 +24,6 @@ import com.example.cs102.exceptions.DuplicateCardException;
 import com.example.cs102.exceptions.InsufficientGoldException;
 import com.example.cs102.exceptions.InvalidHandException;
 
-
 public class GameController {
 
     // private final GameService service;
@@ -44,12 +43,12 @@ public class GameController {
         potionDAO = new PotionDAO();
     }
 
-    public static boolean checkValidName(String name){
-        if (name.isBlank()){
+    public static boolean checkValidName(String name) {
+        if (name.isBlank()) {
             return false;
         }
-        for (int i = 0 ; i < name.length() ; i++){
-            if (!(Character.isAlphabetic(name.charAt(i)) || Character.isWhitespace(name.charAt(i)))){
+        for (int i = 0; i < name.length(); i++) {
+            if (!(Character.isAlphabetic(name.charAt(i)) || Character.isWhitespace(name.charAt(i)))) {
                 return false;
             }
         }
@@ -66,9 +65,9 @@ public class GameController {
     }
 
     // select boss, loops until user selects a valid difficulty
-    public Boss selectBoss(int n){
+    public Boss selectBoss(int n) {
         return bossDAO.retrieve(n);
-        }
+    }
 
     public List<Boss> loadBosses() {
         return bossDAO.retrieveBosses();
@@ -78,13 +77,14 @@ public class GameController {
         return potionDAO.retrievePotion();
     }
 
-    public Potion selectPotion(int n){
+    public Potion selectPotion(int n) {
         return potionDAO.retrieve(n);
     }
+
     // shop
-    public void purchasePotion(int hp, int gold){
-        
-        if(player.getGold() < gold){
+    public void purchasePotion(int hp, int gold) {
+
+        if (player.getGold() < gold) {
             throw new InsufficientGoldException("Not enough credit");
 
         }
@@ -135,8 +135,6 @@ public class GameController {
         return ComboUtility.getDamageValue(comboMove);
     }
 
-    
-
     public void checkMove(int[] input) {
         int handSize = input.length;
         if (handSize != 1 && handSize != 2 && handSize != 5) {
@@ -179,7 +177,7 @@ public class GameController {
         playerHand.addToHand();
     }
 
-    public void bossMove(List<Card> selectedCards) {
+    public void bossAttack(List<Card> selectedCards) {
         String combo = BossDmgCalculatorUtility.getHandValue(selectedCards);
         int damage = BossDmgCalculatorUtility.bossDamageCalculation(combo, boss);
         gameState.doDamageTo(player, damage);
